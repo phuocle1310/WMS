@@ -10,8 +10,8 @@ class User(AbstractUser):
     supplier = models.ForeignKey("Supplier", on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=10, null=True)
-    ADMIN = 1
-    USER = 0
+    ADMIN = 0
+    USER = 1
     SUPPLIER = 2
     USER_TYPE_CHOICES = (
         (ADMIN, 'ADMIN'),
