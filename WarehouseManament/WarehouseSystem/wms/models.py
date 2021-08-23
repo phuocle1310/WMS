@@ -65,7 +65,7 @@ class Location(models.Model):
 
 class ItemLocation(models.Model):
     location = models.OneToOneField(Location, on_delete=models.CASCADE, null=False)
-    item = models.OneToOneField(Item, on_delete=models.CASCADE, null=False)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False)
     qty = models.IntegerField(default=0)
     status = models.BooleanField(default=True)
 
