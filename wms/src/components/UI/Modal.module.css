@@ -1,0 +1,51 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 400;
+  background-color: rgba(0, 0, 0, 0.75);
+  overflow: "auto";
+}
+
+.modal {
+  position: fixed;
+  z-index: 1000;
+  top: 10vh;  left: 28%;
+  width: 40%;
+  background-color: white;
+  padding: 1rem;  overflow: "auto";
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  animation: slide-down 300ms ease-out forwards;
+}
+
+@media only screen and (max-width: 600px) {
+  .modal{  width: 100%;}
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 300px) {
+  .modal{width: 92%; 
+    top: 10vh;  left: 0}
+}
+
+
+@media only screen and (min-width: 768px) {
+  .modal {  width: 100%;width: 100%;
+    top: 10vh;  left: 0}
+} 
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .modal {  width: 100%;
+    top: 10vh;  left: 0;
+  }
+} 
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+ @media only screen and (min-width: 1200px) {
+  .modal {    top: 10vh;  left: 28%;
+    width: 40%;}
+} 
