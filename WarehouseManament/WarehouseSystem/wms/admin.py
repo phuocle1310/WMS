@@ -12,7 +12,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ['username', 'last_name', 'first_name']
 
     def full_name(self, user):
-        full_name = '%s %s' %(user.first_name, user.last_name)
+        full_name = User.get_full_name(self=user)
         return full_name.strip()
     full_name.short_description = 'Full Name'
 
