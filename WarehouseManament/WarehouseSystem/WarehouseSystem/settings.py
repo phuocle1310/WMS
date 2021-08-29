@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'wms.apps.WmsConfig'
+    'wms.apps.WmsConfig',
+    'cloudinary',
+    'cloudinary_storage'
 ]
 
 MIDDLEWARE = [
@@ -127,3 +129,16 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MEDIA_URL = '/WareHouseManagementSystem(WMS)/'  # NÀY LÀ THƯ MỤC TRÊN CLOUDINARY
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'  # LƯU TRỮ KIỂU ẢNH
+
+# INFO ACCOUNT CLOUDINARY
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'ou-hcmc',
+    'API_KEY': '969386329894481',
+    'API_SECRET': 'mg_eWP3Hbfzx-csv5H-9uPVcBA4'
+}

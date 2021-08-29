@@ -6,7 +6,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    avatar = models.CharField(max_length=500, null=True)
+    avatar = models.ImageField(upload_to='avatar_user/%Y/%m', blank=False)
     supplier = models.ForeignKey("Supplier", on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=10, null=True)
@@ -19,7 +19,7 @@ class User(AbstractUser):
         (SUPPLIER, 'SUPPLIER'),
     )
 
-    role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=USER)
+    role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=USER, verbose_name='Vai trò')
 
 
 class Supplier(models.Model):
@@ -100,7 +100,20 @@ class BasePOSO(models.Model):
     closed_date = models.DateTimeField(null=True)
     add_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
-    status = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
+
+    PENDING = 2
+    ACCEPTED = 1
+    FAILED = 3
+    DONE = 0
+    STATUS_CHOICES = (
+        (PENDING, 'PENDING'),
+        (ACCEPTED, 'ACCEPTED'),
+        (FAILED, 'FAILED'),
+        (DONE, 'DONE'),
+    )
+
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=PENDING)
 
     class Meta:
         abstract = True
