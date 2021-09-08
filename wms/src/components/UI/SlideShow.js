@@ -31,7 +31,7 @@ export default function SlideShow() {
   return (
     <React.Fragment>
       <div className={classes.layout}>
-        <Slide autoplay="on" arrows={false} duration={5000} className="slide">
+        <Slide autoplay="on" arrows={false} duration={3500} className="slide">
           <div style={{ ...style }}>
             <div className="top">
               {" "}
@@ -41,7 +41,7 @@ export default function SlideShow() {
             </div>{" "}
             <div className="bottom">
               <h3>Chào mừng bạn</h3>
-              <p>Quản lý nhà kho tiện lợi</p>
+              <p>Quản lý nhà kho tiện lợi bằng WMS.PY</p>
             </div>
           </div>
           <div style={{ ...style }}>
@@ -51,19 +51,11 @@ export default function SlideShow() {
               </div>
             </div>
             <div className="bottom">
-              <h3>Quản lý hàng hóa</h3>
-              <p>Quản lý hàng hóa, hiện đại</p>
-            </div>
-          </div>
-          <div style={{ ...style }}>
-            <div className="top">
-              <div className="circle">
-                <img src={Image1} alt={Image1} className="img"></img>
-              </div>
-            </div>
-            <div className="bottom">
-              <h3>Quản lý hàng hóa</h3>
-              <p>Quản lý hàng hóa, hiện đại</p>
+              <h3>Quản lý nhà kho</h3>
+              <p>
+                Hệ thống giúp theo dõi mức tồn kho, đơn đặt hàng, bán hàng và
+                giao hàng
+              </p>
             </div>
           </div>
           <div style={{ ...style }}>
@@ -73,8 +65,22 @@ export default function SlideShow() {
               </div>
             </div>
             <div className="bottom">
-              <h3>Quản lý hàng hóa</h3>
-              <p>Quản lý hàng hóa, hiện đại</p>
+              <h3>Quản lý vận chuyển</h3>
+              <p>Tối ưu hóa việc chọn và vận chuyển đơn đặt hàng</p>
+            </div>
+          </div>
+          <div style={{ ...style }}>
+            <div className="top">
+              <div className="circle">
+                <img src={Image1} alt={Image1} className="img"></img>
+              </div>
+            </div>
+            <div className="bottom">
+              <h3>Quản lý sản phẩm</h3>
+              <p>
+                Hệ thống quản lý kho có khả năng hỗ trợ trong việc phân phối sản
+                phẩm
+              </p>
             </div>
           </div>
           <div style={{ ...style }}>
@@ -84,8 +90,11 @@ export default function SlideShow() {
               </div>
             </div>
             <div className="bottom">
-              <h3>Quản lý hàng hóa</h3>
-              <p>Quản lý hàng hóa, nhanh chống</p>
+              <h3>Đảm bảo chất lượng</h3>
+              <p>
+                Hỗ trợ cho các chương trình tuân thủ của nhà cung cấp và báo cáo
+                cho nhà cung cấp
+              </p>
             </div>
           </div>
         </Slide>

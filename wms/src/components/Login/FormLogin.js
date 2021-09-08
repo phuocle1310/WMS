@@ -5,15 +5,18 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Button, Grid, Typography, Link, Box, Fab } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 // import { ReactComponent as GG } from "../../../assets/Login/google.svg";
+import MulLanguage from "../../assets/language/MulLanguage";
 import FormLoginStyles from "./FormLoginStyles";
-
+import { useSelector } from "react-redux";
 //lấy năm hiện tại
+
 function Copyright() {
+  const language = MulLanguage["vn"];
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Bản quyền thuộc về © "}
       <Link color="inherit" href="https://material-ui.com/">
-        WMS.PY
+        WMS.PY {language.welcome}
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -22,6 +25,10 @@ function Copyright() {
 }
 
 const FormLogin = function FormLogin() {
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
   const classes = FormLoginStyles();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -60,7 +67,7 @@ const FormLogin = function FormLogin() {
           <Link href="#" variant="body2">
             <h1> WMS.PY</h1>
           </Link>
-          <p>Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!</p>
+          <p>{language.welcomelogin}</p>
         </Grid>
       </Grid>
       <Typography fontWeight="fontWeightBold" component="h1">
