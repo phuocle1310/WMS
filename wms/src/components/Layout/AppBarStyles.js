@@ -2,11 +2,11 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const AppBarStyles = makeStyles((theme) => ({
   main: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 100,
+    // position: "fixed",
+    // top: 0,
+    // left: 0,
+    // right: 0,
+    // zIndex: 100,
   },
   grow: {
     flexGrow: 1,
@@ -15,16 +15,17 @@ const AppBarStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   mainMenu: {
-    backgroundColor: "#673ab7",
+    backgroundColor: "#fff",
+    boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
     color: "#fff",
     [theme.breakpoints.up("lg")]: {
       //   backgroundColor: "#000",
-      color: "#fff",
+      color: "#000",
     },
   },
   title: {
     display: "none",
-    color: "#fff",
+    color: "#000",
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
@@ -67,6 +68,10 @@ const AppBarStyles = makeStyles((theme) => ({
   button: {
     backgroundColor: "#F5F3F3",
     color: "#7200ca",
+    "&:hover": {
+      backgroundColor: "#F5F3F3",
+      color: "#7200ca",
+    },
   },
   subButton: {
     color: "#7200ca",

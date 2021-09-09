@@ -152,14 +152,14 @@ export default function Appbar() {
           position="static"
         >
           <Toolbar>
-            <IconButton
+            {/* <IconButton
               edge="start"
               className={classes.menuButton}
               color="inherit"
               aria-label="open drawer"
             >
               <StarsIcon className={classes.logo}></StarsIcon>
-            </IconButton>
+            </IconButton> */}
             <Typography className={classes.title} variant="h6" noWrap>
               WMS.PY
             </Typography>
@@ -172,13 +172,11 @@ export default function Appbar() {
               <div className={classes.item}></div>
               <div className={classes.item}>
                 <IconButton
-                  aria-label="show more"
-                  aria-controls={mobileMenuId}
-                  aria-haspopup="true"
+                  aria-label="show 11 new notifications"
+                  className={classes.button}
                   onClick={handleMenuHideOpen}
-                  color="inherit"
                 >
-                  <MoreIcon />
+                  <ExpandMoreIcon fontSize="medium"></ExpandMoreIcon>
                 </IconButton>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-//tạo ra language
+//tạo ra Slice language
 const language = createSlice({
   name: "ui",
   initialState: { currentLanguage: "vn" },

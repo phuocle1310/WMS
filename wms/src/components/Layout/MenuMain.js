@@ -59,21 +59,59 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import IconButton from "@material-ui/core/IconButton";
-import PeopleIcon from "@material-ui/icons/People";
-
-import LiveTvIcon from "@material-ui/icons/LiveTv";
-
+import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
+import FiberManualRecordOutlinedIcon from "@material-ui/icons/FiberManualRecordOutlined";
 import SecondNavigationStyles from "./MenuStyles";
 import ItemMenu from "../UI/ItemMenu";
+import RowToggle from "@mui-treasury/components/toggle/row";
+import { useJupiterRowToggleStyles } from "@mui-treasury/styles/rowToggle/jupiter";
 export const MenuListItem = () => {};
 
-export default function MenuMain() {
+export default function MenuMain(props) {
   const classes = SecondNavigationStyles();
+  const [toggled, setToggled] = React.useState(false);
+  const onToggle = () => setToggled(!toggled);
   return (
     <div className={classes.secondMenu}>
       <MenuList className={classes.menuList}>
-        <ItemMenu content="a a a aa"></ItemMenu>
-        <ItemMenu content="aaaaa"></ItemMenu>
+        <MenuItem className={classes.menuItem}>
+          <p>WMS.PY</p>
+        </MenuItem>
+        <MenuItem className={classes.menuItem}>
+          <IconButton
+            className={classes.subButton}
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <HomeOutlinedIcon></HomeOutlinedIcon>
+          </IconButton>{" "}
+          <p>Trang chủ</p>
+        </MenuItem>
+        <div className={classes.tags}>
+          <p className={classes.tag}>Quản lý</p>
+        </div>
+        <MenuItem className={classes.menuItem} onClick={onToggle}>
+          <RowToggle useStyles={useJupiterRowToggleStyles}>
+            <p>Nhập hàng</p>
+            <RowToggle.Action
+              button
+              toggled={toggled}
+              onClick={onToggle}
+              className={classes.toggled}
+            />
+          </RowToggle>
+        </MenuItem>
+        {props.listMenu.map((item, index) => {
+          return (
+            <ItemMenu
+              content={item.content}
+              key={index}
+              link={item.link}
+            ></ItemMenu>
+          );
+        })}
       </MenuList>
     </div>
   );

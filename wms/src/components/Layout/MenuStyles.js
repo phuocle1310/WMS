@@ -1,11 +1,13 @@
 import { makeStyles } from "@material-ui/core/styles";
 const SecondNavigationStyles = makeStyles((theme) => ({
   secondMenu: {
-    background: "#fff",
+    background: "#0b2559",
+    // color: "#90a0c0",
+    color: "#fff",
     height: "auto",
     borderRadius: 0,
     position: "fixed",
-    top: 65,
+    top: 0,
     left: 0,
     right: 0,
     zIndex: 100,
@@ -15,17 +17,25 @@ const SecondNavigationStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("lg")]: {
       height: "100vh",
       display: "flex",
-      width: 230,
-      boxShadow:
-        "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
+      width: 260,
     },
   },
   menuItem: {
     borderBottom: 0,
     width: 230,
+    color: "#5f739b",
+    "& p": {
+      margin: 0,
+      // padding: 0,
+      // color: "#fff",
+    },
+    "&:first-child": {
+      color: "#0699ff",
+      fontSize: "20px",
+      fontWeight: 900,
+    },
     [theme.breakpoints.up("lg")]: {
-      borderBottom: "1px solid  #D1CBCB",
-      height: "70px",
+      height: "60px",
       [`&:last-child`]: {
         borderBottom: 0,
       },
@@ -49,7 +59,25 @@ const SecondNavigationStyles = makeStyles((theme) => ({
     },
   },
   subButton: {
-    color: "#7200ca",
+    paddingLeft: 0,
+  },
+  root: {
+    minWidth: 100,
+    padding: 0,
+  },
+  tag: {
+    borderRadius: "0 3px 3px 0",
+    // borderLeft: `3px solid #0699ff}`,
+    // fontWeight: "bold",
+    padding: "8px 16px",
+    // background: "#000",
+  },
+  tags: {
+    marginLeft: 1,
+  },
+  toggled: {
+    color: "#5f739b",
+    background: "none",
   },
 }));
 export default SecondNavigationStyles;
