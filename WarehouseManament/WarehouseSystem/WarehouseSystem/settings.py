@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'wms.apps.WmsConfig',
     'cloudinary',
-    'cloudinary_storage'
+    'cloudinary_storage',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

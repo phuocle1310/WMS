@@ -10,6 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username', 'full_name', 'role', 'avatar_show', 'is_active']
     list_filter = ['role']
     search_fields = ['username', 'last_name', 'first_name']
+    exclude = ['last_login', 'is_staff', 'date_joined', 'is_superuser']
 
     def full_name(self, user):
         full_name = User.get_full_name(self=user)
@@ -18,16 +19,15 @@ class UserAdmin(admin.ModelAdmin):
 
     def avatar_show(self, user):
         return mark_safe("<img src='{img_url}' width='100' />".format(img_url=user.avatar.url))
-    avatar_show.short_description = 'Ảnh đại diện'
-    User.username.short_description = 'tên tk'
+    avatar_show.short_description = 'Avatar'
 
 
 class POAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'supplier', 'effective_date', 'status']
 
 
 class SOAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'supplier', 'effective_date', 'status']
 
 
 class PODetailAdmin(admin.ModelAdmin):
@@ -43,19 +43,19 @@ class SupplierAdmin(admin.ModelAdmin):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'supplier', 'mu_case', 'Qty_total', 'status']
 
 
 class RowLocationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name']
 
 
 class ShelfColumnAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'column', 'row_location']
 
 
 class ShelfFloorAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'floor', 'row_location']
 
 
 class LocationAdmin(admin.ModelAdmin):
