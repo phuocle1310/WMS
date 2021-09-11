@@ -11,6 +11,7 @@ const styles = makeStyles((theme) => ({
     borderBottom: 0,
     // width: 230,
     fontSize: 15,
+
     [theme.breakpoints.up("lg")]: {
       // borderBottom: "1px solid  #D1CBCB",
       height: "60px",
@@ -20,6 +21,10 @@ const styles = makeStyles((theme) => ({
     },
     subButton: {
       paddingLeft: 0,
+    },
+    color: "current",
+    "&:hover": {
+      background: "#000051",
     },
   },
 }));

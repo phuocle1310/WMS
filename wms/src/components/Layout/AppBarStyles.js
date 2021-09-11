@@ -7,6 +7,7 @@ const AppBarStyles = makeStyles((theme) => ({
     // left: 0,
     // right: 0,
     // zIndex: 100,
+    color: "#000",
   },
   grow: {
     flexGrow: 1,
@@ -17,15 +18,15 @@ const AppBarStyles = makeStyles((theme) => ({
   mainMenu: {
     backgroundColor: "#fff",
     boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-    color: "#fff",
+    color: "#000",
     [theme.breakpoints.up("lg")]: {
       //   backgroundColor: "#000",
       color: "#000",
     },
   },
   title: {
-    display: "none",
-    color: "#000",
+    // display: "none",
+    // color: "#000",
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
@@ -49,7 +50,13 @@ const AppBarStyles = makeStyles((theme) => ({
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("lg")]: {
-      display: "flex",
+      display: "block",
+    },
+  },
+  sectionMobi: {
+    display: "block",
+    [theme.breakpoints.up("lg")]: {
+      display: "none",
     },
   },
   item: {
@@ -77,21 +84,11 @@ const AppBarStyles = makeStyles((theme) => ({
     color: "#7200ca",
   },
   logo: {
-    color: "#fff",
-    // [theme.breakpoints.up("lg")]: {
-    //   color: "#7200ca",
-    // },
+    color: "#000",
   },
-  sectionMobile: {
-    display: "flex",
-    [theme.breakpoints.up("lg")]: {
-      display: "none",
-    },
-  },
-  noti: {
-    transform: "translateX(10px) translateY(50px)",
-    maxHeight: "60h",
-    width: "40ch",
-  },
+  // Popover: {
+  //   // backgroundColor: "#F5F3F3",
+  //   left: 0,
+  // },
 }));
 export default AppBarStyles;

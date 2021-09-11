@@ -20,128 +20,24 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TranslateIcon from "@material-ui/icons/Translate";
 import StarsIcon from "@material-ui/icons/Stars";
 import { useState } from "react";
-import MenuMain from "./MenuMain.js";
+import Popover from "@material-ui/core/Popover";
+import MenuIcon from "@material-ui/icons/Menu";
 //css
 import AppBarStyles from "./AppBarStyles";
-
+import MenuMain from "./MenuMain.js";
 export default function Appbar() {
   const classes = AppBarStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  //set menu hide
-  const [menuHideMoreAnchorEl, setMenuHide] = useState(null);
-
-  const isMenuHideOpen = Boolean(menuHideMoreAnchorEl);
-
-  const handleMenuHideClose = () => {
-    setMenuHide(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuHideOpen = (event) => {
-    setMenuHide(event.currentTarget);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMenuHide = (
-    <Menu
-      anchorEl={menuHideMoreAnchorEl}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      transformOrigin={{ vertical: "top", horizontal: "center" }}
-      id={mobileMenuId}
-      PaperProps={{
-        style: {
-          transform: "translateX(10px) translateY(50px)",
-        },
-      }}
-      open={isMenuHideOpen}
-      onClose={handleMenuHideClose}
-      keepMounted={false}
-    >
-      <MenuItem>
-        <IconButton
-          className={classes.subButton}
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle></AccountCircle>
-        </IconButton>
-        <p>Trang cá nhân</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          className={classes.subButton}
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <TranslateIcon></TranslateIcon>
-        </IconButton>
-        <p>ngôn ngữ và màn hình</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          className={classes.subButton}
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <SettingsIcon></SettingsIcon>
-        </IconButton>
-        <p>cài đặt</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          className={classes.subButton}
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <ExitToAppIcon></ExitToAppIcon>
-        </IconButton>
-        <p>Đăng xuất</p>
-      </MenuItem>
-    </Menu>
-  );
-  //set noti
-  const [notiMoreAnchorEl, setNoti] = useState(null);
-
-  const isNotiOpen = Boolean(notiMoreAnchorEl);
-
-  const handlerNotiMenuClose = () => {
-    setNoti(null);
-  };
-
-  const renderNoti = (
-    <Menu
-      anchorEl={notiMoreAnchorEl}
-      id={mobileMenuId}
-      PaperProps={{
-        style: {
-          transform: "translateX(10px) translateY(50px)",
-          maxHeight: "60h",
-          width: "40ch",
-          "&::-webkit-scrollbar": {
-            width: "0.4em",
-          },
-          "&::-webkit-scrollbar-track": {
-            boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-            webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(0,0,0,.1)",
-            outline: "1px solid slategrey",
-          },
-        },
-      }}
-      open={isNotiOpen}
-      onClose={handlerNotiMenuClose}
-      keepMounted={false}
-    ></Menu>
-  );
-
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   return (
     <div className={classes.main}>
       <div className={classes.grow}>
@@ -152,50 +48,50 @@ export default function Appbar() {
           position="static"
         >
           <Toolbar>
-            {/* <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-            >
-              <StarsIcon className={classes.logo}></StarsIcon>
-            </IconButton> */}
+            <div className={classes.sectionMobi}>
+              <IconButton
+                onClick={handleClick}
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="open drawer"
+              >
+                <MenuIcon className={classes.logo}></MenuIcon>
+              </IconButton>
+            </div>
             <Typography className={classes.title} variant="h6" noWrap>
               WMS.PY
             </Typography>
             <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
+            <div>
               <div className={classes.item}>
-                <Avatar className={classes.green}>{/* <Anh></Anh> */}</Avatar>
-                <h3> Yến</h3>
+                <Avatar className={classes.green}></Avatar>
+                <div className={classes.sectionDesktop}>
+                  <h3>Yến</h3>
+                </div>
               </div>
-              <div className={classes.item}></div>
-              <div className={classes.item}>
-                <IconButton
-                  aria-label="show 11 new notifications"
-                  className={classes.button}
-                  onClick={handleMenuHideOpen}
-                >
-                  <ExpandMoreIcon fontSize="medium"></ExpandMoreIcon>
-                </IconButton>
-              </div>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMenuHideOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
             </div>
           </Toolbar>
         </AppBar>
-        {renderMenuHide}
-        {renderNoti}
       </div>
+      {/* <MenuMain></MenuMain> */}
+      <Popover
+        // style={{ left: "0px !important" }}
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuMain></MenuMain>
+      </Popover>
     </div>
   );
 }

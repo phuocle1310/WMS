@@ -7,27 +7,37 @@ import MenuMain from "./MenuMain.js";
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import MulLanguage from "../../assets/language/MulLanguage";
-
-const language = MulLanguage[`vn`];
-const listMenu = [
-  { content: `${language.inputPo}`, id: 1, link: "/po" },
-  { content: `${language.inputSo}`, id: 2, link: "/po" },
-  { content: `${language.listPo}`, id: 3, link: "/po" },
-  { content: `${language.listSo}`, id: 3, link: "/po" },
-];
-// inputPo: "tạo đơn đặt hàng",
-// inputSo: "tạo đơn nhập hàng",
-// listPo: "danh sách các đơn xuất hàng",
-// listSo: "danh sách các đơn nhập hàng",
+import { makeStyles } from "@material-ui/core/styles";
+const styles = makeStyles((theme) => ({
+  root: {
+    height: "auto",
+    borderRadius: 0,
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    display: "none",
+    textTransform: "capitalize",
+    [theme.breakpoints.up("lg")]: {
+      height: "100vh",
+      display: "flex",
+      width: 260,
+    },
+    color: "#afb2d5",
+  },
+}));
 
 const DashboardLayout = ({ children, ...rest }) => {
+  const classes = styles();
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={12} lg={2}>
-        <MenuMain listMenu={listMenu}></MenuMain>
+        <div className={classes.root}>
+          <MenuMain></MenuMain>
+        </div>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={10}>
-        {/* <Appbar></Appbar> */}
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Appbar></Appbar>

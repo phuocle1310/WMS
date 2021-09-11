@@ -3,27 +3,30 @@ const SecondNavigationStyles = makeStyles((theme) => ({
   secondMenu: {
     background: "#0b2559",
     // color: "#90a0c0",
-    color: "#fff",
+    // color: "#fff",
     height: "auto",
     borderRadius: 0,
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
+    // position: "fixed",
+    // top: 0,
+    // left: 0,
+    // right: 0,
     zIndex: 100,
     boxShadow:
       "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
-    display: "none",
+    // display: "none",
+    textTransform: "capitalize",
     [theme.breakpoints.up("lg")]: {
       height: "100vh",
       display: "flex",
       width: 260,
     },
+    color: "#afb2d5",
   },
   menuItem: {
     borderBottom: 0,
     width: 230,
-    color: "#5f739b",
+    color: "#afb2d5",
+    fontSize: "15px",
     "& p": {
       margin: 0,
       // padding: 0,
@@ -76,8 +79,10 @@ const SecondNavigationStyles = makeStyles((theme) => ({
     marginLeft: 1,
   },
   toggled: {
-    color: "#5f739b",
-    background: "none",
+    // "& .JupiterRowToggle-action-11": {
+    color: "#5f739b !important",
+    background: "none !important",
+    // },
   },
 }));
 export default SecondNavigationStyles;

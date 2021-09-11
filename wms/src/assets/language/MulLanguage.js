@@ -6,6 +6,10 @@ const MulLanguage = {
     inputSo: "Create So",
     listPo: "list Po",
     litsSo: "list So",
+    nameMenuPO: "Purchase Order",
+    nameMenuSo: "Supplier Orders",
+    title: "manage",
+    titleHome: "Home",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -14,6 +18,10 @@ const MulLanguage = {
     inputSo: "tạo đơn nhập hàng",
     listPo: "danh sách các đơn xuất hàng",
     listSo: "danh sách các đơn nhập hàng",
+    nameMenuPO: "đặt hàng",
+    nameMenuSo: "nhập hàng",
+    title: "quản lý",
+    titleHome: "Trang chủ",
   },
 };
 export default MulLanguage;
