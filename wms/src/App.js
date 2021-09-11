@@ -1,24 +1,28 @@
 import logo from './logo.svg';
 import './App.css';
-
+import { Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import NestedMenu from "./components/Layout/MenuMain.js";
+import Appbar from "./components/Layout/Appbar";
+//layout
+import DashboardLayoutRoute from "./components/Layout/DashboardLayoutRoute";
+import LoginLayoutRoute from "./components/Layout/LoginLayoutRoute";
+//page
+import Login from "./components/Login/Login";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Switch>
+          <DashboardLayoutRoute
+            path="/"
+            exact
+            component={Login}
+          ></DashboardLayoutRoute>
+          <LoginLayoutRoute path="/login" component={Login} />
+        </Switch>
+      </Router>
+    </>
   );
 }
 
