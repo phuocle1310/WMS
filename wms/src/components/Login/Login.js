@@ -1,6 +1,5 @@
 import React from "react";
-import { Grid, CssBaseline, Paper } from "@material-ui/core";
-import Wave from "react-wavify";
+import { Grid, Paper } from "@material-ui/core";
 import FormLogin from "./FormLogin";
 import LoginStyles from "./LoginStyles";
 import SlideShow from "../UI/SlideShow";

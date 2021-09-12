@@ -1,12 +1,7 @@
-import React from "react";
-import { useMinimalSelectStyles } from "@mui-treasury/styles/select/minimal";
-import MenuItem from "@material-ui/core/MenuItem";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
-import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
-import ComboBox from "../UI/ComboBox";
 import ClearIcon from "@material-ui/icons/Clear";
 import IconButton from "@material-ui/core/IconButton";
 import ValidatedCombox from "../UI/ValidatedCombox";
@@ -15,19 +10,19 @@ import AddProductStyles from "./AddProductStyles";
 
 const Addproduct = (props) => {
   const classes = AddProductStyles();
+  var moment = require("moment");
   //khai báo
-  //   const { values, handleChange } = props;
-  const minimalSelectClasses = useMinimalSelectStyles();
-  const selectedDate = new Date();
-
+  const { values } = props;
+  // const selectedDate = new Date();
+  const selectedDate = useState(new Date());
   const itemProduct = () => {
     return (
       <>
         {" "}
-        <Grid item md={1} lg={1}>
+        <Grid xs={3} sm={6} md={1} lg={1}>
           {props.id}
         </Grid>
-        <Grid item xs={9} lg={3}>
+        <Grid item xs={9} sm={6} md={2} lg={2}>
           {" "}
           <ValidatedCombox
             name="nameproduct"
@@ -36,25 +31,30 @@ const Addproduct = (props) => {
             errorMessages={["không để trống dòng này"]}
           ></ValidatedCombox>
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={6} sm={6} md={2} lg={2}>
           {" "}
           <ValidatedDatePicker
             autoOk
             variant="inline"
             className={classes.textField}
             inputVariant="outlined"
-            format="MM/dd/yyyy"
+            format="dd/MM/yyyy"
             size="small"
             label="With keyboard"
             validators={["required"]}
             errorMessages={["không để trống dòng này"]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
-            onChange={props.handleChangeManufactureDate}
+            value={
+              values.manufactureDate
+                ? moment(new Date(values.manufactureDate)).format("DD/MM/YYYY")
+                : selectedDate
+            }
+            onChange={(e) => console.log(e)}
             readOnly={true}
           />{" "}
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={6} sm={6} md={2} lg={2}>
           {" "}
           <ValidatedDatePicker
             autoOk
@@ -62,17 +62,22 @@ const Addproduct = (props) => {
             className={classes.textField}
             label="With keyboard"
             inputVariant="outlined"
-            format="MM/dd/yyyy"
+            format="dd/MM/yyyy"
             size="small"
             validators={["required"]}
             errorMessages={["không để trống dòng này"]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
+            value={
+              values.expirationDate
+                ? moment(new Date(values.expirationDate)).format("DD/MM/YYYY")
+                : selectedDate
+            }
             onChange={props.handleChangeExpirationDate}
             readOnly={true}
           />{" "}
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={4} sm={6} md={2} lg={2}>
           <TextValidator
             className={classes.textField}
             variant="outlined"
@@ -87,7 +92,22 @@ const Addproduct = (props) => {
             errorMessages={["không để trống dòng này"]}
           />
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={4} sm={6} md={2} lg={2}>
+          <TextValidator
+            className={classes.textField}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            size="small"
+            label="đơn vị*"
+            autoFocus
+            name="unit"
+            onChange={props.handleChange}
+            validators={["required"]}
+            errorMessages={["không để trống dòng này"]}
+          />
+        </Grid>
+        <Grid item xs={4} sm={6} md={1} lg={1}>
           <IconButton
             color="primary"
             aria-label="upload picture"
@@ -108,10 +128,10 @@ const Addproduct = (props) => {
     return (
       <>
         {" "}
-        <Grid item lg={1}>
+        <Grid xs={3} sm={6} md={1} lg={1}>
           {props.id}
         </Grid>
-        <Grid item lg={3}>
+        <Grid item xs={9} sm={6} md={2} lg={2}>
           <TextValidator
             className={classes.textField}
             variant="outlined"
@@ -127,24 +147,29 @@ const Addproduct = (props) => {
             errorMessages={["không để trống dòng này"]}
           />
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={6} sm={6} md={2} lg={2}>
           {" "}
           <ValidatedDatePicker
             autoOk
             variant="inline"
             className={classes.textField}
             inputVariant="outlined"
-            format="MM/dd/yyyy"
+            format="dd/MM/yyyy"
             size="small"
             label="With keyboard"
             validators={["required"]}
             errorMessages={["không để trống dòng này"]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
+            value={
+              values.manufactureDate
+                ? moment(new Date(values.manufactureDate)).format("DD/MM/YYYY")
+                : ""
+            }
             onChange={props.handleChangeManufactureDate}
           />{" "}
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={6} sm={6} md={2} lg={2}>
           {" "}
           <ValidatedDatePicker
             autoOk
@@ -152,16 +177,21 @@ const Addproduct = (props) => {
             className={classes.textField}
             label="With keyboard"
             inputVariant="outlined"
-            format="MM/dd/yyyy"
+            format="dd/MM/yyyy"
             size="small"
             validators={["required"]}
             errorMessages={["không để trống dòng này"]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
+            value={
+              values.expirationDate
+                ? moment(new Date(values.expirationDate)).format("DD/MM/YYYY")
+                : ""
+            }
             onChange={props.handleChangeExpirationDate}
           />{" "}
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={4} sm={6} md={2} lg={2}>
           <TextValidator
             className={classes.textField}
             variant="outlined"
@@ -177,7 +207,22 @@ const Addproduct = (props) => {
             errorMessages={["không để trống dòng này"]}
           />
         </Grid>
-        <Grid item lg={2}>
+        <Grid item xs={4} sm={6} md={2} lg={2}>
+          <TextValidator
+            className={classes.textField}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            size="small"
+            label="đơn vị*"
+            autoFocus
+            name="unit"
+            onChange={props.handleChange}
+            validators={["required"]}
+            errorMessages={["không để trống dòng này"]}
+          />
+        </Grid>
+        <Grid item xs={4} sm={6} md={1} lg={1}>
           <IconButton
             color="primary"
             aria-label="upload picture"
@@ -195,7 +240,7 @@ const Addproduct = (props) => {
     );
   };
   return (
-    <Grid container spacing={3}>
+    <Grid container style={{ width: "100%" }} spacing={2}>
       {props.isNew ? itemProduct() : itemNewProduct()}
     </Grid>
   );

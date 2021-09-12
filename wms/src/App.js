@@ -1,9 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
-import { Route, Switch, Redirect } from "react-router-dom";
+import "./App.css";
+import { Switch } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import NestedMenu from "./components/Layout/MenuMain.js";
-import Appbar from "./components/Layout/Appbar";
 //layout
 import DashboardLayoutRoute from "./components/Layout/DashboardLayoutRoute";
 import LoginLayoutRoute from "./components/Layout/LoginLayoutRoute";

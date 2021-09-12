@@ -6,15 +6,19 @@ const FormStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "column",
     flexWrap: "wrap",
-    width: "100%",
+    width: "99%",
     "& > *": {
-      margin: theme.spacing(1),
+      margin: "1%",
     },
     "& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
       {
         display: "none",
         margin: 80,
       },
+    fontSize: 13,
+    [theme.breakpoints.up("lg")]: {
+      fontSize: 15,
+    },
   },
   small: {
     width: theme.spacing(3),
@@ -37,10 +41,13 @@ const FormStyles = makeStyles((theme) => ({
   },
   labelId: {
     fontWeight: "bold",
-    fontSize: 15,
     display: "inline",
     margin: 0,
     float: "left",
+    fontSize: 13,
+    [theme.breakpoints.up("lg")]: {
+      fontSize: 15,
+    },
   },
   box: {
     width: "100%",
@@ -49,12 +56,10 @@ const FormStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "row",
     "& nav": {
-      width: "80%",
+      width: "70%",
     },
     "& nav:first-child": {
-      width: "20%",
-      //   marginRight: 15,
-      //   border: "13px solid #000",
+      width: "30%",
     },
   },
   box1: {
@@ -74,8 +79,7 @@ const FormStyles = makeStyles((theme) => ({
       marginLeft: 0,
     },
     "& .MuiSelect-root": {
-      // background: "#000",
-      width: 180,
+      //   width: 180,
       "& .MuiSelect-iconOutlined": {
         background: "#000",
       },
@@ -102,7 +106,7 @@ const FormStyles = makeStyles((theme) => ({
     borderRadius: 25,
     border: 0,
     color: "white",
-    height: 40,
+    height: 48,
     // width: "100px",
     padding: "0 30px",
     "&:hover": {
@@ -110,9 +114,32 @@ const FormStyles = makeStyles((theme) => ({
     },
     float: "left",
     marginRight: 15,
+    fontSize: 13,
+    [theme.breakpoints.up("lg")]: {
+      fontSize: 15,
+    },
   },
   label: {
     textTransform: "capitalize",
+  },
+  button: {
+    margin: theme.spacing(3, 0, 2),
+
+    background: "#4345de",
+    borderRadius: 25,
+    border: 0,
+    color: "white",
+    height: 40,
+    fontSize: 13,
+    [theme.breakpoints.up("lg")]: {
+      fontSize: 15,
+    },
+    padding: "0 30px",
+    "&:hover": {
+      background: "#4345de",
+    },
+    float: "left",
+    marginRight: 15,
   },
 }));
 export default FormStyles;

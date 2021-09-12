@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 import React from "react";
-import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 import { TextValidator } from "react-material-ui-form-validator";
@@ -11,19 +10,11 @@ const Styles = makeStyles((theme) => ({
     float: "left",
     [`& fieldset`]: {
       borderRadius: 25,
-      //   width: "200px",
       border: "1px solid #c5cae9",
     },
     "& .MuiOutlinedInput-inputMarginDense": {
       margin: 0,
       marginLeft: 0,
-    },
-    "& .MuiSelect-root": {
-      // background: "#000",
-      width: 180,
-      "& .MuiSelect-iconOutlined": {
-        // background: "#000",
-      },
     },
   },
 }));
@@ -37,6 +28,7 @@ export default function ComboBox(props) {
       style={{ width: "100%" }}
       name="nameproduct"
       onSelect={props.handleChange}
+      fullWidth
       renderInput={(params) => (
         <TextValidator
           {...params}

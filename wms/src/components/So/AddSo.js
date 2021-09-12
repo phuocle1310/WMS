@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import { useMinimalSelectStyles } from "@mui-treasury/styles/select/minimal";
-import MenuItem from "@material-ui/core/MenuItem";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Grid from "@material-ui/core/Grid";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { ValidatorForm } from "react-material-ui-form-validator";
-import {
-  TextValidator,
-  SelectValidator,
-} from "react-material-ui-form-validator";
+import { TextValidator } from "react-material-ui-form-validator";
 import TextField from "@material-ui/core/TextField";
 import Addproduct from "../Product/Addproduct";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,18 +12,6 @@ import Button from "@material-ui/core/Button";
 import FormStyles from "./FormStyles";
 const AddSo = (props) => {
   const classes = FormStyles();
-  //khai báo
-  //   const { values, handleChange } = props;
-
-  const minimalSelectClasses = useMinimalSelectStyles();
-  const selectedDate = new Date();
-  const iconComponent = (props) => {
-    return (
-      <ExpandMoreIcon
-        className={props.className + " " + minimalSelectClasses.icon}
-      />
-    );
-  };
 
   //khai báo form ban đầu rỗng
   let form = null;
@@ -55,6 +37,7 @@ const AddSo = (props) => {
           key={index}
           isNew={item.isNew}
           id={index + 1}
+          values={item}
           onClear={removeItemHandler.bind(this, index)}
           handleChange={handleChangeAll(index)}
           handleChangeSelect={handleChangeSelect(index)}
@@ -226,7 +209,7 @@ const AddSo = (props) => {
               aria-label="upload picture"
               component="span"
               classes={{
-                root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+                root: classes.button, // class name, e.g. `classes-nesting-root-x`
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             >
@@ -235,7 +218,7 @@ const AddSo = (props) => {
             <Button
               variant="contained"
               classes={{
-                root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+                root: classes.button, // class name, e.g. `classes-nesting-root-x`
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
               //   size="large"
@@ -247,21 +230,22 @@ const AddSo = (props) => {
           </nav>
         </div>
         <div className={classes.box1}>
-          <p className={classes.labelId}>Danh sách sản phẩm:</p> {listItems()}
+          <p className={classes.labelId}>Danh sách sản phẩm:</p>
         </div>
+        <div className={classes.box1}>{listItems()}</div>
       </div>
-      <Button
-        variant="contained"
-        type="submit"
-        classes={{
-          root: classes.submit, // class name, e.g. `classes-nesting-root-x`
-          label: classes.label, // class name, e.g. `classes-nesting-label-x`
-        }}
-        //   size="large"
-        // startIcon={<AddIcon />}
-      >
-        Gửi yêu cầu
-      </Button>
+      <div className={classes.box1}>
+        <Button
+          variant="contained"
+          type="submit"
+          classes={{
+            root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+            label: classes.label, // class name, e.g. `classes-nesting-label-x`
+          }}
+        >
+          Gửi yêu cầu
+        </Button>
+      </div>
     </ValidatorForm>
   );
 };

@@ -2,12 +2,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const AppBarStyles = makeStyles((theme) => ({
   main: {
-    // position: "fixed",
-    // top: 0,
-    // left: 0,
-    // right: 0,
-    // zIndex: 100,
-    color: "#000",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    fontSize: 10,
+    [theme.breakpoints.up("lg")]: {
+      left: 260,
+    },
   },
   grow: {
     flexGrow: 1,

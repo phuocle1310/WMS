@@ -20,6 +20,10 @@ const AddProductStyles = makeStyles((theme) => ({
         // background: "#000",
       },
     },
+    fontSize: 13,
+    [theme.breakpoints.up("lg")]: {
+      fontSize: 15,
+    },
   },
   textFieldDate: {
     padding: 0,
@@ -33,6 +37,10 @@ const AddProductStyles = makeStyles((theme) => ({
         border: "1px solid #c5cae9",
         // width: "200px",
       },
+    },
+    fontSize: 13,
+    [theme.breakpoints.up("lg")]: {
+      fontSize: 15,
     },
   },
 }));

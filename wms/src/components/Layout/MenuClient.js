@@ -1,19 +1,12 @@
 import React from "react";
-import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
-import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
 import SecondNavigationStyles from "./MenuStyles";
 import ItemMenu from "../UI/ItemMenu";
 import RowToggle from "@mui-treasury/components/toggle/row";
 import { useJupiterRowToggleStyles } from "@mui-treasury/styles/rowToggle/jupiter";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-import StarsIcon from "@material-ui/icons/Stars";
-import InputBase from "@material-ui/core/InputBase";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SettingsIcon from "@material-ui/icons/Settings";
+
 // export const MenuListItem = () => {};
 
 export default function MenuClient(props) {

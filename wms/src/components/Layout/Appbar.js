@@ -26,19 +26,17 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AppBarStyles from "./AppBarStyles";
 import MenuMain from "./MenuMain.js";
 import MenuClient from "./MenuClient";
+
 export default function Appbar() {
   const classes = AppBarStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const [isMenu, setIsMenu] = React.useState(false);
+  const renderMenu = () => {
+    return (
+      <MenuMain>
+        <MenuClient></MenuClient>
+      </MenuMain>
+    );
   };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
   return (
     <div className={classes.main}>
       <div className={classes.grow}>
@@ -51,7 +49,9 @@ export default function Appbar() {
           <Toolbar>
             <div className={classes.sectionMobi}>
               <IconButton
-                onClick={handleClick}
+                onClick={() => {
+                  setIsMenu(!isMenu);
+                }}
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
@@ -75,26 +75,7 @@ export default function Appbar() {
           </Toolbar>
         </AppBar>
       </div>
-      {/* <MenuMain></MenuMain> */}
-      <Popover
-        // style={{ left: "0px !important" }}
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuMain>
-          <MenuClient></MenuClient>
-        </MenuMain>
-      </Popover>
+      {isMenu && renderMenu()}
     </div>
   );
 }
