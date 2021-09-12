@@ -2,16 +2,14 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const LoginStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh", //100vh
+    height: "10vh", //100vh
   },
   left: {
     textAlign: "center",
     margin: 0,
-    height: "100%", //100vh
-    // background: "#bcd3fb",
   },
   right: {
-    height: "100%",
+    height: "100vh",
     textAlign: "center",
     margin: 0,
   },

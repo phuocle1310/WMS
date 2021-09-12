@@ -25,6 +25,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 //css
 import AppBarStyles from "./AppBarStyles";
 import MenuMain from "./MenuMain.js";
+import MenuClient from "./MenuClient";
 export default function Appbar() {
   const classes = AppBarStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -90,7 +91,9 @@ export default function Appbar() {
           horizontal: "left",
         }}
       >
-        <MenuMain></MenuMain>
+        <MenuMain>
+          <MenuClient></MenuClient>
+        </MenuMain>
       </Popover>
     </div>
   );

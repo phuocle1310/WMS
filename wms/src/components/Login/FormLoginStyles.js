@@ -32,14 +32,16 @@ const FormLoginStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-
-    background: "#4345de",
     borderRadius: 25,
     border: 0,
     color: "white",
     height: 48,
     width: "100%",
     padding: "0 30px",
+    background: "#4345de",
+    "&:hover": {
+      background: "#4345de",
+    },
   },
   label: {
     textTransform: "capitalize",
