@@ -63,7 +63,15 @@ const FormStyles = makeStyles((theme) => ({
     },
   },
   box1: {
-    width: "100%",
+    // width: "100%",
+    float: "left",
+  },
+  box2: {
+    // width: "100%",
+    // textAlign: "center",
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "flex-end",
   },
   textField: {
     padding: 0,
@@ -102,7 +110,7 @@ const FormStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
 
-    background: "#4345de",
+    background: "#E4544B",
     borderRadius: 25,
     border: 0,
     color: "white",
@@ -110,7 +118,7 @@ const FormStyles = makeStyles((theme) => ({
     // width: "100px",
     padding: "0 30px",
     "&:hover": {
-      background: "#4345de",
+      background: "#E4544B",
     },
     float: "left",
     marginRight: 15,

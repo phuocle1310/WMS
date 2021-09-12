@@ -5,12 +5,9 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     textAlign: "center",
+    color: "#4251b5",
     marginTop: 80,
     padding: 5,
-  },
-  paper: {
-    textAlign: "center",
-    color: "#4251b5",
   },
   content: {
     width: "100%",

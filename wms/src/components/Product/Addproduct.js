@@ -20,7 +20,7 @@ const Addproduct = (props) => {
       <>
         {" "}
         <Grid xs={3} sm={6} md={1} lg={1}>
-          {props.id}
+          <p>{props.id}</p>
         </Grid>
         <Grid item xs={9} sm={6} md={2} lg={2}>
           {" "}
@@ -129,7 +129,7 @@ const Addproduct = (props) => {
       <>
         {" "}
         <Grid xs={3} sm={6} md={1} lg={1}>
-          {props.id}
+          <p>{props.id}</p>
         </Grid>
         <Grid item xs={9} sm={6} md={2} lg={2}>
           <TextValidator

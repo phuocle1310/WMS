@@ -234,7 +234,17 @@ const AddSo = (props) => {
         </div>
         <div className={classes.box1}>{listItems()}</div>
       </div>
-      <div className={classes.box1}>
+      <div className={classes.box2}>
+        <Button
+          variant="contained"
+          type="submit"
+          classes={{
+            root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+            label: classes.label, // class name, e.g. `classes-nesting-label-x`
+          }}
+        >
+          Hủy
+        </Button>
         <Button
           variant="contained"
           type="submit"
