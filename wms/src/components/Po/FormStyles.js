@@ -2,8 +2,8 @@ import { makeStyles } from "@material-ui/core/styles";
 const FormStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
     flexDirection: "column",
     flexWrap: "wrap",
     width: "99%",
@@ -63,15 +63,18 @@ const FormStyles = makeStyles((theme) => ({
     },
   },
   box1: {
-    // width: "100%",
-    float: "left",
+    "& p": {
+      textAlign: "center",
+      //   marginBottom: 15,
+    },
   },
   box2: {
     // width: "100%",
     // textAlign: "center",
+    // marginTop: 10,
     // display: "flex",
     // alignItems: "center",
-    // justifyContent: "flex-end",
+    // justifyContent: "center",
   },
   textField: {
     padding: 0,
@@ -123,6 +126,9 @@ const FormStyles = makeStyles((theme) => ({
     float: "left",
     marginRight: 15,
     fontSize: 13,
+    "&:first-child": {
+      background: "#000",
+    },
     [theme.breakpoints.up("lg")]: {
       fontSize: 15,
     },

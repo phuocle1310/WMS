@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useMinimalSelectStyles } from "@mui-treasury/styles/select/minimal";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
@@ -8,13 +7,23 @@ import Addproduct from "../Product/Addproduct";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
+import ClearIcon from "@material-ui/icons/Clear";
 //css
 import FormStyles from "./FormStyles";
-const AddSo = (props) => {
+//lang
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector } from "react-redux";
+const AddPo = (props) => {
   const classes = FormStyles();
-
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
   //khai báo form ban đầu rỗng
   let form = null;
+  var moment = require("moment");
   //readonly
   const TextFieldComponent = (props) => {
     return <TextField fullWidth {...props} disabled={true} />;
@@ -38,7 +47,7 @@ const AddSo = (props) => {
           isNew={item.isNew}
           id={index + 1}
           values={item}
-          onClear={removeItemHandler.bind(this, index)}
+          onClear={removeItemHandler.bind(this, item)}
           handleChange={handleChangeAll(index)}
           handleChangeSelect={handleChangeSelect(index)}
           handleChangeManufactureDate={handleChangeManufactureDate(index)}
@@ -80,7 +89,7 @@ const AddSo = (props) => {
   //xóa
   const removeItemHandler = (selIndex) => {
     setListProduct((prevState) => {
-      return prevState.filter((item, index) => index !== selIndex);
+      return prevState.filter((item, index) => item !== selIndex);
     });
   };
   //hàm xử lý onchange
@@ -134,6 +143,12 @@ const AddSo = (props) => {
     });
     console.log(listProduct);
   };
+  //xử lý PO
+  const [timepoRequest, setTimePoRequest] = useState("");
+  const onDelete = () => {
+    setTimePoRequest("");
+    setListProduct([]);
+  };
   return (
     <ValidatorForm
       className={classes.form}
@@ -145,7 +160,7 @@ const AddSo = (props) => {
       <div className={classes.root}>
         <div className={classes.box}>
           <nav>
-            <p className={classes.labelId}>Nhà cung cấp:</p>{" "}
+            <p className={classes.labelId}>{language.supplier}:</p>{" "}
           </nav>
           <nav>
             <TextValidator
@@ -155,12 +170,14 @@ const AddSo = (props) => {
               size="small"
               fullWidth
               type="text"
+              value="Tra dao"
+              readOnly={true}
             ></TextValidator>
           </nav>
         </div>
         <div className={classes.box}>
           <nav>
-            <p className={classes.labelId}>Ngày tạo:</p>{" "}
+            <p className={classes.labelId}>{language.dateCreated}:</p>{" "}
           </nav>
           <nav>
             <ValidatedDatePicker
@@ -168,10 +185,8 @@ const AddSo = (props) => {
               variant="inline"
               className={classes.textFieldDate}
               inputVariant="outlined"
-              format="MM/dd/yyyy"
+              format="dd/MM/yyyy"
               size="small"
-              validators={["required"]}
-              errorMessages={["không để trống dòng này"]}
               style={{ width: "100%" }}
               InputAdornmentProps={{ position: "start" }}
               TextFieldComponent={TextFieldComponent}
@@ -181,7 +196,7 @@ const AddSo = (props) => {
         </div>
         <div className={classes.box}>
           <nav>
-            <p className={classes.labelId}>Ngày xuất:</p>{" "}
+            <p className={classes.labelId}>{language.importDate}:</p>{" "}
           </nav>
           <nav>
             <ValidatedDatePicker
@@ -189,18 +204,26 @@ const AddSo = (props) => {
               variant="inline"
               className={classes.textFieldDate}
               inputVariant="outlined"
-              format="MM/dd/yyyy"
+              format="dd/MM/yyyy"
               size="small"
               validators={["required"]}
               errorMessages={["không để trống dòng này"]}
               style={{ width: "100%" }}
               InputAdornmentProps={{ position: "start" }}
+              value={
+                timepoRequest
+                  ? moment(new Date(timepoRequest)).format("DD/MM/YYYY")
+                  : ""
+              }
+              onChange={(e) => {
+                setTimePoRequest(e.toLocaleDateString());
+              }}
             />
           </nav>
         </div>
         <div className={classes.box}>
           <nav>
-            <p className={classes.labelId}>Thêm sản phẩm:</p>{" "}
+            <p className={classes.labelId}>{language.addProduct}</p>{" "}
           </nav>
           <nav>
             <IconButton
@@ -225,25 +248,26 @@ const AddSo = (props) => {
               onClick={addItemProductNewHandler}
               startIcon={<AddIcon />}
             >
-              tạo mới
+              {language.createNew}
             </Button>
           </nav>
         </div>
         <div className={classes.box1}>
-          <p className={classes.labelId}>Danh sách sản phẩm:</p>
+          <p className={classes.labelId}>{language.listProduct}</p>
         </div>
         <div className={classes.box1}>{listItems()}</div>
       </div>
       <div className={classes.box2}>
         <Button
           variant="contained"
-          type="submit"
+          onClick={onDelete}
           classes={{
             root: classes.submit, // class name, e.g. `classes-nesting-root-x`
             label: classes.label, // class name, e.g. `classes-nesting-label-x`
           }}
+          startIcon={<ClearIcon />}
         >
-          Hủy
+          {language.close}
         </Button>
         <Button
           variant="contained"
@@ -252,12 +276,13 @@ const AddSo = (props) => {
             root: classes.submit, // class name, e.g. `classes-nesting-root-x`
             label: classes.label, // class name, e.g. `classes-nesting-label-x`
           }}
+          startIcon={<SendIcon />}
         >
-          Gửi yêu cầu
+          {language.sendRequire}
         </Button>
       </div>
     </ValidatorForm>
   );
 };
 
-export default AddSo;
+export default AddPo;

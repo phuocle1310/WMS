@@ -4,9 +4,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 //layout
 import DashboardLayoutRoute from "./components/Layout/DashboardLayoutRoute";
 import LoginLayoutRoute from "./components/Layout/LoginLayoutRoute";
-import AddSoPage from "./pages/client/AddSoPage";
+import AddPoPage from "./pages/client/AddPoPage";
 //page
 import Login from "./components/Login/Login";
+import ListPoPage from "./pages/client/ListPoPage";
 function App() {
   return (
     <>
@@ -15,7 +16,7 @@ function App() {
           <DashboardLayoutRoute
             path="/"
             exact
-            component={AddSoPage}
+            component={ListPoPage}
           ></DashboardLayoutRoute>
           <LoginLayoutRoute path="/login" component={Login} />
         </Switch>

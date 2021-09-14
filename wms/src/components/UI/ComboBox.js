@@ -3,6 +3,8 @@ import React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 import { TextValidator } from "react-material-ui-form-validator";
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector } from "react-redux";
 const Styles = makeStyles((theme) => ({
   textField: {
     padding: 0,
@@ -20,6 +22,10 @@ const Styles = makeStyles((theme) => ({
 }));
 export default function ComboBox(props) {
   const classes = Styles();
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
   return (
     <Autocomplete
       id="combo-box-demo"
@@ -33,7 +39,7 @@ export default function ComboBox(props) {
         <TextValidator
           {...params}
           size="small"
-          label="Sản phẩm"
+          label={language.product}
           variant="outlined"
           fullWidth
           className={classes.textField}

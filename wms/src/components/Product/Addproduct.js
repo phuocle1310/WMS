@@ -7,9 +7,17 @@ import IconButton from "@material-ui/core/IconButton";
 import ValidatedCombox from "../UI/ValidatedCombox";
 //css
 import AddProductStyles from "./AddProductStyles";
-
+//lang
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector } from "react-redux";
 const Addproduct = (props) => {
   const classes = AddProductStyles();
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
+  
   var moment = require("moment");
   //khai báo
   const { values } = props;
@@ -28,7 +36,7 @@ const Addproduct = (props) => {
             name="nameproduct"
             handleChange={props.handleChangeSelect}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           ></ValidatedCombox>
         </Grid>
         <Grid item xs={6} sm={6} md={2} lg={2}>
@@ -40,9 +48,9 @@ const Addproduct = (props) => {
             inputVariant="outlined"
             format="dd/MM/yyyy"
             size="small"
-            label="With keyboard"
+            label={language.manufactureDate}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
             value={
@@ -60,12 +68,12 @@ const Addproduct = (props) => {
             autoOk
             variant="inline"
             className={classes.textField}
-            label="With keyboard"
+            label={language.expirationDate}
             inputVariant="outlined"
             format="dd/MM/yyyy"
             size="small"
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
             value={
@@ -85,11 +93,11 @@ const Addproduct = (props) => {
             fullWidth
             size="small"
             type="number"
-            label="số lượng*"
+            label={language.quantity}
             name="quantity"
             onChange={props.handleChange}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
         <Grid item xs={4} sm={6} md={2} lg={2}>
@@ -99,12 +107,12 @@ const Addproduct = (props) => {
             margin="normal"
             fullWidth
             size="small"
-            label="đơn vị*"
+            label={language.unit}
             autoFocus
             name="unit"
             onChange={props.handleChange}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
         <Grid item xs={4} sm={6} md={1} lg={1}>
@@ -139,12 +147,12 @@ const Addproduct = (props) => {
             fullWidth
             id="email"
             size="small"
-            label="Sản phẩm mới"
+            label={language.productNew}
             autoFocus
             name="nameproduct"
             onChange={props.handleChange}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
         <Grid item xs={6} sm={6} md={2} lg={2}>
@@ -156,9 +164,9 @@ const Addproduct = (props) => {
             inputVariant="outlined"
             format="dd/MM/yyyy"
             size="small"
-            label="With keyboard"
+            label={language.manufactureDate}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
             value={
@@ -175,12 +183,12 @@ const Addproduct = (props) => {
             autoOk
             variant="inline"
             className={classes.textField}
-            label="With keyboard"
+            label={language.expirationDate}
             inputVariant="outlined"
             format="dd/MM/yyyy"
             size="small"
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
             style={{ width: "100%" }}
             InputAdornmentProps={{ position: "start" }}
             value={
@@ -199,12 +207,12 @@ const Addproduct = (props) => {
             fullWidth
             size="small"
             type="number"
-            label="số lượng*"
+            label={language.quantity}
             autoFocus
             name="quantity"
             onChange={props.handleChange}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
         <Grid item xs={4} sm={6} md={2} lg={2}>
@@ -214,12 +222,11 @@ const Addproduct = (props) => {
             margin="normal"
             fullWidth
             size="small"
-            label="đơn vị*"
-            autoFocus
+            label={language.unit}
             name="unit"
             onChange={props.handleChange}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
         <Grid item xs={4} sm={6} md={1} lg={1}>
@@ -240,7 +247,7 @@ const Addproduct = (props) => {
     );
   };
   return (
-    <Grid container style={{ width: "100%" }} spacing={2}>
+    <Grid container style={{ width: "100%", marginBottom: 15 }} spacing={1}>
       {props.isNew ? itemProduct() : itemNewProduct()}
     </Grid>
   );
