@@ -1,11 +1,7 @@
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import MulLanguage from "../../assets/language/MulLanguage";
-import { useSelector } from "react-redux";
-import FiberManualRecordOutlinedIcon from "@material-ui/icons/FiberManualRecordOutlined";
 
-import IconButton from "@material-ui/core/IconButton";
 const styles = makeStyles((theme) => ({
   menuItem: {
     borderBottom: 0,

@@ -1,6 +1,5 @@
 import React from "react";
-import { Grid, CssBaseline, Paper } from "@material-ui/core";
-import Wave from "react-wavify";
+import { Grid, Paper } from "@material-ui/core";
 import FormLogin from "./FormLogin";
 import LoginStyles from "./LoginStyles";
 import SlideShow from "../UI/SlideShow";
@@ -8,8 +7,8 @@ export default function Login() {
   const classes = LoginStyles();
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
+    <Grid container className={classes.root}>
+      {/* <CssBaseline /> */}
       <Grid item xs={12} sm={12} md={7}>
         <div className={classes.left}>
           <div>

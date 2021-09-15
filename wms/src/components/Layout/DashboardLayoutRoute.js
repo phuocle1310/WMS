@@ -1,13 +1,11 @@
-import { Fragment } from "react";
-
 import Grid from "@material-ui/core/Grid";
 import Appbar from "./Appbar";
 import MenuMain from "./MenuMain.js";
 // export default Layout;
-import React, { Component } from "react";
+import React from "react";
 import { Route } from "react-router-dom";
-import MulLanguage from "../../assets/language/MulLanguage";
 import { makeStyles } from "@material-ui/core/styles";
+import MenuClient from "./MenuClient";
 const styles = makeStyles((theme) => ({
   root: {
     height: "auto",
@@ -34,7 +32,9 @@ const DashboardLayout = ({ children, ...rest }) => {
     <Grid container>
       <Grid item xs={12} sm={12} md={12} lg={2}>
         <div className={classes.root}>
-          <MenuMain></MenuMain>
+          <MenuMain>
+            <MenuClient></MenuClient>
+          </MenuMain>
         </div>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={10}>

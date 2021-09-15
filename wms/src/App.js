@@ -1,14 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
-import { Route, Switch, Redirect } from "react-router-dom";
+import "./App.css";
+import { Switch } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import NestedMenu from "./components/Layout/MenuMain.js";
-import Appbar from "./components/Layout/Appbar";
 //layout
 import DashboardLayoutRoute from "./components/Layout/DashboardLayoutRoute";
 import LoginLayoutRoute from "./components/Layout/LoginLayoutRoute";
+import AddPoPage from "./pages/client/AddPoPage";
 //page
 import Login from "./components/Login/Login";
+import ListPoPage from "./pages/client/ListPoPage";
 function App() {
   return (
     <>
@@ -17,7 +16,7 @@ function App() {
           <DashboardLayoutRoute
             path="/"
             exact
-            component={Login}
+            component={ListPoPage}
           ></DashboardLayoutRoute>
           <LoginLayoutRoute path="/login" component={Login} />
         </Switch>

@@ -16,7 +16,6 @@ ReactDOM.render(
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <App></App>
       </MuiPickersUtilsProvider>{" "}
-      *
     </Provider>
   </BrowserRouter>,
 
