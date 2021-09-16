@@ -21,3 +21,6 @@ code {
 .MuiDataGrid-main > div:nth-child(3) {
    display: none;
 }
+.MuiDataGrid-main > div:nth-child(4) {
+  display: none;
+}

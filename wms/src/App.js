@@ -18,6 +18,11 @@ function App() {
             exact
             component={ListPoPage}
           ></DashboardLayoutRoute>
+          <DashboardLayoutRoute
+            path="/po"
+            exact
+            component={AddPoPage}
+          ></DashboardLayoutRoute>
           <LoginLayoutRoute path="/login" component={Login} />
         </Switch>
       </Router>

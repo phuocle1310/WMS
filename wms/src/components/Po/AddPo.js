@@ -253,7 +253,7 @@ const AddPo = (props) => {
           </nav>
         </div>
         <div className={classes.box1}>
-          <p className={classes.labelId}>{language.listProduct}</p>
+          <p className={classes.labelId}>{language.listProducts}</p>
         </div>
         <div className={classes.box1}>{listItems()}</div>
       </div>

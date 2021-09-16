@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     // textAlign: "center",
     marginBottom: 13,
     background: "#fff",
-    paddingTop: 20,
+    // paddingTop: 20,
     borderTop: "5px solid #4251b5",
     // borderBottom: "5px solid #4251b5",
     [theme.breakpoints.up("lg")]: {
@@ -34,7 +34,7 @@ const ListPoPage = (props) => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={12} md={12} lg={12}>
-        <h3>{language.titleRPo}</h3>
+        <h3>{language.listPo}</h3>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <div className={classes.content}>

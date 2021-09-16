@@ -29,14 +29,24 @@ const MulLanguage = {
     unit: "Unit",
     //error
     requiredError: "Please enter this line",
+    //list Po
+    id: "Id",
+    status: "Status",
+    detail: "Detail",
+    see: "See",
+    //staus
+    PENDING: "PENDING",
+    ACCEPTED: "ACCEPTED",
+    FAILED: " FAILED",
+    DONE: "DONE",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
     //itemmenu
     inputPo: "tạo đơn đặt hàng",
     inputSo: "tạo đơn nhập hàng",
-    listPo: "danh sách các đơn xuất hàng",
-    listSo: "danh sách các đơn nhập hàng",
+    listPo: "Danh sách các đơn nhập hàng",
+    listSo: "Danh sách các đơn xuất hàng",
     nameMenuPO: "nhập hàng",
     nameMenuSo: "đặt hàng",
     title: "quản lý",
@@ -60,6 +70,16 @@ const MulLanguage = {
     expirationDate: "Ngày hết hạn",
     //error
     requiredError: "vui lòng nhập dòng này",
+    //list Po
+    id: "Mã",
+    status: "Trạng thái",
+    detail: "Chi tiết",
+    see: "Xem",
+    //trang thái
+    PENDING: "chưa giả quyết",
+    ACCEPTED: "Được chấp nhận",
+    FAILED: "thất bại",
+    DONE: "Hoàn tất",
   },
 };
 export default MulLanguage;
