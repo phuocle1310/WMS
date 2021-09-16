@@ -3,6 +3,8 @@ from django.contrib.auth.models import Permission
 from django.utils.safestring import mark_safe
 
 from .models import *
+
+
 # Register your models here.
 
 
@@ -15,10 +17,15 @@ class UserAdmin(admin.ModelAdmin):
     def full_name(self, user):
         full_name = User.get_full_name(self=user)
         return full_name.strip()
+
     full_name.short_description = 'Full Name'
 
     def avatar_show(self, user):
-        return mark_safe("<img src='{img_url}' width='100' />".format(img_url=user.avatar.url))
+        if user.avatar is None or user.avatar == '':
+            return 'User hasn\'t avatar'
+        else:
+            return mark_safe("<img src='{img_url}' width='100' />".format(img_url=user.avatar.url))
+
     avatar_show.short_description = 'Avatar'
 
 
@@ -39,7 +46,7 @@ class SODetailAdmin(admin.ModelAdmin):
 
 
 class SupplierAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'company_name', 'address', 'phone', 'email', 'status']
 
 
 class ItemAdmin(admin.ModelAdmin):
@@ -52,10 +59,12 @@ class RowLocationAdmin(admin.ModelAdmin):
 
 class ShelfColumnAdmin(admin.ModelAdmin):
     list_display = ['id', 'column', 'row_location']
+    list_filter = ['row_location']
 
 
 class ShelfFloorAdmin(admin.ModelAdmin):
     list_display = ['id', 'floor', 'row_location']
+    list_filter = ['row_location']
 
 
 class LocationAdmin(admin.ModelAdmin):

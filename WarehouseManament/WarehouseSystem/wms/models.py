@@ -26,6 +26,7 @@ class User(AbstractUser):
     role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=USER)
 
     def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
         self.set_password(self.password)
         if self.is_superuser:
             self.role = self.ADMIN
@@ -35,22 +36,28 @@ class User(AbstractUser):
         else:
             self.is_superuser = False
             self.is_staff = False
-        super(User, self).save(*args, **kwargs)
+
 
 
 class Supplier(models.Model):
     company_name = models.CharField(max_length=100, null=False, unique=True)
     address = models.CharField(max_length=100, null=False)
-    phone = models.CharField(max_length=100, null=True)
+    phone = models.CharField(max_length=20, null=True)
     email = models.CharField(max_length=100, null=True)
     status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.company_name
 
+    def clean(self):
+        suplier = Supplier.objects.get(company_name=self.company_name)
+        if suplier is not None:
+            raise ValidationError({'company_name':'Company name is exist'})
+
 
 class Item(models.Model):
     name = models.CharField(max_length=100, null=False)
+    unit = models.CharField(max_length=10, null=False)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
     expire_date = models.DateTimeField()  # HSD
     production_date = models.DateTimeField()  # NSX
@@ -61,14 +68,17 @@ class Item(models.Model):
     desc = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = ['name', 'production_date']
+
     def __str__(self):
         return self.name
 
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
             if self.expire_date.date() <= self.production_date.date():
-                raise ValidationError({
-                                          'expire_date': 'Expire date can be < Production date'})  # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
+                # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
+                raise ValidationError({'expire_date': 'Expire date can be < Production date'})
             if self.production_date.date() < datetime.datetime.now().date():
                 raise ValidationError({'production_date': 'Production date can be < now'})
 
@@ -141,11 +151,11 @@ class ItemLocation(models.Model):
 
 
 class BasePOSO(models.Model):
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=False)
     Qty_total = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity total at least 1 CASE')],
-                                    null=True)
+                                    null=False)
     effective_date = models.DateTimeField()
-    closed_date = models.DateTimeField(blank=True)
+    closed_date = models.DateTimeField(blank=True, null=True)
     add_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -170,12 +180,11 @@ class BasePOSO(models.Model):
     def clean(self):
         if self.closed_date is not None and self.effective_date is not None:
             if self.closed_date.date() <= self.effective_date.date():
-                raise ValidationError({
-                                          'closed_date': 'Close date can be < Effective date'})  # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
-            if self.effective_date.date() < datetime.datetime.now().date():
-                raise ValidationError({'effective_date': 'Effective date can be < now'})
+                # Nếu ko chỉ định trường nào thì nó sẽ raise trên cùng
+                raise ValidationError({'closed_date': 'Close date can be < Effective date'})
         if self.status == 0:
-            raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
+            if self.closed_date is None:
+                raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
 
     def __str__(self):
         return '%s -- %s' % (self.supplier.company_name, self.add_date.date())
@@ -191,8 +200,44 @@ class SO(BasePOSO):
     edit_who = models.ForeignKey(User, related_name="so_edit_who", on_delete=models.SET_NULL, null=True)
 
 
+class ItemTemp(models.Model):
+    name = models.CharField(max_length=100, null=False)
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
+    expire_date = models.DateTimeField()  # HSD
+    production_date = models.DateTimeField()  # NSX
+    mu_case = models.IntegerField(default=1, null=False,
+                                  validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
+    desc = models.TextField(null=True, blank=True)
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ['name', 'production_date']
+
+    def __str__(self):
+        return self.name
+
+    def clean(self):
+        if self.expire_date is not None or self.production_date is not None:
+            if self.expire_date.date() <= self.production_date.date():
+                # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
+                raise ValidationError({'expire_date': 'Expire date can be < Production date'})
+            # if self.production_date.date() < datetime.datetime.now().date():
+            #     raise ValidationError({'production_date': 'Production date can be < now'})
+
+
+class PODetailTemp(models.Model):
+    PO = models.ForeignKey(PO, on_delete=models.CASCADE, null=False)
+    item = models.ForeignKey(ItemTemp, on_delete=models.SET_NULL, null=True)
+    Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
+    description = models.TextField(null=True, blank=True)
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-id']
+
+
 class BasePOSODetail(models.Model):
-    item = models.ManyToManyField(Item)
+    item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
     description = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
@@ -202,7 +247,7 @@ class BasePOSODetail(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        str_po_detail = '%s: %s--%s' % (self.supplier.company_name, self.item, self.Qty_order)
+        str_po_detail = '%s--%s' % (self.item, self.Qty_order)
         return str_po_detail
 
 
@@ -230,7 +275,7 @@ class Receipt(BaseReceiptOrder):
     edit_who = models.ForeignKey(User, related_name="receipt_edit_who", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        str_receipt = '%s - %s' % (PO.supplier.company_name, self.add_date)
+        str_receipt = '%s - %s' % (self.supplier.company_name, self.add_date)
         return str_receipt
 
 
@@ -240,7 +285,7 @@ class Order(BaseReceiptOrder):
     edit_who = models.ForeignKey(User, related_name="order_edit_who", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        str_order = '%s - %s' % (SO.supplier.company_name, self.add_date)
+        str_order = '%s - %s' % (self.supplier.company_name, self.add_date)
         return str_order
 
 
