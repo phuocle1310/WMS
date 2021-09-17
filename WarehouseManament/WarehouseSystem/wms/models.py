@@ -76,7 +76,7 @@ class Item(models.Model):
 
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
-            if self.expire_date.date() <= self.production_date.date():
+            if self.expire_date.date() < self.production_date.date():
                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'expire_date': 'Expire date can be < Production date'})
             if self.production_date.date() < datetime.datetime.now().date():
