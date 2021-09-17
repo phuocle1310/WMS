@@ -8,6 +8,7 @@ import AddPoPage from "./pages/client/AddPoPage";
 //page
 import Login from "./components/Login/Login";
 import ListPoPage from "./pages/client/ListPoPage";
+import Podetail from "./pages/client/Podetail";
 function App() {
   return (
     <>
@@ -15,6 +16,11 @@ function App() {
         <Switch>
           <DashboardLayoutRoute
             path="/"
+            exact
+            component={Podetail}
+          ></DashboardLayoutRoute>
+          <DashboardLayoutRoute
+            path="/listpo"
             exact
             component={ListPoPage}
           ></DashboardLayoutRoute>

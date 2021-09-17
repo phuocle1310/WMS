@@ -13,7 +13,6 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import ClearIcon from "@material-ui/icons/Clear";
 import SearchIcon from "@material-ui/icons/Search";
@@ -21,64 +20,13 @@ import IconButton from "@material-ui/core/IconButton";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    textAlign: "center",
-    // color: "#4251b5",
-    padding: 5,
-    "& .MuiDataGrid-columnHeaderWrapper": {
-      // background: "#4251b5",
-      color: "#fff",
-    },
-    "& .MuiDataGrid-columnsContainer": {
-      background: "#4251b5",
-    },
-  },
-  alert: {
-    width: "120px",
-  },
-  overlay: {
-    flexDirection: "column",
-    "& .ant-empty-img-1": {
-      fill: theme.palette.type === "light" ? "#aeb8c2" : "#262626",
-    },
-    "& .ant-empty-img-2": {
-      fill: theme.palette.type === "light" ? "#f5f5f7" : "#595959",
-    },
-    "& .ant-empty-img-3": {
-      fill: theme.palette.type === "light" ? "#dce0e6" : "#434343",
-    },
-    "& .ant-empty-img-4": {
-      fill: theme.palette.type === "light" ? "#fff" : "#1c1c1c",
-    },
-    "& .ant-empty-img-5": {
-      fillOpacity: theme.palette.type === "light" ? "0.8" : "0.08",
-      fill: theme.palette.type === "light" ? "#f5f5f5" : "#fff",
-    },
-  },
-  root1: {
-    padding: theme.spacing(0.5, 0.5, 0),
-    justifyContent: "space-between",
-    display: "flex",
-    alignItems: "flex-start",
-    flexWrap: "wrap",
-  },
-  textField: {
-    [theme.breakpoints.down("xs")]: {
-      width: "100%",
-    },
-    margin: theme.spacing(1, 0.5, 1.5),
-    "& .MuiSvgIcon-root": {
-      marginRight: theme.spacing(0.5),
-    },
-    "& .MuiInput-underline:before": {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  },
-}));
+//print
+import ReactToPrint from "react-to-print";
+//css
+import ListPoStyles from "./ListPoStyles";
 
 export default function DataGridProDemo() {
-  const classes = useStyles();
+  const classes = ListPoStyles();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -239,8 +187,6 @@ export default function DataGridProDemo() {
   };
   //hàm xuất hiện thông báo
   function CustomNoRowsOverlay() {
-    const classes = useStyles();
-
     return (
       <GridOverlay className={classes.overlay}>
         <svg
@@ -323,7 +269,7 @@ export default function DataGridProDemo() {
       <TextField
         value={value}
         onChange={handlerOnchange}
-        placeholder="Search…"
+        placeholder={language.sreach}
         className={classes.textField}
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,

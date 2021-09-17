@@ -39,6 +39,8 @@ const MulLanguage = {
     ACCEPTED: "ACCEPTED",
     FAILED: " FAILED",
     DONE: "DONE",
+    //tìm kiếm
+    sreach: "Sreach...",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -80,6 +82,8 @@ const MulLanguage = {
     ACCEPTED: "Được chấp nhận",
     FAILED: "thất bại",
     DONE: "Hoàn tất",
+    //tìm kiếm
+    sreach: "Tìm kiếm...",
   },
 };
 export default MulLanguage;
