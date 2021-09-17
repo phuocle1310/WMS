@@ -16,11 +16,13 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    
 )
 
 router = DefaultRouter()
 router.register('users', views.UserViewSet)
 router.register('pos', views.POViewSet)
+router.register('sos', views.SOView)
 router.register('items', views.ItemViewSet)
 
 urlpatterns = [

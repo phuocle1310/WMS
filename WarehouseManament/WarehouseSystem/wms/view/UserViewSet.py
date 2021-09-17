@@ -1,8 +1,14 @@
+from django.contrib.auth import logout
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, viewsets, generics
+from rest_framework import permissions, viewsets, generics, status
+from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
 
 from ..models import User
+from ..permission import *
 from ..serializers import UserSerializer
 
 
@@ -10,11 +16,62 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
                   generics.UpdateAPIView, generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
     parser_classes = [MultiPartParser, ]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['first_name', 'last_name', 'role', 'is_active', 'username', 'address']
 
     def get_permissions(self):
-        if self.action == 'retrieve' or self.action == 'update' or self.action == 'list':
+        if self.action in ['create', 'list', 'retrieve', 'update']:
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
+
+    def retrieve(self, request, *args, **kwargs):
+        if request.user.id == int(kwargs.get('pk')):
+            serializer = UserSerializer(request.user)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        if request.user.role == 2:
+            serializer = UserSerializer(request.user)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        if request.user.role == 1:
+            try:
+                user = User.objects.get(Q(id=kwargs.get('pk'), role=2))
+                serializer = UserSerializer(user)
+            except User.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        if request.user.role == 2:
+            raise PermissionDenied()
+        if request.user.role == 1:
+            role = int(request.data.get('role'))
+            if role in [0, 1]:
+                raise PermissionDenied("You can't update to Admin/User Account")
+        return super().create(request, *args, **kwargs) and Response(status=status.HTTP_200_OK)
+
+    def partial_update(self, request, *args, **kwargs):
+        if request.user.role == 2:
+            raise PermissionDenied()
+        if request.user.role == 1:
+            role = int(request.data.get('role'))
+            if role == 0 or role == 1:
+                raise PermissionDenied("You can't update to Admin/User Account")
+        return super().create(request, *args, **kwargs) and Response(status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        if request.user.role == 2:
+            raise PermissionDenied()
+        if request.user.role == 1:
+            role = int(request.data.get('role'))
+            if role == 0 or role == 1:
+                raise PermissionDenied("You can't create Admin/User Account")
+        return super().create(request, *args, **kwargs) and Response(status=status.HTTP_200_OK)
+
+    # @action(methods=["GET"], detail=False, url_path="logout", name="logout")
+    # def logout(self, request, *args, **kwargs):
+    #     logout(request)
+    #     if request.auth:
+    #         request.auth.revoke()
+    #     return Response(status=status.HTTP_200_OK)

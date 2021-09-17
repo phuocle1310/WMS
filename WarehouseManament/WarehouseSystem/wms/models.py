@@ -26,7 +26,6 @@ class User(AbstractUser):
     role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=USER)
 
     def save(self, *args, **kwargs):
-        super(User, self).save(*args, **kwargs)
         self.set_password(self.password)
         if self.is_superuser:
             self.role = self.ADMIN
@@ -36,8 +35,7 @@ class User(AbstractUser):
         else:
             self.is_superuser = False
             self.is_staff = False
-
-
+        super(User, self).save(*args, **kwargs)
 
 class Supplier(models.Model):
     company_name = models.CharField(max_length=100, null=False, unique=True)
@@ -85,6 +83,7 @@ class Item(models.Model):
 
 class RowLocation(models.Model):
     name = models.CharField(max_length=3, null=False, blank=False)
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
