@@ -1,10 +1,10 @@
 from django.urls import path, include, re_path
 from rest_framework import permissions
-
 from . import views
 from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -12,7 +12,7 @@ schema_view = get_schema_view(
         default_version='v1',
         description="APIs for WMS.PY",
         contact=openapi.Contact(email="1851050120phuoc@ou.edu.vn"),
-        license=openapi.License(name="Le Huu Phuoc 2021"),
+        license=openapi.License(name="wms PY 2021"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -20,7 +20,8 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register('users', views.UserViewSet)
-router.register('pos', views.POViewSet, basename='po')
+router.register('pos', views.POViewSet)
+router.register('items', views.ItemViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
