@@ -68,14 +68,6 @@ const FormStyles = makeStyles((theme) => ({
       //   marginBottom: 15,
     },
   },
-  box2: {
-    // width: "100%",
-    // textAlign: "center",
-    // marginTop: 10,
-    // display: "flex",
-    // alignItems: "center",
-    // justifyContent: "center",
-  },
   textField: {
     padding: 0,
     margin: 0,

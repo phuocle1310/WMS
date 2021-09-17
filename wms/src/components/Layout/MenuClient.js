@@ -21,12 +21,12 @@ export default function MenuClient(props) {
   );
   const language = MulLanguage[`${currentLanguage}`];
   const listMenu1 = [
-    { content: `${language.inputSo}`, id: 2, link: "/po" },
-    { content: `${language.listSo}`, id: 3, link: "/po" },
+    { content: `${language.inputSo}`, id: 2, link: "/so" },
+    { content: `${language.listSo}`, id: 3, link: "/listso" },
   ];
   const listMenu2 = [
     { content: `${language.inputPo}`, id: 1, link: "/po" },
-    { content: `${language.listPo}`, id: 3, link: "/po" },
+    { content: `${language.listPo}`, id: 4, link: "/listpo" },
   ];
   return (
     <div>
@@ -45,7 +45,7 @@ export default function MenuClient(props) {
         </RowToggle>
       </MenuItem>
       {toggled1 &&
-        listMenu1.map((item, index) => {
+        listMenu2.map((item, index) => {
           return (
             <ItemMenu
               content={item.content}
@@ -66,7 +66,7 @@ export default function MenuClient(props) {
         </RowToggle>
       </MenuItem>
       {toggled &&
-        listMenu2.map((item, index) => {
+        listMenu1.map((item, index) => {
           return (
             <ItemMenu
               content={item.content}
