@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import path, include, re_path
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
@@ -34,5 +35,7 @@ urlpatterns = [
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('oauth2-info/', views.AuthInfo.as_view())
+    path('oauth2-info/', views.AuthInfo.as_view()),
+
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

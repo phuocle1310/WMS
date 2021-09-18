@@ -46,7 +46,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView,
     @action(methods=['get'], detail=False,
             url_path='get-sos-by-supplier',
             url_name='sos-by-supplier')
-    def get_sos_by_supplier(self, request):
+    def get_so_by_supplier(self, request):
         try:
             supplier = self.request.query_params.get('supplier')
             so = SO.objects.filter(supplier=supplier, active=True)
