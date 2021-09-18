@@ -2,6 +2,7 @@ from drf_yasg.openapi import Parameter, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, generics, permissions, status, filters
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from ..models import *
@@ -25,6 +26,11 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     ])
     @action(methods=['get'], detail=False, url_path='get-item-by-supplier')
     def get_item_by_supplier(self, request):
+        if request.user.role == 2:
+            if request.user.supplier != self.request.query_params.get('supplier'):
+                raise PermissionDenied()
+
+
         try:
             supplier = self.request.query_params.get('supplier')
             items = Item.objects.filter(supplier=supplier)

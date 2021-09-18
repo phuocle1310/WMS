@@ -58,8 +58,8 @@ class Item(models.Model):
     name = models.CharField(max_length=100, null=False)
     unit = models.CharField(max_length=10, null=False)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
-    expire_date = models.DateTimeField()  # HSD
-    production_date = models.DateTimeField()  # NSX
+    expire_date = models.DateField()  # HSD
+    production_date = models.DateField()  # NSX
     mu_case = models.IntegerField(default=1, null=False,
                                   validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
     Qty_total = models.IntegerField(default=1, null=True,
@@ -75,11 +75,9 @@ class Item(models.Model):
 
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
-            if self.expire_date.date() < self.production_date.date():
+            if self.expire_date < self.production_date:
                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'expire_date': 'Expire date can be < Production date'})
-            if self.production_date.date() < datetime.datetime.now().date():
-                raise ValidationError({'production_date': 'Production date can be < now'})
 
 
 class RowLocation(models.Model):
@@ -154,10 +152,10 @@ class BasePOSO(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=False)
     Qty_total = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity total at least 1 CASE')],
                                     null=False)
-    effective_date = models.DateTimeField()
-    closed_date = models.DateTimeField(blank=True, null=True)
-    add_date = models.DateTimeField(auto_now_add=True)
-    edit_date = models.DateTimeField(auto_now=True)
+    effective_date = models.DateField()
+    closed_date = models.DateField(blank=True, null=True)
+    add_date = models.DateField(auto_now_add=True)
+    edit_date = models.DateField(auto_now=True)
     active = models.BooleanField(default=True)
 
     PENDING = 2
@@ -179,7 +177,7 @@ class BasePOSO(models.Model):
 
     def clean(self):
         if self.closed_date is not None and self.effective_date is not None:
-            if self.closed_date.date() <= self.effective_date.date():
+            if self.closed_date <= self.effective_date:
                 # Nếu ko chỉ định trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'closed_date': 'Close date can be < Effective date'})
         if self.status == 0:
@@ -187,7 +185,7 @@ class BasePOSO(models.Model):
                 raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
 
     def __str__(self):
-        return '%s -- %s' % (self.supplier.company_name, self.add_date.date())
+        return '%s -- %s' % (self.supplier.company_name, self.add_date)
 
 
 class PO(BasePOSO):
@@ -203,8 +201,8 @@ class SO(BasePOSO):
 class ItemTemp(models.Model):
     name = models.CharField(max_length=100, null=False)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
-    expire_date = models.DateTimeField()  # HSD
-    production_date = models.DateTimeField()  # NSX
+    expire_date = models.DateField()  # HSD
+    production_date = models.DateField()  # NSX
     mu_case = models.IntegerField(default=1, null=False,
                                   validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
     desc = models.TextField(null=True, blank=True)
@@ -218,11 +216,9 @@ class ItemTemp(models.Model):
 
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
-            if self.expire_date.date() <= self.production_date.date():
+            if self.expire_date <= self.production_date:
                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'expire_date': 'Expire date can be < Production date'})
-            # if self.production_date.date() < datetime.datetime.now().date():
-            #     raise ValidationError({'production_date': 'Production date can be < now'})
 
 
 class PODetailTemp(models.Model):
@@ -260,8 +256,8 @@ class SODetail(BasePOSODetail):
 
 
 class BaseReceiptOrder(models.Model):
-    add_date = models.DateTimeField(auto_now_add=True)
-    edit_date = models.DateTimeField(auto_now=True)
+    add_date = models.DateField(auto_now_add=True)
+    edit_date = models.DateField(auto_now=True)
     status = models.BooleanField(default=True)
 
     class Meta:

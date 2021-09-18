@@ -46,7 +46,7 @@ class POSerializer(ModelSerializer):
                 raise ValidationError({field: 'This is required field'})
 
         if instance.closed_date is not None:
-            if instance.closed_date.date() <= instance.effective_date.date():
+            if instance.closed_date <= instance.effective_date:
                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'closed_date': 'Close date can be < Effective date'})
         if instance.status == 0:
@@ -102,7 +102,7 @@ class SOSerializer(ModelSerializer):
                 raise ValidationError({field: 'This is required field'})
 
         if instance.closed_date is not None:
-            if instance.closed_date.date() <= instance.effective_date.date():
+            if instance.closed_date <= instance.effective_date:
                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'closed_date': 'Close date can be < Effective date'})
         if instance.status == 0:
