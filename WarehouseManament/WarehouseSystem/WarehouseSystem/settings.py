@@ -111,7 +111,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '12345',
         'HOST': ''  # mặc định localhost
     }
 }
