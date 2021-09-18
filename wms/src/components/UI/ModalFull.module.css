@@ -1,0 +1,19 @@
+backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.75);
+  overflow: "auto";
+}
+
+.modal {
+  position: fixed;
+  top: 0;  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 210;
+
+}

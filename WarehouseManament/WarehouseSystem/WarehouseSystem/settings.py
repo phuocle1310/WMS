@@ -44,8 +44,15 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'oauth2_provider',
+    'corsheaders'
 ]
 
+
+#auth
+OAUTH2_INFO = {
+    "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
+    "client_serect": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
+}
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
@@ -70,7 +77,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'WarehouseSystem.urls'
 
@@ -101,8 +110,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': ''  # localhost
+        'PASSWORD': '123456789',
+        'HOST': ''  # mặc định localhost
     }
 }
 
