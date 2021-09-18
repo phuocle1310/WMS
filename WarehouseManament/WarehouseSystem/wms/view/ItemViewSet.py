@@ -29,8 +29,6 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
         if request.user.role == 2:
             if request.user.supplier != self.request.query_params.get('supplier'):
                 raise PermissionDenied()
-
-
         try:
             supplier = self.request.query_params.get('supplier')
             items = Item.objects.filter(supplier=supplier)

@@ -13,7 +13,6 @@ class POViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView
                 generics.UpdateAPIView, generics.CreateAPIView):
     queryset = PO.objects.filter(active=True)
     serializer_class = POSerializer
-    # permission_classes = [permissions.IsAuthenticated]
     action_required_auth = ['list', 'retrieve', 'create',
                             'update', 'get_pos_by_supplier', 'get_po_by_range_effective_date']
     
