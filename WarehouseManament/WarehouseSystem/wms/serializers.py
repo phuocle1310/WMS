@@ -76,6 +76,7 @@ class PODetailSerializer(ModelSerializer):
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
 
+
 # SERIALIZER cho SO class
 
 
@@ -131,7 +132,6 @@ class SODetailSerializer(ModelSerializer):
                 raise ValidationError({field: 'This is required field'})
 
 
-
 # SERIALIZER CLASS cho Item
 
 class ItemSerializer(ModelSerializer):
@@ -148,5 +148,3 @@ class ItemSerializer(ModelSerializer):
         for field in fields:
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
-
-
