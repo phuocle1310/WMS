@@ -41,6 +41,8 @@ const MulLanguage = {
     DONE: "DONE",
     //tìm kiếm
     sreach: "Sreach...",
+    //dang nhap
+    errLogin: "The password or the username that you've entered is incorrect",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -84,6 +86,8 @@ const MulLanguage = {
     DONE: "Hoàn tất",
     //tìm kiếm
     sreach: "Tìm kiếm...",
+    //dang nhap
+    errLogin: "Tên đăng nhập hoặc mật khẩu không đúng!!",
   },
 };
 export default MulLanguage;

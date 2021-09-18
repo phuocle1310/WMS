@@ -1,15 +1,15 @@
 import axiosClient from "./axiosClient";
 const userApi = {
-  getAuthInfo: (params) => {
+  getAuthInfo: () => {
     const url = `/oauth2-info/`;
     return axiosClient.get(url);
   },
-  login: (params) => {
+  login: (data) => {
     const url = `/o/token/`;
-    return axiosClient.get(url);
+    return axiosClient.post(url, data);
   },
-  getUser: (params) => {
-    const url = `/o/token/`;
+  getUser: () => {
+    const url = `/users/current-user/`;
     return axiosClient.get(url);
   },
 };

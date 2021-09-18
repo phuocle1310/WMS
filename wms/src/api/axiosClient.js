@@ -1,6 +1,7 @@
 // api/axiosClient.js
 import axios from "axios";
 import queryString from "query-string";
+import cookies from "react-cookies";
 const axiosClient = axios.create({
   baseURL: "http://127.0.0.1:8000",
   headers: {
@@ -9,7 +10,9 @@ const axiosClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 axiosClient.interceptors.request.use(async (config) => {
-  // Handle token here ...
+  const token = cookies.load("access-token");
+  console.log(token);
+  config.headers.Authorization = token ? `Bearer ${token}` : "";
   return config;
 });
 axiosClient.interceptors.response.use(
