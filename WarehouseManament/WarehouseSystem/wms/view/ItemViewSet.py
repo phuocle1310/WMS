@@ -36,3 +36,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
         except Item.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+    def create(self, request, *args, **kwargs):
+        pass
