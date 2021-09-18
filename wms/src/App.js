@@ -17,33 +17,45 @@ import { useDispatch, useSelector } from "react-redux";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  console.log(isLoggedIn + "ok");
+  console.log(isLoggedIn);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchLogin = async () => {
+      try {
+        const action = getMe();
+        const actionResult = await dispatch(action);
+        unwrapResult(actionResult);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLogin();
+  }, []);
   return (
     <>
       <Router>
         <Switch>
-          {/* {isLoggedIn && ( */}
-          <DashboardLayoutRoute
-            path="/"
-            exact
-            component={Podetail}
-          ></DashboardLayoutRoute>
-          <DashboardLayoutRoute
-            path="/listpo"
-            exact
-            component={ListPoPage}
-          ></DashboardLayoutRoute>
-          <DashboardLayoutRoute
-            path="/po"
-            exact
-            component={AddPoPage}
-          ></DashboardLayoutRoute>{" "}
-          {/* )} */}
-          <LoginLayoutRoute path="/login" component={Login} />
-          {/* <Redirect to="/login" /> */}
-          <Route path="*">
-            <Redirect to="/" />
-          </Route>
+          {!isLoggedIn && <LoginLayoutRoute path="/login" component={Login} />}
+          {!isLoggedIn && <Redirect to="/login" />}
+          {isLoggedIn && (
+            <>
+              <DashboardLayoutRoute
+                path="/"
+                exact
+                component={Podetail}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/listpo"
+                exact
+                component={ListPoPage}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/po"
+                exact
+                component={AddPoPage}
+              ></DashboardLayoutRoute>{" "}
+            </>
+          )}
         </Switch>
       </Router>
     </>

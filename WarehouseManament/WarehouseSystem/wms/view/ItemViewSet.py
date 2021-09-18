@@ -28,7 +28,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
         try:
             supplier = self.request.query_params.get('supplier')
 
-            items = Item.objects.filter(supplier=supplier).orderby('-expire_date')
+            items = Item.objects.filter(supplier=supplier)
             serializer = ItemSerializer(items, many=True)
         except Item.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)

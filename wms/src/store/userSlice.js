@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import userApi from "../api/userApi";
 //cookies
 import cookies from "react-cookies";
-const token = cookies.load("access-token");
+
 export const getMe = createAsyncThunk(
   "user/getMe",
   async (params, thunlApi) => {
@@ -10,7 +10,11 @@ export const getMe = createAsyncThunk(
     return currentUser;
   },
 );
-
+const token = () => {
+  const token = cookies.load("access-token");
+  console.log(token);
+  return token;
+};
 //tạo ra uiSlice
 const userSlice = createSlice({
   name: "user",
@@ -18,7 +22,7 @@ const userSlice = createSlice({
     currentUser: {},
     error: false,
     loading: true,
-    isLoggedIn:   token ?  true :  false,
+    isLoggedIn: !!token,
   },
   reducers: {
     logout(state) {
@@ -27,7 +31,9 @@ const userSlice = createSlice({
       state.currentUser = {};
       state.loading = true;
       state.error = false;
-      token ? state.isLoggedIn = true : state.isLoggedIn = false
+      const token = cookies.load("access-token");
+      console.log(token);
+      token ? (state.isLoggedIn = true) : (state.isLoggedIn = false);
     },
   },
   extraReducers: {
@@ -41,7 +47,9 @@ const userSlice = createSlice({
     [getMe.fulfilled]: (state, action) => {
       state.loading = false;
       state.currentUser = action.payload;
-      token ? state.isLoggedIn = true : state.isLoggedIn = false
+      const token = cookies.load("access-token");
+      console.log(token);
+      token ? (state.isLoggedIn = true) : (state.isLoggedIn = false);
     },
   },
 });

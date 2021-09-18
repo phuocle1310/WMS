@@ -24,6 +24,8 @@ router.register('pos', views.POViewSet)
 router.register('sos', views.SOView)
 router.register('users', views.UserViewSet)
 router.register('items', views.ItemViewSet)
+router.register('podetail', views.PODetailView)
+router.register('sodetail', views.SODetailView)
 
 urlpatterns = [
     path('', include(router.urls)),
