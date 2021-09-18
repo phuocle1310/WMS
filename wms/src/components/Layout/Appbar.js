@@ -5,31 +5,35 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-
-import SearchIcon from "@material-ui/icons/Search";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import Avatar from "@material-ui/core/Avatar";
-import SettingsIcon from "@material-ui/icons/Settings";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TranslateIcon from "@material-ui/icons/Translate";
-import StarsIcon from "@material-ui/icons/Stars";
-import { useState } from "react";
-import Popover from "@material-ui/core/Popover";
 import MenuIcon from "@material-ui/icons/Menu";
+import Avatar from "@material-ui/core/Avatar";
 //css
 import AppBarStyles from "./AppBarStyles";
 import MenuMain from "./MenuMain.js";
 import MenuClient from "./MenuClient";
+//lang
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Appbar() {
   const classes = AppBarStyles();
   const [isMenu, setIsMenu] = React.useState(false);
+  //thông tin user
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  //show thong tin dang nhap
+  const showInfo = () => {
+    return (
+      <div className={classes.item}>
+        <Avatar className={classes.green} src={currentUser.avatar}></Avatar>
+        <div className={classes.sectionDesktop}>
+          <h3>
+            {currentUser.first_name} {currentUser.last_name}
+          </h3>
+        </div>
+      </div>
+    );
+  };
   const renderMenu = () => {
     return (
       <MenuMain>
@@ -64,14 +68,7 @@ export default function Appbar() {
               WMS.PY
             </Typography>
             <div className={classes.grow} />
-            <div>
-              <div className={classes.item}>
-                <Avatar className={classes.green}></Avatar>
-                <div className={classes.sectionDesktop}>
-                  <h3>Yến</h3>
-                </div>
-              </div>
-            </div>
+            <div>{isLoggedIn ? showInfo() : "dang nhap"}</div>
           </Toolbar>
         </AppBar>
       </div>

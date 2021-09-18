@@ -8,8 +8,9 @@ import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SettingsIcon from "@material-ui/icons/Settings";
-// export const MenuListItem = () => {};
-
+import { useDispatch } from "react-redux";
+import uiActions from "../../store/userSlice";
+import { useHistory } from "react-router";
 export default function MenuMain(props) {
   const classes = SecondNavigationStyles();
 
@@ -18,7 +19,13 @@ export default function MenuMain(props) {
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
-
+  const history = useHistory();
+  //logout
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(uiActions.actions.logout());
+    history.replace("/login");
+  };
   return (
     <div className={classes.secondMenu}>
       <MenuList className={classes.menuList}>
@@ -50,7 +57,7 @@ export default function MenuMain(props) {
           </IconButton>
           <p>cài đặt</p>
         </MenuItem>
-        <MenuItem className={classes.menuItem}>
+        <MenuItem className={classes.menuItem} onClick={handleLogout}>
           <IconButton
             className={classes.subButton}
             aria-label="account of current user"

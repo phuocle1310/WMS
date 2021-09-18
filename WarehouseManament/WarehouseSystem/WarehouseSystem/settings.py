@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'corsheaders'
 ]
-
+#chạy post man bỏ biến này ra
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+}
 
 SWAGGER_SETTINGS = {
     'SHOW_REQUEST_HEADERS': True,
@@ -72,8 +75,7 @@ SWAGGER_SETTINGS = {
 #auth
 OAUTH2_INFO = {
     "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
-    "client_serect": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7l"
-                     "bxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0 "
+    "client_secret": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
 }
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
@@ -88,7 +90,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 
-    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication','rest_framework.authentication.SessionAuthentication'),
+
 }
 
 MIDDLEWARE = [
@@ -132,7 +135,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '12345',
+        'PASSWORD': '123456789',
         'HOST': ''  # mặc định localhost
     }
 }
