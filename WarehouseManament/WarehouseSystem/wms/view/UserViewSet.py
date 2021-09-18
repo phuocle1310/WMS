@@ -18,16 +18,17 @@ from ..models import User
 from ..permission import *
 from ..serializers import UserSerializer
 
+
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPIView,
                   generics.ListAPIView, generics.UpdateAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
+    # permission_classes = [permissions.IsAuthenticated, ]
     parser_classes = [MultiPartParser, ]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['first_name', 'last_name', 'role', 'is_active', 'username', 'address']
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['first_name', 'last_name', 'role', 'is_active', 'username', 'address']
 
-    #phan quyen
+    # phan quyen
     def get_permissions(self):
         if self.action in ['create', 'list', 'retrieve', 'update', 'get_current_user']:
             return [permissions.IsAuthenticated()]
@@ -83,7 +84,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
     #         request.auth.revoke()
     #     return Response(status=status.HTTP_200_OK)
 
-    #ley user da dang nhap
+    # ley user da dang nhap
     @action(methods=['get'], detail=False, url_path="current-user")
     def get_current_user(self, request):
         return Response(self.serializer_class(request.user).data,

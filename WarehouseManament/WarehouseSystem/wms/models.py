@@ -48,10 +48,10 @@ class Supplier(models.Model):
     def __str__(self):
         return self.company_name
 
-    def clean(self):
-        suplier = Supplier.objects.get(company_name=self.company_name)
-        if suplier is not None:
-            raise ValidationError({'company_name':'Company name is exist'})
+    # def clean(self):
+    #     suplier = Supplier.objects.filter(company_name=self.company_name)
+    #     if suplier is not None:
+    #         raise ValidationError({'company_name': 'Company name is exist'})
 
 
 class Item(models.Model):

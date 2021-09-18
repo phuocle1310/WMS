@@ -27,7 +27,6 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     def get_item_by_supplier(self, request):
         try:
             supplier = self.request.query_params.get('supplier')
-
             items = Item.objects.filter(supplier=supplier)
             serializer = ItemSerializer(items, many=True)
         except Item.DoesNotExist:

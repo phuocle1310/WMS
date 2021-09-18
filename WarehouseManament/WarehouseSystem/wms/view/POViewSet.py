@@ -15,7 +15,7 @@ class POViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView
     serializer_class = POSerializer
     # permission_classes = [permissions.IsAuthenticated]
     action_required_auth = ['list', 'retrieve', 'create',
-                            'update', 'get_po_by_supplier', 'get_po_by_range_effective_date']
+                            'update', 'get_pos_by_supplier', 'get_po_by_range_effective_date']
     
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
