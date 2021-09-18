@@ -12,6 +12,7 @@ import ListPoPage from "./pages/client/ListPoPage";
 import Podetail from "./pages/client/Podetail";
 //
 import { getMe } from "./store/userSlice";
+import { getProductBySupplier } from "./store/productSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -35,7 +36,7 @@ function App() {
     <>
       <Router>
         <Switch>
-          {!isLoggedIn && <LoginLayoutRoute path="/login" component={Login} />}
+          <LoginLayoutRoute path="/login" component={Login} />
           {!isLoggedIn && <Redirect to="/login" />}
           {isLoggedIn && (
             <>
