@@ -51,7 +51,8 @@ INSTALLED_APPS = [
 #auth
 OAUTH2_INFO = {
     "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
-    "client_serect": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
+    "client_serect": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7l"
+                     "bxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0 "
 }
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
