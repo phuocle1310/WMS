@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InputAdornment, IconButton } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -6,9 +6,17 @@ import { Button, Grid, Typography, Link, Box } from "@material-ui/core";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import FormLoginStyles from "./FormLoginStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useSelector } from "react-redux";
-//lấy năm hiện tại
+import { useHistory } from "react-router";
+//api
+import userApi from "../../../src/api/userApi";
+//cookies
+import cookies from "react-cookies";
+//redux
+import { getMe } from "../../store/userSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
 
+//lấy năm hiện tại
 function Copyright() {
   const language = MulLanguage["vn"];
   return (
@@ -32,11 +40,13 @@ const FormLogin = function FormLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const [issErr, setIsErr] = useState(false);
+  const history = useHistory();
   //if is insSing bằng true => mở đăng nhập
   //state nhiều biến
   const [info, setInfo] = useState({
     formData: {
-      email: "",
+      username: "",
       password: "",
     },
   });
@@ -46,12 +56,40 @@ const FormLogin = function FormLogin() {
     formData[event.target.name] = event.target.value;
     setInfo({ formData });
   };
-
+  const dispatch = useDispatch();
   //submit
-  const handleSubmit = () => {
-    // your submit logic
+  const handleSubmit = (e) => {
+    //gửi nguyên trang
+    e.preventDefault();
+    // xử lý đăng nhập
+    const fetchLogin = async () => {
+      try {
+        //gọi từ axios
+        // const response = await userApi.login()
+        const authInfo = await userApi.getAuthInfo();
+        console.log(authInfo);
+        //from data
+        const fromData = {
+          ...info.formData,
+          grant_type: "password",
+          ...authInfo,
+        };
+        const response = await userApi.login(fromData);
+        //lưu vô cookie
+        cookies.save("access-token", response.access_token);
+        const action = getMe();
+        const actionResult = await dispatch(action);
+        //update thong tin user
+        unwrapResult(actionResult);
+        //chuyen qua trang chu
+        history.replace("/");
+      } catch (error) {
+        setIsErr(true);
+      }
+    };
+    fetchLogin();
   };
-  //
+
   const vali = ["required"];
   const errorShow = ["không để trống dòng này"];
   return (
@@ -90,11 +128,12 @@ const FormLogin = function FormLogin() {
           variant="outlined"
           margin="normal"
           fullWidth
-          id="email"
+          id="username"
           label="Tên đăng nhập *"
           autoFocus
           onChange={handleChange}
-          value={info.formData.email}
+          value={info.formData.username}
+          name="username"
           validators={["required"]}
           errorMessages={["không để trống dòng này"]}
         />
@@ -128,6 +167,11 @@ const FormLogin = function FormLogin() {
             ),
           }}
         />
+        {issErr && (
+          <p style={{ textAlign: "center", color: "red" }}>
+            {language.errLogin}
+          </p>
+        )}
         <Button
           type="submit"
           classes={{
