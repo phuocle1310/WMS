@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from .models import *
 
 
-# API cho user class
+# SERIALIZER cho user class
 
 class UserSerializer(ModelSerializer):
     class Meta:
@@ -22,7 +22,7 @@ class UserSerializer(ModelSerializer):
         return user
 
 
-# API cho PO class
+# SERIALIZER cho PO class
 
 class POSerializer(ModelSerializer):
     class Meta:
@@ -56,10 +56,27 @@ class POSerializer(ModelSerializer):
         return attrs
 
 
-# API cho PO Detail
+# SERIALIZER cho PO Detail
 
+class PODetailSerializer(ModelSerializer):
+    class Meta:
+        model = PODetail
+        fields = '__all__'
+        extra_kwargs = {}
+        validators = []
 
-# API cho SO class
+    def create(self, validated_data):
+        return PODetail.objects.create(**validated_data)
+
+    def validate(self, attrs):
+        instance = PODetail(**attrs)
+        fields = ['item']
+
+        for field in fields:
+            if not attrs.get(field):
+                raise ValidationError({field: 'This is required field'})
+
+# SERIALIZER cho SO class
 
 
 class SOSerializer(ModelSerializer):
@@ -91,6 +108,28 @@ class SOSerializer(ModelSerializer):
             if instance.closed_date is None:
                 raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
         return attrs
+
+
+# SERIALIZER CLASS cho SO DETAIL
+
+class SODetailSerializer(ModelSerializer):
+    class Meta:
+        model = SODetail
+        fields = '__all__'
+        extra_kwargs = {}
+        validators = []
+
+    def create(self, validated_data):
+        return SODetail.objects.create(**validated_data)
+
+    def validate(self, attrs):
+        instance = SODetail(**attrs)
+        fields = ['item']
+
+        for field in fields:
+            if not attrs.get(field):
+                raise ValidationError({field: 'This is required field'})
+
 
 
 # SERIALIZER CLASS cho Item

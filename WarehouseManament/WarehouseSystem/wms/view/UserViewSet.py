@@ -18,7 +18,8 @@ from ..models import User
 from ..permission import *
 from ..serializers import UserSerializer
 
-class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
+class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPIView,
+                  generics.ListAPIView, generics.UpdateAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated, ]
@@ -28,10 +29,8 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
     #phan quyen
     def get_permissions(self):
-        if self.action in ['create', 'list', 'retrieve', 'update']:
-            if self.action == 'get_current_user':
-                return [permissions.IsAuthenticated()]
-
+        if self.action in ['create', 'list', 'retrieve', 'update', 'get_current_user']:
+            return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
     def retrieve(self, request, *args, **kwargs):
