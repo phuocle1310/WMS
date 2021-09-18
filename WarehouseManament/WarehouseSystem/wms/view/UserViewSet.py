@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.contrib.auth import logout
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
@@ -7,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
-=======
 from rest_framework import viewsets, generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.decorators import action
@@ -15,7 +13,6 @@ from rest_framework.response import Response
 from django.http import Http404
 from django.conf import settings
 from django.db.models import F
->>>>>>> 783e0ed3cea433bc4e9d67b217da1848fe62b750
 
 from ..models import User
 from ..permission import *
@@ -24,25 +21,18 @@ from ..serializers import UserSerializer
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
-<<<<<<< HEAD
     permission_classes = [permissions.IsAuthenticated, ]
     parser_classes = [MultiPartParser, ]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['first_name', 'last_name', 'role', 'is_active', 'username', 'address']
-=======
->>>>>>> 783e0ed3cea433bc4e9d67b217da1848fe62b750
 
     #phan quyen
     def get_permissions(self):
-<<<<<<< HEAD
         if self.action in ['create', 'list', 'retrieve', 'update']:
-=======
-        if self.action == 'get_current_user':
->>>>>>> 783e0ed3cea433bc4e9d67b217da1848fe62b750
-            return [permissions.IsAuthenticated()]
+            if self.action == 'get_current_user':
+                return [permissions.IsAuthenticated()]
 
         return [permissions.AllowAny()]
-<<<<<<< HEAD
 
     def retrieve(self, request, *args, **kwargs):
         if request.user.id == int(kwargs.get('pk')):
@@ -93,10 +83,9 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #     if request.auth:
     #         request.auth.revoke()
     #     return Response(status=status.HTTP_200_OK)
-=======
+
     #ley user da dang nhap
     @action(methods=['get'], detail=False, url_path="current-user")
     def get_current_user(self, request):
         return Response(self.serializer_class(request.user).data,
                         status=status.HTTP_200_OK)
->>>>>>> 783e0ed3cea433bc4e9d67b217da1848fe62b750
