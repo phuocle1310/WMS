@@ -37,6 +37,7 @@ class User(AbstractUser):
             self.is_staff = False
         super(User, self).save(*args, **kwargs)
 
+
 class Supplier(models.Model):
     company_name = models.CharField(max_length=100, null=False, unique=True)
     address = models.CharField(max_length=100, null=False)
