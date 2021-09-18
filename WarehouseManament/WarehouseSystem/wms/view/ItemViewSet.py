@@ -12,7 +12,13 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
                   generics.UpdateAPIView, generics.RetrieveAPIView):
     queryset = Item.objects.filter(status=True)
     serializer_class = ItemSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    action_required_auth = ['list', 'retrieve', 'create',
+                            'update']
+
+    def get_permissions(self, list_action=action_required_auth):
+        if self.action in list_action:
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
 
     @swagger_auto_schema(manual_parameters=[
         Parameter('supplier', IN_QUERY, type='integer'),
@@ -22,7 +28,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
         try:
             supplier = self.request.query_params.get('supplier')
 
-            items = Item.objects.filter(supplier=supplier)
+            items = Item.objects.filter(supplier=supplier).orderby('-expire_date')
             serializer = ItemSerializer(items, many=True)
         except Item.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)

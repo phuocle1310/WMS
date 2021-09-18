@@ -77,13 +77,18 @@ const FormLogin = function FormLogin() {
         const response = await userApi.login(fromData);
         //lưu vô cookie
         cookies.save("access-token", response.access_token);
-        const action = getMe();
-        const actionResult = await dispatch(action);
-        //update thong tin user
-        unwrapResult(actionResult);
+        // const action = getMe();
+        // const actionResult = await dispatch(action);
+        // //update thong tin user
+        // unwrapResult(actionResult);
+        // console.log(unwrapResult(actionResult));
         //chuyen qua trang chu
-        history.replace("/");
+        console.log(response)
+        const response1 = await userApi.getUser();
+        console.log(response1)
+        // history.replace("/");
       } catch (error) {
+        console.log(error.response.data);
         setIsErr(true);
       }
     };

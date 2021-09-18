@@ -1,6 +1,5 @@
 from django.urls import path, include, re_path
 from rest_framework import permissions
-from  .view import  *
 from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -17,12 +16,14 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    
 )
 
 router = DefaultRouter()
-router.register('users', UserViewSet)
-router.register('pos', POViewSet)
-router.register('items', ItemViewSet)
+router.register('pos', views.POViewSet)
+router.register('sos', views.SOView)
+router.register('users', views.UserViewSet)
+router.register('items', views.ItemViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
