@@ -7,7 +7,7 @@
 # from .models import *
 # from .serializers import *
 #
-# from .view import *
+from .view import *
 from rest_framework.views import APIView
 from django.conf import settings
 from rest_framework.response import Response
