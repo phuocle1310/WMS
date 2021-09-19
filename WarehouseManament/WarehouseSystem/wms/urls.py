@@ -21,12 +21,13 @@ schema_view = get_schema_view(
 )
 
 router = DefaultRouter()
-router.register('pos', views.POViewSet)
-router.register('sos', views.SOView)
-router.register('users', views.UserViewSet)
-router.register('items', views.ItemViewSet)
+router.register('po', views.POViewSet)
+router.register('so', views.SOView)
+router.register('user', views.UserViewSet)
+router.register('item', views.ItemViewSet)
 router.register('podetail', views.PODetailView)
 router.register('sodetail', views.SODetailView)
+router.register('podetailtemps', views.PODetailRequest)
 
 urlpatterns = [
     path('', include(router.urls)),
