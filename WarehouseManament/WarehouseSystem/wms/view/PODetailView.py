@@ -6,7 +6,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from . import POViewSet
-from ..models import PODetail, PO
+from ..models import PODetail, PO, PODetailTemp
 from ..serializers import PODetailSerializer, POSerializer
 
 
@@ -27,18 +27,21 @@ class PODetailView(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
             raise PermissionDenied()
         return super(PODetailView, self).list(request, *args, **kwargs)
 
-    # @swagger_auto_schema(manual_parameters=[
-    #     Parameter('po', IN_QUERY, type='integer'),
-    # ])
-    # @action(methods=['post'], detail=False,
-    #         url_path='create-po-detail')
-    def create(self, request, *args, **kwargs):
+
+    @action(methods=['post'], detail=False,
+            url_path='create-po-detail')
+    def add_PODetail(self, request):
         if request.user.role == 2:
             raise PermissionDenied()
-        # else:
-        #     serializer = self.get_serializer(data=request.data)
-        #     serializer.is_valid(raise_exception=True)
-        return super(PODetailView, self).create(request, *args, **kwargs)
+        else:
+            poid = MappingPODetail(data=request.data)
+            poid.is_valid(raise_exception=True)
+            podetail = PODetailTemp.objects.filter(pk=poid)
+            for po in podetail:
+                pode = PODetail()
+                pode.PO = po.PO
+                pode.Qty_order = po.Qty_total
+                pode.description = po.description
 
     def retrieve(self, request, *args, **kwargs):
         if request.user.role == 0:

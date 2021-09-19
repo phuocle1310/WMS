@@ -4,3 +4,4 @@ from .ItemViewSet import ItemViewSet
 from .SOView import SOView
 from .PODetailView import PODetailView
 from .SODetailView import SODetailView
+from .PODetailRequest import PODetailRequest

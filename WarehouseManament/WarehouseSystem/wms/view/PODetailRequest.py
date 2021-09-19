@@ -11,8 +11,8 @@ from ..serializers import PODetailSerializer, POSerializer, PODetailTempSerializ
 
 
 class PODetailRequest(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView,
-                   generics.CreateAPIView):
-    queryset = PODetailTemp.objects.filter(status=True)
+                      generics.CreateAPIView):
+    queryset = PODetailTemp.objects.all()
     serializer_class = PODetailTempSerializer
     action_required_auth = ['list', 'retrieve', 'create',
                             'update']
@@ -21,11 +21,6 @@ class PODetailRequest(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveA
         if self.action in list_action:
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
-
-    def list(self, request, *args, **kwargs):
-        if request.user.role == 2:
-            raise PermissionDenied()
-        return super(PODetailRequest, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         if request.user.role == 2:
@@ -45,13 +40,11 @@ class PODetailRequest(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveA
     def get_po_details_temp(self, request):
         try:
             if request.user.role == 2:
-                podetails = PODetailRequest.objects.filter(PO__supplier=request.user.supplier,
-                                                           PO=request.query_params.get('po'))
+                podetails = PODetailTemp.objects.filter(PO__supplier=request.user.supplier,
+                                                        PO__id=request.query_params.get('po'))
             else:
-                podetails = PODetailRequest.objects.filter(PO=request.query_params.get('po'))
+                podetails = PODetailTemp.objects.filter(PO=request.query_params.get('po'))
             serializer = PODetailTempSerializer(podetails, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except PODetail.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-

@@ -23,10 +23,8 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
                   generics.ListAPIView, generics.UpdateAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
-    # permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     parser_classes = [MultiPartParser, ]
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['first_name', 'last_name', 'role', 'is_active', 'username', 'address']
 
     # phan quyen
     def get_permissions(self):
@@ -76,13 +74,6 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
             if role == 0 or role == 1:
                 raise PermissionDenied("You can't create Admin/User Account")
         return super().create(request, *args, **kwargs) and Response(status=status.HTTP_200_OK)
-
-    # @action(methods=["GET"], detail=False, url_path="logout", name="logout")
-    # def logout(self, request, *args, **kwargs):
-    #     logout(request)
-    #     if request.auth:
-    #         request.auth.revoke()
-    #     return Response(status=status.HTTP_200_OK)
 
     # ley user da dang nhap
     @action(methods=['get'], detail=False, url_path="current-user")
