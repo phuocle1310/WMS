@@ -23,6 +23,8 @@ const Addproduct = (props) => {
   const { values } = props;
   // const selectedDate = new Date();
   const selectedDate = useState(new Date());
+
+
   const itemProduct = () => {
     return (
       <>
@@ -34,6 +36,7 @@ const Addproduct = (props) => {
           {" "}
           <ValidatedCombox
             name="nameproduct"
+            product={props.product}
             handleChange={props.handleChangeSelect}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}

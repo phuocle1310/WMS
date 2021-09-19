@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
@@ -13,9 +13,13 @@ import ClearIcon from "@material-ui/icons/Clear";
 import FormStyles from "./FormStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+//api
+import { getProductBySupplier } from "../../store/productSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 const AddPo = (props) => {
   const classes = FormStyles();
+  const dispatch = useDispatch();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -38,6 +42,9 @@ const AddPo = (props) => {
       expirationDate: "",
     },
   ]);
+  //lấy product từ redux
+  const product = useSelector((state) => state.product.listProductBySupplier);
+  console.log(product);
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
@@ -52,6 +59,7 @@ const AddPo = (props) => {
           handleChangeSelect={handleChangeSelect(index)}
           handleChangeManufactureDate={handleChangeManufactureDate(index)}
           handleChangeExpirationDate={handleChangeExpirationDate(index)}
+          product={product}
         ></Addproduct>
       );
     });
@@ -149,6 +157,19 @@ const AddPo = (props) => {
     setTimePoRequest("");
     setListProduct([]);
   };
+  // lấy sản phẩm từ api
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const action = getProductBySupplier();
+        const actionResult = await dispatch(action);
+        unwrapResult(actionResult);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProduct();
+  }, []);
   return (
     <ValidatorForm
       className={classes.form}
