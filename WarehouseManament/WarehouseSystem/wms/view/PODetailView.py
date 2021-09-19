@@ -27,9 +27,17 @@ class PODetailView(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
             raise PermissionDenied()
         return super(PODetailView, self).list(request, *args, **kwargs)
 
+    # @swagger_auto_schema(manual_parameters=[
+    #     Parameter('po', IN_QUERY, type='integer'),
+    # ])
+    # @action(methods=['post'], detail=False,
+    #         url_path='create-po-detail')
     def create(self, request, *args, **kwargs):
         if request.user.role == 2:
             raise PermissionDenied()
+        # else:
+        #     serializer = self.get_serializer(data=request.data)
+        #     serializer.is_valid(raise_exception=True)
         return super(PODetailView, self).create(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
