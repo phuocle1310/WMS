@@ -15,11 +15,9 @@ import FormStyles from "./FormStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
-import { getProductBySupplier } from "../../store/productSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
+import productApi from "../../api/productApi";
 const AddPo = (props) => {
   const classes = FormStyles();
-  const dispatch = useDispatch();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -43,8 +41,7 @@ const AddPo = (props) => {
     },
   ]);
   //lấy product từ redux
-  const product = useSelector((state) => state.product.listProductBySupplier);
-  console.log(product);
+
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
@@ -158,12 +155,12 @@ const AddPo = (props) => {
     setListProduct([]);
   };
   // lấy sản phẩm từ api
+  let [product, setProduct] = useState([]);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const action = getProductBySupplier();
-        const actionResult = await dispatch(action);
-        unwrapResult(actionResult);
+        const repose = await productApi.getProductBySupplier();
+        setProduct(repose.results);
       } catch (error) {
         console.log(error);
       }

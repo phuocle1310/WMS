@@ -18,7 +18,8 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
-            return [permissions.IsAuthenticated()]
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)            return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
     @swagger_auto_schema(manual_parameters=[
@@ -35,4 +36,3 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
             serializer = ItemSerializer(items, many=True)
         except Item.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
