@@ -81,6 +81,7 @@ const FormLogin = function FormLogin() {
         const actionResult = await dispatch(action);
         //update thong tin user
         unwrapResult(actionResult);
+        console.log(response +"token");
         //chuyen qua trang chu
         history.replace("/");
       } catch (error) {

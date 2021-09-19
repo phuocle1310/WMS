@@ -6,14 +6,14 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from . import POViewSet
-from ..models import PODetail, PO
-from ..serializers import PODetailSerializer, POSerializer
+from ..models import PODetail, PO, PODetailTemp
+from ..serializers import PODetailSerializer, POSerializer, PODetailTempSerializer
 
 
-class PODetailView(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView,
-                   generics.CreateAPIView, generics.DestroyAPIView):
-    queryset = PODetail.objects.filter(status=True)
-    serializer_class = PODetailSerializer
+class PODetailRequest(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView,
+                   generics.CreateAPIView):
+    queryset = PODetailTemp.objects.filter(status=True)
+    serializer_class = PODetailTempSerializer
     action_required_auth = ['list', 'retrieve', 'create',
                             'update']
 
@@ -25,30 +25,31 @@ class PODetailView(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIV
     def list(self, request, *args, **kwargs):
         if request.user.role == 2:
             raise PermissionDenied()
-        return super(PODetailView, self).list(request, *args, **kwargs)
+        return super(PODetailRequest, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         if request.user.role == 2:
             raise PermissionDenied()
-        return super(PODetailView, self).create(request, *args, **kwargs)
+        return super(PODetailRequest, self).create(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         if request.user.role == 0:
             raise PermissionDenied()
-        return super(PODetailView, self).retrieve(request, *args, **kwargs)
+        return super(PODetailRequest, self).retrieve(request, *args, **kwargs)
 
     @swagger_auto_schema(manual_parameters=[
         Parameter('po', IN_QUERY, type='integer'),
     ])
     @action(methods=['get'], detail=False,
             url_path='get-po-details')
-    def get_po_details(self, request):
+    def get_po_details_temp(self, request):
         try:
             if request.user.role == 2:
-                podetails = PODetail.objects.filter(PO__supplier=request.user.supplier, PO=request.query_params.get('po'))
+                podetails = PODetailRequest.objects.filter(PO__supplier=request.user.supplier,
+                                                           PO=request.query_params.get('po'))
             else:
-                podetails = PODetail.objects.filter(PO=request.query_params.get('po'))
-            serializer = PODetailSerializer(podetails, many=True)
+                podetails = PODetailRequest.objects.filter(PO=request.query_params.get('po'))
+            serializer = PODetailTempSerializer(podetails, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except PODetail.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)

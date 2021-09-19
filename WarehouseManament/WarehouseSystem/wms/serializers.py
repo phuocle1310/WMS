@@ -30,6 +30,7 @@ class POSerializer(ModelSerializer):
         fields = '__all__'
         extra_kwargs = {}
         validators = []
+        read_only_fields = ['status', 'active']
 
     def create(self, validated_data):
         return PO.objects.create(**validated_data)
@@ -76,6 +77,26 @@ class PODetailSerializer(ModelSerializer):
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
 
+
+# SERIALIZER CHO PODETAIL TEMP
+
+class PODetailTempSerializer(ModelSerializer):
+    class Meta:
+        model = PODetailTemp
+        fields = '__all__'
+        extra_kwargs = {}
+        validators = []
+
+    def create(self, validated_data):
+        return PODetailTemp.objects.create(**validated_data)
+
+    def validate(self, attrs):
+        instance = PODetailTemp(**attrs)
+        fields = ['item']
+
+        for field in fields:
+            if not attrs.get(field):
+                raise ValidationError({field: 'This is required field'})
 
 # SERIALIZER cho SO class
 
