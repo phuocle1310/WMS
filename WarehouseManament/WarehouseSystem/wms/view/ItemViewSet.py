@@ -26,12 +26,12 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     ])
     @action(methods=['get'], detail=False, url_path='get-item-by-supplier')
     def get_item_by_supplier(self, request):
-        supplier = self.request.query_params.get('supplier')
-        if request.user.role == 2:
-            if request.user.supplier.pk != int(supplier):
-                raise PermissionDenied()
+        # supplier = self.request.query_params.get('supplier')
+        # if request.user.role == 2:
+        #     if request.user.supplier.pk != int(supplier):
+        #         raise PermissionDenied()
         try:
-            items = Item.objects.filter(supplier=supplier)
+            items = Item.objects.filter(supplier=request.user.supplier)
             serializer = ItemSerializer(items, many=True)
         except Item.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
