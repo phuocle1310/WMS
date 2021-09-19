@@ -26,6 +26,7 @@ class User(AbstractUser):
     role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=USER)
 
     def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
         self.set_password(self.password)
         if self.is_superuser:
             self.role = self.ADMIN
@@ -35,7 +36,7 @@ class User(AbstractUser):
         else:
             self.is_superuser = False
             self.is_staff = False
-        super(User, self).save(*args, **kwargs)
+
 
 
 class Supplier(models.Model):
@@ -250,9 +251,15 @@ class BasePOSODetail(models.Model):
 class PODetail(BasePOSODetail):
     PO = models.ForeignKey(PO, on_delete=models.CASCADE, null=False)
 
+    class Meta:
+        unique_together = ['PO', 'item']
+
 
 class SODetail(BasePOSODetail):
     SO = models.ForeignKey(SO, on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        unique_together = ['SO', 'item']
 
 
 class BaseReceiptOrder(models.Model):
@@ -286,7 +293,7 @@ class Order(BaseReceiptOrder):
 
 
 class BaseReceiptOrderDetail(models.Model):
-    item = models.ManyToManyField(Item)
+    item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
     Qty_just = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
     Qty_receipt = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
@@ -304,9 +311,15 @@ class ReceiptDetail(BaseReceiptOrderDetail):
     def __str__(self):
         return ReceiptDetail.item
 
+    class Meta:
+        unique_together = ['receipt', 'item']
+
 
 class OrderDetail(BaseReceiptOrderDetail):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return ReceiptDetail.item
+
+    class Meta:
+        unique_together = ['order', 'item']

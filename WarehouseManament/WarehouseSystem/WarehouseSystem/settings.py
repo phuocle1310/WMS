@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 #chạy post man bỏ biến này ra
-OAUTH2_PROVIDER = {
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-}
+# OAUTH2_PROVIDER = {
+#     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+# }
 
 SWAGGER_SETTINGS = {
     'SHOW_REQUEST_HEADERS': True,
@@ -73,10 +73,18 @@ SWAGGER_SETTINGS = {
 
 
 #auth
+# may phuoc
 OAUTH2_INFO = {
-    "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
-    "client_secret": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
+    "client_id": "rFHqkLDS66o8QLm30zlUXTzd787R60jQcXKBoKNS",
+    "client_secret": "5kXZ9ZRFEpyyfKPT97z4sNWLYX4IeD5488CEv5umO43iGhfrzSuBbcpNo7gUgPgffi5qCcdAaGadbyJ3ZLZbZnrsBJpIMXLgMZM9VmXFW5eRY8GRr95y1j5X1aJNT40i"
 }
+# may cau
+# OAUTH2_INFO = {
+#     "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
+#     "client_secret": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
+# }
+
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
@@ -135,7 +143,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '12345',
         'HOST': ''  # mặc định localhost
     }
 }
