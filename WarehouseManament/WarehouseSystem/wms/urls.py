@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from . import views
+from .models import PO
 
 
 schema_view = get_schema_view(
@@ -27,7 +28,7 @@ router.register('users', views.UserViewSet)
 router.register('items', views.ItemViewSet)
 router.register('podetail', views.PODetailView)
 router.register('sodetail', views.SODetailView)
-
+router.register('PO', views.PoCreateAPIView, PO)
 urlpatterns = [
     path('', include(router.urls)),
 

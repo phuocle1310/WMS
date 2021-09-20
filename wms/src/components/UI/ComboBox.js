@@ -39,12 +39,12 @@ export default function ComboBox(props) {
         <TextValidator
           {...params}
           size="small"
+          value={props.value || ""}
           label={language.product}
           variant="outlined"
           fullWidth
           className={classes.textField}
-          validators={["required"]}
-          errorMessages={["không để trống dòng này"]}
+          required
         />
       )}
     />

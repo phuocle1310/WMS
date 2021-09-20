@@ -40,8 +40,19 @@ const AddPo = (props) => {
       expirationDate: "",
     },
   ]);
-  //lấy product từ redux
-
+  // lấy sản phẩm từ api
+  let [product, setProduct] = useState([]);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await productApi.getProductBySupplier();
+        setProduct(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProduct();
+  }, []);
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
@@ -134,14 +145,26 @@ const AddPo = (props) => {
       }
       return newlist;
     });
-    console.log(listProduct);
+  };
+  const getItem = (e) => {
+    const item = product.find(({ name }) => name === e);
+    return item;
   };
   const handleChangeSelect = (id) => (e) => {
     setListProduct((prevState) => {
       let newlist = [...prevState];
       for (let i = 0; i < newlist.length; i++) {
         if (i === id) {
+          console.log("vo");
           newlist[i]["nameproduct"] = e.target.value;
+
+          console.log(getItem());
+          if (newlist[i]["nameproduct"]) {
+            const item = getItem(e.target.value);
+            newlist[i]["manufactureDate"] = Date.parse(item.production_date);
+            newlist[i]["expirationDate"] = Date.parse(item.expire_date);
+            console.log(getItem());
+          }
         }
       }
       return newlist;
@@ -154,19 +177,7 @@ const AddPo = (props) => {
     setTimePoRequest("");
     setListProduct([]);
   };
-  // lấy sản phẩm từ api
-  let [product, setProduct] = useState([]);
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const repose = await productApi.getProductBySupplier();
-        setProduct(repose.results);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProduct();
-  }, []);
+
   return (
     <ValidatorForm
       className={classes.form}
@@ -231,7 +242,7 @@ const AddPo = (props) => {
               value={
                 timepoRequest
                   ? moment(new Date(timepoRequest)).format("DD/MM/YYYY")
-                  : ""
+                  : " "
               }
               onChange={(e) => {
                 setTimePoRequest(e.toLocaleDateString());

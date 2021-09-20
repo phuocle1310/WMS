@@ -24,37 +24,6 @@ class UserSerializer(ModelSerializer):
 
 # SERIALIZER cho PO class
 
-class POSerializer(ModelSerializer):
-    class Meta:
-        model = PO
-        fields = '__all__'
-        extra_kwargs = {}
-        validators = []
-        read_only_fields = ['status', 'active']
-
-    def create(self, validated_data):
-        return PO.objects.create(**validated_data)
-
-    def validate(self, attrs):
-        instance = PO(**attrs)
-
-        # Validate các trường ko được null
-
-        fields = ['supplier', 'effective_date', 'add_who', 'edit_who']
-
-        for field in fields:
-            if not attrs.get(field):
-                raise ValidationError({field: 'This is required field'})
-
-        if instance.closed_date is not None:
-            if instance.closed_date <= instance.effective_date:
-                # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
-                raise ValidationError({'closed_date': 'Close date can be < Effective date'})
-        if instance.status == 0:
-            if instance.closed_date is None:
-                raise ValidationError({'closed_date': 'PO\'s status was done, so close date can be null'})
-
-        return attrs
 
 
 # SERIALIZER cho PO Detail
@@ -80,23 +49,7 @@ class PODetailSerializer(ModelSerializer):
 
 # SERIALIZER CHO PODETAIL TEMP
 
-class PODetailTempSerializer(ModelSerializer):
-    class Meta:
-        model = PODetailTemp
-        fields = '__all__'
-        extra_kwargs = {}
-        validators = []
 
-    def create(self, validated_data):
-        return PODetailTemp.objects.create(**validated_data)
-
-    def validate(self, attrs):
-        instance = PODetailTemp(**attrs)
-        fields = ['item']
-
-        for field in fields:
-            if not attrs.get(field):
-                raise ValidationError({field: 'This is required field'})
 
 # SERIALIZER cho SO class
 
@@ -169,3 +122,74 @@ class ItemSerializer(ModelSerializer):
         for field in fields:
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
+
+
+
+
+class ItemTempSerializer(ModelSerializer):
+    class Meta:
+        model = ItemTemp
+        fields = '__all__'
+        extra_kwargs = {}
+        validators = []
+
+    def validators(self, attrs):
+        instance = Item(**attrs)
+
+        fields = ['supplier']
+        for field in fields:
+            if not attrs.get(field):
+                raise ValidationError({field: 'This is required field'})
+
+class PODetailTempSerializer(ModelSerializer):
+    ItemTemp = ItemTempSerializer()
+
+    class Meta:
+        model = PODetailTemp
+        fields = ['id', 'ItemTemp']
+        extra_kwargs = {}
+        validators = []
+
+    def create(self, validated_data):
+        return PODetailTemp.objects.create(**validated_data)
+
+    def validate(self, attrs):
+        instance = PODetailTemp(**attrs)
+        fields = ['item']
+
+        for field in fields:
+            if not attrs.get(field):
+                raise ValidationError({field: 'This is required field'})
+
+class POSerializer(ModelSerializer):
+    potailtemp = PODetailTempSerializer(many=True)
+    class Meta:
+        model = PO
+        fields = ['supplier', 'effective_date', 'add_who', 'edit_who', 'potailtemp']
+        extra_kwargs = {}
+        validators = []
+        read_only_fields = ['status', 'active']
+
+    def create(self, validated_data):
+        return PO.objects.create(**validated_data)
+
+    def validate(self, attrs):
+        instance = PO(**attrs)
+
+        # Validate các trường ko được null
+
+        fields = ['supplier', 'effective_date', 'add_who', 'edit_who']
+
+        for field in fields:
+            if not attrs.get(field):
+                raise ValidationError({field: 'This is required field'})
+
+        if instance.closed_date is not None:
+            if instance.closed_date <= instance.effective_date:
+                # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
+                raise ValidationError({'closed_date': 'Close date can be < Effective date'})
+        if instance.status == 0:
+            if instance.closed_date is None:
+                raise ValidationError({'closed_date': 'PO\'s status was done, so close date can be null'})
+
+        return attrs

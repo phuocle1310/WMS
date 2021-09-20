@@ -39,6 +39,7 @@ const Addproduct = (props) => {
             product={props.product}
             handleChange={props.handleChangeSelect}
             validators={["required"]}
+            value={values.nameproduct ? values.nameproduct : " "}
             errorMessages={[`${language.requiredError}`]}
           ></ValidatedCombox>
         </Grid>
@@ -98,6 +99,7 @@ const Addproduct = (props) => {
             type="number"
             label={language.quantity}
             name="quantity"
+            value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}
@@ -114,6 +116,7 @@ const Addproduct = (props) => {
             autoFocus
             name="unit"
             onChange={props.handleChange}
+            value={values.unit ? values.unit : ""}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}
           />
@@ -155,6 +158,7 @@ const Addproduct = (props) => {
             name="nameproduct"
             onChange={props.handleChange}
             validators={["required"]}
+            value={values.nameproduct ? values.nameproduct : " "}
             errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
@@ -175,7 +179,7 @@ const Addproduct = (props) => {
             value={
               values.manufactureDate
                 ? moment(new Date(values.manufactureDate)).format("DD/MM/YYYY")
-                : ""
+                : " "
             }
             onChange={props.handleChangeManufactureDate}
           />{" "}
@@ -197,7 +201,7 @@ const Addproduct = (props) => {
             value={
               values.expirationDate
                 ? moment(new Date(values.expirationDate)).format("DD/MM/YYYY")
-                : ""
+                : " "
             }
             onChange={props.handleChangeExpirationDate}
           />{" "}
@@ -215,6 +219,7 @@ const Addproduct = (props) => {
             name="quantity"
             onChange={props.handleChange}
             validators={["required"]}
+            value={values.quantity ? values.quantity : ""}
             errorMessages={[`${language.requiredError}`]}
           />
         </Grid>
@@ -228,6 +233,7 @@ const Addproduct = (props) => {
             label={language.unit}
             name="unit"
             onChange={props.handleChange}
+            value={values.unit ? values.unit : ""}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}
           />
