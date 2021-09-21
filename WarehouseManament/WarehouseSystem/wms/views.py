@@ -21,9 +21,5 @@ class AuthInfo(APIView):
     def get(self, request):
         return Response(settings.OAUTH2_INFO, status=status.HTTP_200_OK)
 
-#Po -> Po tạm
-class PoCreateAPIView(viewsets.ViewSet,generics.CreateAPIView):
-    model = PO
-    serializer_class = POSerializer
-    #code xử lý data
+
 

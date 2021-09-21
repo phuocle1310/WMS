@@ -11,7 +11,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatar_user/%Y/%m', blank=True)
-    supplier = models.ForeignKey("Supplier", on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=10, null=True)
     ADMIN = 0
@@ -39,9 +38,9 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
 
-
 class Supplier(models.Model):
     company_name = models.CharField(max_length=100, null=False, unique=True)
+    user = models.OneToOneField(User, related_name="supplier", on_delete=models.CASCADE, null=False)
     address = models.CharField(max_length=100, null=False)
     phone = models.CharField(max_length=20, null=True)
     email = models.CharField(max_length=100, null=True)
@@ -180,14 +179,13 @@ class BasePOSO(models.Model):
     def clean(self):
         if self.closed_date is not None and self.effective_date is not None:
             if self.closed_date <= self.effective_date:
-                # Nếu ko chỉ định trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'closed_date': 'Close date can be < Effective date'})
         if self.status == 0:
             if self.closed_date is None:
                 raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
 
     def __str__(self):
-        return '%s -- %s' % (self.supplier.company_name, self.add_date)
+        return '%s -- %s' % (self.user.first_name, self.add_date)
 
 
 class PO(BasePOSO):
@@ -202,13 +200,10 @@ class SO(BasePOSO):
 
 class ItemTemp(models.Model):
     name = models.CharField(max_length=100, null=False)
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
     expire_date = models.DateField()  # HSD
     production_date = models.DateField()  # NSX
     mu_case = models.IntegerField(default=1, null=False,
                                   validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
-    desc = models.TextField(null=True, blank=True)
-    status = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ['name', 'production_date']
@@ -224,18 +219,15 @@ class ItemTemp(models.Model):
 
 
 class PODetailTemp(models.Model):
-    PO = models.ForeignKey(PO, on_delete=models.CASCADE, null=False)
-    item = models.ForeignKey(ItemTemp, on_delete=models.SET_NULL, null=True)
+    PO = models.ForeignKey(PO, related_name= "podetail_temp", on_delete=models.CASCADE, null=False)
+    item = models.ForeignKey(ItemTemp, related_name= "po_detail_temp", on_delete=models.SET_NULL, null=True)
     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
-    description = models.TextField(null=True, blank=True)
-    status = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-id']
 
 
 class BasePOSODetail(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
     description = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
@@ -250,14 +242,16 @@ class BasePOSODetail(models.Model):
 
 
 class PODetail(BasePOSODetail):
-    PO = models.ForeignKey(PO, on_delete=models.CASCADE, null=False)
+    item = models.ForeignKey(Item, related_name="podetail", on_delete=models.SET_NULL, null=True)
+    PO = models.ForeignKey(PO, related_name="podetail", on_delete=models.CASCADE, null=False)
 
     class Meta:
         unique_together = ['PO', 'item']
 
 
 class SODetail(BasePOSODetail):
-    SO = models.ForeignKey(SO, on_delete=models.CASCADE, null=False)
+    item = models.ForeignKey(Item, related_name="sodetail", on_delete=models.SET_NULL, null=True)
+    SO = models.ForeignKey(SO, related_name="sodetail", on_delete=models.CASCADE, null=False)
 
     class Meta:
         unique_together = ['SO', 'item']
@@ -279,7 +273,7 @@ class Receipt(BaseReceiptOrder):
     edit_who = models.ForeignKey(User, related_name="receipt_edit_who", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        str_receipt = '%s - %s' % (self.supplier.company_name, self.add_date)
+        str_receipt = '%s - %s' % (self.user.first_name, self.add_date)
         return str_receipt
 
 
@@ -289,7 +283,7 @@ class Order(BaseReceiptOrder):
     edit_who = models.ForeignKey(User, related_name="order_edit_who", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        str_order = '%s - %s' % (self.supplier.company_name, self.add_date)
+        str_order = '%s - %s' % (self.user.first_name, self.add_date)
         return str_order
 
 
@@ -298,7 +292,6 @@ class BaseReceiptOrderDetail(models.Model):
     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
     Qty_just = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
     Qty_receipt = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
-    description = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
 
     class Meta:

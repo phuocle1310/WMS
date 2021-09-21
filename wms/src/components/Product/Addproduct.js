@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { TextValidator } from "react-material-ui-form-validator";
@@ -17,19 +17,23 @@ const Addproduct = (props) => {
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
-  
+
   var moment = require("moment");
   //khai báo
   const { values } = props;
   // const selectedDate = new Date();
-  const selectedDate = useState(new Date());
-
-
+  const [selectedDate, setselectedDate] = useState({ manufactureDate: "" });
+  useEffect(() => {
+    setselectedDate({ manufactureDate: values.manufactureDate });
+    console.log(
+      moment(new Date(selectedDate.manufactureDate)).format("YYYY/MM/DD"),
+    );
+  }, [values.manufactureDate]);
   const itemProduct = () => {
     return (
       <>
         {" "}
-        <Grid xs={3} sm={6} md={1} lg={1}>
+        <Grid item xs={3} sm={6} md={1} lg={1}>
           <p>{props.id}</p>
         </Grid>
         <Grid item xs={9} sm={6} md={2} lg={2}>
@@ -59,7 +63,9 @@ const Addproduct = (props) => {
             InputAdornmentProps={{ position: "start" }}
             value={
               values.manufactureDate
-                ? moment(new Date(values.manufactureDate)).format("DD/MM/YYYY")
+                ? moment(new Date(selectedDate.manufactureDate)).format(
+                    "YYYY/MM/DD",
+                  )
                 : selectedDate
             }
             onChange={(e) => console.log(e)}
@@ -82,7 +88,7 @@ const Addproduct = (props) => {
             InputAdornmentProps={{ position: "start" }}
             value={
               values.expirationDate
-                ? moment(new Date(values.expirationDate)).format("DD/MM/YYYY")
+                ? moment(new Date(values.expirationDate)).format("YYYY/MM/DD")
                 : selectedDate
             }
             onChange={props.handleChangeExpirationDate}
@@ -99,7 +105,11 @@ const Addproduct = (props) => {
             type="number"
             label={language.quantity}
             name="quantity"
-            value={values.quantity ? values.quantity : ""}
+            defaultValue={
+              values.expirationDate
+                ? moment(new Date(values.expirationDate)).format("DD/MM/YYYY")
+                : selectedDate
+            }
             onChange={props.handleChange}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}

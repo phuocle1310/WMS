@@ -72,19 +72,11 @@ SWAGGER_SETTINGS = {
 }
 
 
-# #auth
-# # may phuoc
-# OAUTH2_INFO = {
-#     "client_id": "rFHqkLDS66o8QLm30zlUXTzd787R60jQcXKBoKNS",
-#     "client_secret": "5kXZ9ZRFEpyyfKPT97z4sNWLYX4IeD5488CEv5umO43iGhfrzSuBbcpNo7gUgPgffi5qCcdAaGadbyJ3ZLZbZnrsBJpIMXLgMZM9VmXFW5eRY8GRr95y1j5X1aJNT40i"
-# }
-#may cau
+#auth
 OAUTH2_INFO = {
-    "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
-    "client_secret": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
+    "client_id": "dCCsKciaksXAHxESE9b4a9n20YFPpWT35ksOaIgE",
+    "client_secret": "hKu2rhDnB6vV9Tr5hAEDyXIzOn1ZvDzyDTKiL9AKbLFvw4vq1DK5jDNg97BjGNPiAuyc6ADdjrn63GpBruayllvRUluW6QqS7HIVwIJ93DZKX7qP02oWUvAqyH72Os86"
 }
-
-
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',

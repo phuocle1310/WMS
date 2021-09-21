@@ -30,7 +30,7 @@ export default function ComboBox(props) {
     <Autocomplete
       id="combo-box-demo"
       options={props.product}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => option.name || ""}
       style={{ width: "100%" }}
       name="nameproduct"
       onSelect={props.handleChange}

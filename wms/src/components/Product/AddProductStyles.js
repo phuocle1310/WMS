@@ -43,5 +43,22 @@ const AddProductStyles = makeStyles((theme) => ({
       fontSize: 15,
     },
   },
+  box: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    [theme.breakpoints.up("lg")]: {
+      width: "100%",
+    },
+  },
+  boxChild: {
+    marginBottom: 20,
+    [theme.breakpoints.up("lg")]: {
+      width: "30%",
+    },
+  },
 }));
 export default AddProductStyles;

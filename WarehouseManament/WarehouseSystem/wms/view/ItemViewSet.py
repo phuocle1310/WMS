@@ -6,13 +6,12 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from ..models import *
-from ..serializers import ItemSerializer
+from ..serializers import ItemSerializer, ItemViewSerializer
 
 
-class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView,
-                  generics.UpdateAPIView, generics.RetrieveAPIView):
+class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Item.objects.filter(status=True)
-    serializer_class = ItemSerializer
+    serializer_class = ItemViewSerializer
     action_required_auth = ['list', 'retrieve', 'create',
                             'update']
 
@@ -25,7 +24,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     def get_item_by_supplier(self, request):
         try:
             if request.user.role == 2:
-                items = Item.objects.filter(supplier=request.user.supplier)
+                items = Item.objects.filter(supplier=request.user.supplier).distinct()
             else:
                 items = Item.objects.all()
             serializer = ItemSerializer(items, many=True)

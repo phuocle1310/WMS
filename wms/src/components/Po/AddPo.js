@@ -157,13 +157,10 @@ const AddPo = (props) => {
         if (i === id) {
           console.log("vo");
           newlist[i]["nameproduct"] = e.target.value;
-
-          console.log(getItem());
           if (newlist[i]["nameproduct"]) {
             const item = getItem(e.target.value);
-            newlist[i]["manufactureDate"] = Date.parse(item.production_date);
-            newlist[i]["expirationDate"] = Date.parse(item.expire_date);
-            console.log(getItem());
+            newlist[i]["manufactureDate"] = item.expire_date;
+            newlist[i]["expirationDate"] = item.production_date;
           }
         }
       }
