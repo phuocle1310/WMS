@@ -8,7 +8,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import AddIcon from "@material-ui/icons/Add";
 import PostAddIcon from "@material-ui/icons/PostAdd";
@@ -52,26 +51,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 100,
     padding: 5,
   },
-  content: {
-    width: "100%",
-    margin: "auto",
-    // textAlign: "center",
-    marginBottom: 13,
-    background: "#fff",
-    paddingTop: 20,
-    borderTop: "5px solid #4251b5",
-    // borderBottom: "5px solid #4251b5",
-    [theme.breakpoints.up("lg")]: {
-      width: "90%",
-    },
-  },
   tabs: {
-    // background: "#4251b5",
     margin: "auto",
     textAlign: "center",
-    "& .MuiTab-textColorPrimary ": {
-      // color: "#fff !important",
-    },
   },
   tab: {
     // background: "red",
@@ -79,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "capitalize",
     border: "2px solid #ede7f6",
     borderBottom: "none",
-    width: 120,
+    // width: 120,
     [theme.breakpoints.up("lg")]: {
       width: "auto",
     },
@@ -87,9 +69,6 @@ const useStyles = makeStyles((theme) => ({
   box: {
     borderBottom: "1px solid #ede7f6",
     width: "90%",
-  },
-  tabPanel: {
-    // background: "#fafafa",
   },
 }));
 const AddPoPage = (props) => {
@@ -117,13 +96,13 @@ const AddPoPage = (props) => {
           aria-label="scrollable force tabs example"
         >
           <Tab
-            label="Item One"
+            label={language.addNewProduct}
             className={classes.tab}
             icon={<AddIcon />}
             {...a11yProps(0)}
           />
           <Tab
-            label="Item Two"
+            label={language.titleRPo}
             className={classes.tab}
             icon={<PostAddIcon />}
             {...a11yProps(1)}
@@ -137,9 +116,7 @@ const AddPoPage = (props) => {
         <TabPanel value={value} index={1}>
           <h3>{language.titleRPo}</h3>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <div className={classes.content}>
-              <AddPo></AddPo>
-            </div>
+            <AddPo></AddPo>
           </Grid>
         </TabPanel>
       </Grid>

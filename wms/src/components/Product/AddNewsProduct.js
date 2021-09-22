@@ -80,7 +80,7 @@ const AddNewsProduct = (props) => {
     >
       <div className={classes.box}>
         <div className={classes.boxChild}>
-          <h4 style={{ margin: 0 }}>{language.addNewProduct}</h4>
+          <h3>{language.addNewProduct}</h3>
         </div>
         <div className={classes.boxChild}>
           {" "}
@@ -108,12 +108,12 @@ const AddNewsProduct = (props) => {
             format="dd/MM/yyyy"
             size="small"
             fullWidth
-            value={selectedDateP}
             className={classes.textField}
             InputAdornmentProps={{ position: "start" }}
             validators={["required"]}
             maxDate={new Date()}
             errorMessages={[`${language.requiredError}`]}
+            value={selectedDateP}
             onChange={(date) => {
               if (moment.isDate(date)) {
                 date.setHours(0, 0, 0, 0);
