@@ -265,9 +265,9 @@ class ItemCreateSerializer(ModelSerializer):
         instance = Item(**attrs)
 
         if instance.production_date > instance.expire_date:
-            raise ValidationError({"production_date": "Prodcution date can be less or equal than expire date"})
-        if instance.production_date <= date.today():
-            raise ValidationError({"production_date": "Prodcution date can be greater or equal than now"})
+            raise ValidationError({"production_date": "Prodcution date can be less than expire date"})
+        if instance.production_date >= date.today():
+            raise ValidationError({"production_date": "Prodcution date can be less or equal than now"})
         return attrs
 
 

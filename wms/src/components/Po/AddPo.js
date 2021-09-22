@@ -9,17 +9,16 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";
+import Grid from "@material-ui/core/Grid";
 //css
 import FormStyles from "./FormStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
-import { getProductBySupplier } from "../../store/productSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
+import productApi from "../../api/productApi";
 const AddPo = (props) => {
   const classes = FormStyles();
-  const dispatch = useDispatch();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -42,9 +41,19 @@ const AddPo = (props) => {
       expirationDate: "",
     },
   ]);
-  //lấy product từ redux
-  const product = useSelector((state) => state.product.listProductBySupplier);
-  console.log(product);
+  // lấy sản phẩm từ api
+  let [product, setProduct] = useState([]);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await productApi.getProductBySupplier();
+        setProduct(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProduct();
+  }, []);
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
@@ -71,21 +80,6 @@ const AddPo = (props) => {
         ...prevState,
         {
           isNew: true,
-          nameproduct: "",
-          quantity: "",
-          manufactureDate: "",
-          expirationDate: "",
-        },
-      ];
-    });
-  };
-  //xử lý thêm mới hoàn toàn
-  const addItemProductNewHandler = () => {
-    setListProduct((prevState) => {
-      return [
-        ...prevState,
-        {
-          isNew: false,
           nameproduct: "",
           quantity: "",
           manufactureDate: "",
@@ -137,14 +131,23 @@ const AddPo = (props) => {
       }
       return newlist;
     });
-    console.log(listProduct);
+  };
+  const getItem = (e) => {
+    const item = product.find(({ name }) => name === e);
+    return item;
   };
   const handleChangeSelect = (id) => (e) => {
     setListProduct((prevState) => {
       let newlist = [...prevState];
       for (let i = 0; i < newlist.length; i++) {
         if (i === id) {
+          console.log("vo");
           newlist[i]["nameproduct"] = e.target.value;
+          if (newlist[i]["nameproduct"]) {
+            const item = getItem(e.target.value);
+            newlist[i]["manufactureDate"] = item.expire_date;
+            newlist[i]["expirationDate"] = item.production_date;
+          }
         }
       }
       return newlist;
@@ -157,19 +160,7 @@ const AddPo = (props) => {
     setTimePoRequest("");
     setListProduct([]);
   };
-  // lấy sản phẩm từ api
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const action = getProductBySupplier();
-        const actionResult = await dispatch(action);
-        unwrapResult(actionResult);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProduct();
-  }, []);
+
   return (
     <ValidatorForm
       className={classes.form}
@@ -179,11 +170,9 @@ const AddPo = (props) => {
       instantValidate
     >
       <div className={classes.root}>
-        <div className={classes.box}>
-          <nav>
+        <Grid container>
+          <Grid item lg={3}>
             <p className={classes.labelId}>{language.supplier}:</p>{" "}
-          </nav>
-          <nav>
             <TextValidator
               className={classes.textField}
               variant="outlined"
@@ -194,13 +183,7 @@ const AddPo = (props) => {
               value="Tra dao"
               readOnly={true}
             ></TextValidator>
-          </nav>
-        </div>
-        <div className={classes.box}>
-          <nav>
             <p className={classes.labelId}>{language.dateCreated}:</p>{" "}
-          </nav>
-          <nav>
             <ValidatedDatePicker
               autoOk
               variant="inline"
@@ -213,13 +196,7 @@ const AddPo = (props) => {
               TextFieldComponent={TextFieldComponent}
               readOnly={true}
             />
-          </nav>
-        </div>
-        <div className={classes.box}>
-          <nav>
             <p className={classes.labelId}>{language.importDate}:</p>{" "}
-          </nav>
-          <nav>
             <ValidatedDatePicker
               autoOk
               variant="inline"
@@ -229,54 +206,41 @@ const AddPo = (props) => {
               size="small"
               validators={["required"]}
               errorMessages={["không để trống dòng này"]}
+              minDate={new Date()}
               style={{ width: "100%" }}
               InputAdornmentProps={{ position: "start" }}
-              value={
-                timepoRequest
-                  ? moment(new Date(timepoRequest)).format("DD/MM/YYYY")
-                  : ""
-              }
-              onChange={(e) => {
-                setTimePoRequest(e.toLocaleDateString());
+              value={timepoRequest}
+              onChange={(date) => {
+                setTimePoRequest(date);
               }}
             />
-          </nav>
-        </div>
-        <div className={classes.box}>
-          <nav>
-            <p className={classes.labelId}>{language.addProduct}</p>{" "}
-          </nav>
-          <nav>
-            <IconButton
-              onClick={addItemProductHandler}
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-              classes={{
-                root: classes.button, // class name, e.g. `classes-nesting-root-x`
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-            <Button
-              variant="contained"
-              classes={{
-                root: classes.button, // class name, e.g. `classes-nesting-root-x`
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-              //   size="large"
-              onClick={addItemProductNewHandler}
-              startIcon={<AddIcon />}
-            >
-              {language.createNew}
-            </Button>
-          </nav>
-        </div>
-        <div className={classes.box1}>
-          <p className={classes.labelId}>{language.listProducts}</p>
-        </div>
-        <div className={classes.box1}>{listItems()}</div>
+          </Grid>
+          <Grid item lg={9}>
+            <div className={classes.box}>
+              <nav>
+                <p className={classes.labelId}>{language.addProduct}</p>{" "}
+              </nav>
+              <nav>
+                <IconButton
+                  onClick={addItemProductHandler}
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                  classes={{
+                    root: classes.button, // class name, e.g. `classes-nesting-root-x`
+                    label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </nav>
+            </div>
+            <div className={classes.box}>
+              <p className={classes.labelId}>{language.listProducts}</p>
+            </div>
+            <div className={classes.box1}>{listItems()}</div>
+          </Grid>
+        </Grid>
       </div>
       <div className={classes.box2}>
         <Button

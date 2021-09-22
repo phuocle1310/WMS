@@ -47,9 +47,33 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 #chạy post man bỏ biến này ra
-# OAUTH2_PROVIDER = {
-#     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+}
+
+# SWAGGER_SETTINGS = {
+#     'SHOW_REQUEST_HEADERS': True,
+#     'SECURITY_DEFINITIONS': {
+#         'Bearer': {
+#             'type': 'apiKey',
+#             'name': 'Authorization',
+#             'in': 'header'
+#         }
+#     },
+#     'USE_SESSION_AUTH': False,
+#     'JSON_EDITOR': True,
+#     'SUPPORTED_SUBMIT_METHODS': [
+#         'get',
+#         'post',
+#         'put',
+#         'delete',
+#         'patch',
+#     ],
 # }
+
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+}
 
 # SWAGGER_SETTINGS = {
 #     'SHOW_REQUEST_HEADERS': True,
@@ -74,18 +98,16 @@ INSTALLED_APPS = [
 # }
 
 
-#auth
-# may phuoc
-OAUTH2_INFO = {
-    "client_id": "rFHqkLDS66o8QLm30zlUXTzd787R60jQcXKBoKNS",
-    "client_secret": "5kXZ9ZRFEpyyfKPT97z4sNWLYX4IeD5488CEv5umO43iGhfrzSuBbcpNo7gUgPgffi5qCcdAaGadbyJ3ZLZbZnrsBJpIMXLgMZM9VmXFW5eRY8GRr95y1j5X1aJNT40i"
-}
-# may cau
-# OAUTH2_INFO = {
-#     "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
-#     "client_secret": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
-# }
 
+#auth
+OAUTH2_INFO = {
+    "client_id": "dCCsKciaksXAHxESE9b4a9n20YFPpWT35ksOaIgE",
+    "client_secret": "hKu2rhDnB6vV9Tr5hAEDyXIzOn1ZvDzyDTKiL9AKbLFvw4vq1DK5jDNg97BjGNPiAuyc6ADdjrn63GpBruayllvRUluW6QqS7HIVwIJ93DZKX7qP02oWUvAqyH72Os86"
+}
+OAUTH2_INFO = {
+    "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
+    "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
@@ -145,7 +167,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '12345',
+        'PASSWORD': '123456789',
         'HOST': ''  # mặc định localhost
     }
 }
