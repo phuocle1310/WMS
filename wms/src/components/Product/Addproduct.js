@@ -33,10 +33,10 @@ const Addproduct = (props) => {
     return (
       <>
         {" "}
-        <Grid item xs={3} sm={6} md={1} lg={1}>
+        <div>
           <p>{props.id}</p>
-        </Grid>
-        <Grid item xs={9} sm={6} md={2} lg={4}>
+        </div>
+        <div>
           {" "}
           <ValidatedCombox
             name="nameproduct"
@@ -46,12 +46,13 @@ const Addproduct = (props) => {
             value={values.nameproduct ? values.nameproduct : " "}
             errorMessages={[`${language.requiredError}`]}
           ></ValidatedCombox>
-        </Grid>
-        <Grid item xs={6} sm={6} md={2} lg={2}>
+        </div>
+        <div>
           {" "}
           <ValidatedDatePicker
             autoOk
             variant="inline"
+            style={{ width: 100 }}
             className={classes.textField}
             inputVariant="outlined"
             format="dd/MM/yyyy"
@@ -71,12 +72,13 @@ const Addproduct = (props) => {
             onChange={(e) => console.log(e)}
             readOnly={true}
           />{" "}
-        </Grid>
-        <Grid item xs={6} sm={6} md={2} lg={2}>
+        </div>
+        <div>
           {" "}
           <ValidatedDatePicker
             autoOk
             variant="inline"
+            fullWidth
             className={classes.textField}
             label={language.expirationDate}
             inputVariant="outlined"
@@ -94,13 +96,13 @@ const Addproduct = (props) => {
             onChange={props.handleChangeExpirationDate}
             readOnly={true}
           />{" "}
-        </Grid>
-        <Grid item xs={4} sm={6} md={2} lg={2}>
+        </div>
+        <div>
           <TextValidator
             className={classes.textField}
             variant="outlined"
             margin="normal"
-            fullWidth
+            style={{ width: 130 }}
             size="small"
             type="number"
             label={language.quantity}
@@ -114,8 +116,8 @@ const Addproduct = (props) => {
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}
           />
-        </Grid>
-        <Grid item xs={4} sm={6} md={1} lg={1}>
+        </div>
+        <div>
           <IconButton
             color="primary"
             aria-label="upload picture"
@@ -124,15 +126,11 @@ const Addproduct = (props) => {
           >
             <ClearIcon />
           </IconButton>
-        </Grid>
+        </div>
       </>
     );
   };
-  return (
-    <Grid container style={{ width: "100%", marginBottom: 15 }} spacing={1}>
-      {props.isNew && itemProduct()}
-    </Grid>
-  );
+  return <div className={classes.product}>{props.isNew && itemProduct()}</div>;
 };
 
 export default Addproduct;

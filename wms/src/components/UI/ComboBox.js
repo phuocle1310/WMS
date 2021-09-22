@@ -31,7 +31,7 @@ export default function ComboBox(props) {
       id="combo-box-demo"
       options={props.product}
       getOptionLabel={(option) => option.name || ""}
-      style={{ width: "100%" }}
+      style={{ width: "200px" }}
       name="nameproduct"
       onSelect={props.handleChange}
       fullWidth

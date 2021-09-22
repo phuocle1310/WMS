@@ -83,5 +83,17 @@ const AddProductStyles = makeStyles((theme) => ({
   label: {
     textTransform: "capitalize",
   },
+  product: {
+    rowGap: "10px",
+    "& div": {
+      marginRight: 10,
+      marginBottom: 10,
+    },
+    [theme.breakpoints.up("lg")]: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  },
 }));
 export default AddProductStyles;

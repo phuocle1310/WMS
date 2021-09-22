@@ -51,25 +51,52 @@ OAUTH2_PROVIDER = {
     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 }
 
-SWAGGER_SETTINGS = {
-    'SHOW_REQUEST_HEADERS': True,
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
-    },
-    'USE_SESSION_AUTH': False,
-    'JSON_EDITOR': True,
-    'SUPPORTED_SUBMIT_METHODS': [
-        'get',
-        'post',
-        'put',
-        'delete',
-        'patch',
-    ],
+# SWAGGER_SETTINGS = {
+#     'SHOW_REQUEST_HEADERS': True,
+#     'SECURITY_DEFINITIONS': {
+#         'Bearer': {
+#             'type': 'apiKey',
+#             'name': 'Authorization',
+#             'in': 'header'
+#         }
+#     },
+#     'USE_SESSION_AUTH': False,
+#     'JSON_EDITOR': True,
+#     'SUPPORTED_SUBMIT_METHODS': [
+#         'get',
+#         'post',
+#         'put',
+#         'delete',
+#         'patch',
+#     ],
+# }
+
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 }
+
+# SWAGGER_SETTINGS = {
+#     'SHOW_REQUEST_HEADERS': True,
+#     'SECURITY_DEFINITIONS': {
+#         "oauth": {
+#             "type": "oauth2",
+#             "authorizationUrl": "http://127.0.0.1:8000/api-auth/",
+#             "flow": "implicit",
+#             "scopes": {
+#             }
+#         }
+#     },
+#     'USE_SESSION_AUTH': False,
+#     'JSON_EDITOR': True,
+#     'SUPPORTED_SUBMIT_METHODS': [
+#         'get',
+#         'post',
+#         'put',
+#         'delete',
+#         'patch',
+#     ],
+# }
+
 
 
 #auth
@@ -77,6 +104,11 @@ OAUTH2_INFO = {
     "client_id": "dCCsKciaksXAHxESE9b4a9n20YFPpWT35ksOaIgE",
     "client_secret": "hKu2rhDnB6vV9Tr5hAEDyXIzOn1ZvDzyDTKiL9AKbLFvw4vq1DK5jDNg97BjGNPiAuyc6ADdjrn63GpBruayllvRUluW6QqS7HIVwIJ93DZKX7qP02oWUvAqyH72Os86"
 }
+OAUTH2_INFO = {
+    "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
+    "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
