@@ -136,10 +136,10 @@ const Addproduct = (props) => {
             color="primary"
             aria-label="upload picture"
             component="span"
-            classes={{
-              root: classes.submit, // class name, e.g. `classes-nesting-root-x`
-              label: classes.label, // class name, e.g. `classes-nesting-label-x`
-            }}
+            // classes={{
+            //   root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+            //   label: classes.label, // class name, e.g. `classes-nesting-label-x`
+            // }}
             onClick={props.onClear}
           >
             <ClearIcon />

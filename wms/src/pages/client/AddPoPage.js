@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
@@ -27,7 +26,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -89,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: "1px solid #ede7f6",
     width: "90%",
   },
+  tabPanel: {
+    // background: "#fafafa",
+  },
 }));
 const AddPoPage = (props) => {
   const classes = useStyles();
@@ -128,8 +130,8 @@ const AddPoPage = (props) => {
           />
         </Tabs>{" "}
       </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <TabPanel value={value} index={0}>
+      <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
+        <TabPanel value={value} index={0} component={"div"}>
           <AddNewsProduct />
         </TabPanel>
         <TabPanel value={value} index={1}>

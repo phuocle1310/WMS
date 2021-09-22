@@ -29,6 +29,8 @@ const MulLanguage = {
     unit: "Unit",
     //error
     requiredError: "Please enter this line",
+    requiredExpirationDate:
+      "Prodcution date can be less or equal than expire date",
     //list Po
     id: "Id",
     status: "Status",
@@ -43,6 +45,9 @@ const MulLanguage = {
     sreach: "Sreach...",
     //dang nhap
     errLogin: "The password or the username that you've entered is incorrect",
+    //thêm sản phẩm mới
+    addNewProduct: "Add new product",
+    muCase: " Quantity/Case",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -74,6 +79,7 @@ const MulLanguage = {
     expirationDate: "Ngày hết hạn",
     //error
     requiredError: "vui lòng nhập dòng này",
+    requiredExpirationDate: "Hạn sử dụng phải lớn hơn ngày sản xuất",
     //list Po
     id: "Mã",
     status: "Trạng thái",
@@ -88,6 +94,9 @@ const MulLanguage = {
     sreach: "Tìm kiếm...",
     //dang nhap
     errLogin: "Tên đăng nhập hoặc mật khẩu không đúng!!",
+    //addnewproduct
+    addNewProduct: "Thêm sản phẩm mới",
+    muCase: "Số lượng trên một thùng",
   },
 };
 export default MulLanguage;
