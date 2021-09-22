@@ -73,7 +73,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
             role = int(request.data.get('role'))
             if role == 0 or role == 1:
                 raise PermissionDenied("You can't create Admin/User Account")
-        return super().create(request, *args, **kwargs) and Response(status=status.HTTP_200_OK)
+        return super().create(request, *args, **kwargs) and Response(status=status.HTTP_201_CREATED)
 
     # ley user da dang nhap
     @action(methods=['get'], detail=False, url_path="current-user")

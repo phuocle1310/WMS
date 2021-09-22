@@ -22,20 +22,20 @@ class User(AbstractUser):
         (SUPPLIER, 'SUPPLIER'),
     )
 
-    role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=USER)
+    role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=ADMIN)
 
-    # def save(self, *args, **kwargs):
-    #
-    #     self.set_password(self.password)
-    #     if self.is_superuser:
-    #         self.role = self.ADMIN
-    #     if self.role == self.ADMIN:
-    #         self.is_superuser = True
-    #         self.is_staff = True
-    #     else:
-    #         self.is_superuser = False
-    #         self.is_staff = False
-    #     super(User, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.set_password(self.password)
+        super(User, self).save(*args, **kwargs)
+        # self.set_password(self.password)
+        # if self.is_superuser:
+        #     self.role = self.ADMIN
+        # if self.role == self.ADMIN:
+        #     self.is_superuser = True
+        #     self.is_staff = True
+        # else:
+        #     self.is_superuser = False
+        #     self.is_staff = False
 
 
 class Supplier(models.Model):
@@ -49,11 +49,6 @@ class Supplier(models.Model):
     def __str__(self):
         return self.company_name
 
-    # def clean(self):
-    #     suplier = Supplier.objects.filter(company_name=self.company_name)
-    #     if suplier is not None:
-    #         raise ValidationError({'company_name': 'Company name is exist'})
-
 
 class Item(models.Model):
     name = models.CharField(max_length=100, null=False)
@@ -62,22 +57,20 @@ class Item(models.Model):
     expire_date = models.DateField()  # HSD
     production_date = models.DateField()  # NSX
     mu_case = models.IntegerField(default=1, null=False,
-                                  validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
-    Qty_total = models.IntegerField(default=1, null=True,
-                                    validators=[MinValueValidator(1, 'Quantity total at least 1 CASE')])
-    desc = models.TextField(null=True, blank=True)
+                                  validators=[MinValueValidator(1, 'Quantity MU/CASE must greater than or equal')])  # MU/Case
+    Qty_total = models.IntegerField(default=0, null=True,
+                                    validators=[MinValueValidator(0, 'Quantity total must greater than 0')])
     status = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ['name', 'production_date']
 
     def __str__(self):
-        return self.name
+        return self.name +"      " +str(self.production_date)
 
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
             if self.expire_date < self.production_date:
-                # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
                 raise ValidationError({'expire_date': 'Expire date can be < Production date'})
 
 
@@ -151,13 +144,11 @@ class ItemLocation(models.Model):
 
 class BasePOSO(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=False)
-    Qty_total = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity total at least 1 CASE')],
-                                    null=False)
     effective_date = models.DateField()
     closed_date = models.DateField(blank=True, null=True)
     add_date = models.DateField(auto_now_add=True)
     edit_date = models.DateField(auto_now=True)
-    active = models.BooleanField(default=True)
+    description = models.TextField(null=True, blank=True)
 
     PENDING = 2
     ACCEPTED = 1
@@ -198,38 +189,37 @@ class SO(BasePOSO):
     edit_who = models.ForeignKey(User, related_name="so_edit_who", on_delete=models.SET_NULL, null=True)
 
 
-class ItemTemp(models.Model):
-    name = models.CharField(max_length=100, null=False)
-    expire_date = models.DateField()  # HSD
-    production_date = models.DateField()  # NSX
-    mu_case = models.IntegerField(default=1, null=False,
-                                  validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
+# class ItemTemp(models.Model):
+#     name = models.CharField(max_length=100, null=False)
+#     expire_date = models.DateField()  # HSD
+#     production_date = models.DateField()  # NSX
+#     mu_case = models.IntegerField(default=1, null=False,
+#                                   validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
+#
+#     class Meta:
+#         unique_together = ['name', 'production_date']
+#
+#     def __str__(self):
+#         return self.name
+#
+#     def clean(self):
+#         if self.expire_date is not None or self.production_date is not None:
+#             if self.expire_date <= self.production_date:
+#                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
+#                 raise ValidationError({'expire_date': 'Expire date can be < Production date'})
 
-    class Meta:
-        unique_together = ['name', 'production_date']
 
-    def __str__(self):
-        return self.name
-
-    def clean(self):
-        if self.expire_date is not None or self.production_date is not None:
-            if self.expire_date <= self.production_date:
-                # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
-                raise ValidationError({'expire_date': 'Expire date can be < Production date'})
-
-
-class PODetailTemp(models.Model):
-    PO = models.ForeignKey(PO, related_name= "podetail_temp", on_delete=models.CASCADE, null=False)
-    item = models.ForeignKey(ItemTemp, related_name= "po_detail_temp", on_delete=models.SET_NULL, null=True)
-    Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
-
-    class Meta:
-        ordering = ['-id']
+# class PODetailTemp(models.Model):
+#     PO = models.ForeignKey(PO, related_name= "podetail_temp", on_delete=models.CASCADE, null=False)
+#     item = models.ForeignKey(ItemTemp, related_name= "po_detail_temp", on_delete=models.SET_NULL, null=True)
+#     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
+#
+#     class Meta:
+#         ordering = ['-id']
 
 
 class BasePOSODetail(models.Model):
-    Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
-    description = models.TextField(null=True, blank=True)
+    Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order must greater or equal than 1')])
     status = models.BooleanField(default=True)
 
     class Meta:
@@ -289,9 +279,9 @@ class Order(BaseReceiptOrder):
 
 class BaseReceiptOrderDetail(models.Model):
     item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
-    Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
-    Qty_just = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
-    Qty_receipt = models.IntegerField(default=1, validators=[MinValueValidator(1, 'khong duoc duoi 1 CASE')], null=True)
+    Qty_order = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity order must greater than 0')], null=True)
+    Qty_just = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity just must greater than 0')], null=True)
+    Qty_receipt = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity just must greater than 0')], null=True)
     status = models.BooleanField(default=True)
 
     class Meta:
