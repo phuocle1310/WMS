@@ -25,9 +25,6 @@ router.register('po', views.POViewSet)
 router.register('so', views.SOView)
 router.register('user', views.UserViewSet)
 router.register('item', views.ItemViewSet)
-router.register('podetail', views.PODetailView)
-router.register('sodetail', views.SODetailView)
-router.register('podetailtemps', views.PODetailRequest)
 
 urlpatterns = [
     path('', include(router.urls)),

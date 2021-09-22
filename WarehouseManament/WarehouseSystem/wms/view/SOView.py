@@ -6,56 +6,35 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from ..models import SO
-from ..serializers import SOSerializer
+from ..serializers import SOSerializer, SOCreateSerializer
 
 
-class SOView(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView,
-             generics.UpdateAPIView, generics.CreateAPIView):
-    queryset = SO.objects.filter(active=True)
-    serializer_class = SOSerializer
+class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
+    queryset = SO.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     action_required_auth = ['list', 'retrieve', 'create',
-                            'update', 'get_so_by_supplier', 'get_so_by_range_effective_date']
+                            'update']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
-    @swagger_auto_schema(manual_parameters=[
-        Parameter('from_date', IN_QUERY, type='str'),
-        Parameter('to_date', IN_QUERY, type='str')
-    ])
-    @action(methods=['get'], detail=False,
-            url_path='get-so-by-range-effective-date',
-            url_name='so-by-range-effective-date')
-    def get_so_by_range_effective_date(self, request):
-        try:
-            from_date = self.request.query_params.get('from_date')
-            to_date = self.request.query_params.get('to_date')
+    def get_serializer_class(self):
+        if self.action in ['create']:
+            return SOCreateSerializer
+        if self.action in ["list", "get_po"]:
+            return SOSerializer
 
-            so = SO.objects.filter(effective_date__date__range=[from_date, to_date], active=True)
-            serializer = SOSerializer(so, many=True)
-        except SO.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    @action(methods=['get'], detail=True)
+    def get_so(self, request, pk):
+        so = self.get_object()
+        if so is not None:
+            return Response(data=SOSerializer(so).data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(manual_parameters=[
-        Parameter('supplier', IN_QUERY, type='integer', required=True)
-    ])
-    @action(methods=['get'], detail=False,
-            url_path='get-sos-by-supplier',
-            url_name='sos-by-supplier')
-    def get_so_by_supplier(self, request):
-        try:
-            supplier = self.request.query_params.get('supplier')
-            so = SO.objects.filter(supplier=supplier, active=True)
-            serializer = SOSerializer(so, many=True)
-        except SO.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    def list(self, request, *args, **kwargs):
-        if request.user.role == 2:
-            raise PermissionDenied()
-        return super().list(request, *args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        serializer = SOCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save(**{"supplier": self.request.user.supplier, "items": self.request.data.get('items')})
+        return Response(SOSerializer(instance).data, status=status.HTTP_201_CREATED)

@@ -54,10 +54,12 @@ INSTALLED_APPS = [
 # SWAGGER_SETTINGS = {
 #     'SHOW_REQUEST_HEADERS': True,
 #     'SECURITY_DEFINITIONS': {
-#         'Bearer': {
-#             'type': 'apiKey',
-#             'name': 'Authorization',
-#             'in': 'header'
+#         "oauth": {
+#             "type": "oauth2",
+#             "authorizationUrl": "http://127.0.0.1:8000/api-auth/",
+#             "flow": "implicit",
+#             "scopes": {
+#             }
 #         }
 #     },
 #     'USE_SESSION_AUTH': False,
