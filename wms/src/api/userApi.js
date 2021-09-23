@@ -9,7 +9,7 @@ const userApi = {
     return axiosClient.post(url, data);
   },
   getUser: () => {
-    const url = `/users/current-user/`;
+    const url = `/user/current-user/`;
     return axiosClient.get(url);
   },
 };

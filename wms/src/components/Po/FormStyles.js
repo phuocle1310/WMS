@@ -45,6 +45,8 @@ const FormStyles = makeStyles((theme) => ({
     margin: 0,
     float: "left",
     fontSize: 13,
+    marginBottom: 10,
+    marginTop: 10,
     [theme.breakpoints.up("lg")]: {
       fontSize: 15,
     },
@@ -53,20 +55,16 @@ const FormStyles = makeStyles((theme) => ({
     width: "100%",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     flexDirection: "row",
-    "& nav": {
-      width: "70%",
-    },
-    "& nav:first-child": {
-      width: "30%",
-    },
   },
   box1: {
     "& p": {
       textAlign: "center",
-      //   marginBottom: 15,
     },
+  },
+  box2: {
+    float: "right",
   },
   textField: {
     padding: 0,
@@ -145,7 +143,7 @@ const FormStyles = makeStyles((theme) => ({
       background: "#4345de",
     },
     float: "left",
-    marginRight: 15,
+    marginLeft: 15,
   },
 }));
 export default FormStyles;

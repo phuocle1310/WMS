@@ -30,8 +30,8 @@ export default function ComboBox(props) {
     <Autocomplete
       id="combo-box-demo"
       options={props.product}
-      getOptionLabel={(option) => option.name}
-      style={{ width: "100%" }}
+      getOptionLabel={(option) => option.name || ""}
+      style={{ width: "200px" }}
       name="nameproduct"
       onSelect={props.handleChange}
       fullWidth
@@ -39,12 +39,12 @@ export default function ComboBox(props) {
         <TextValidator
           {...params}
           size="small"
+          value={props.value || ""}
           label={language.product}
           variant="outlined"
           fullWidth
           className={classes.textField}
-          validators={["required"]}
-          errorMessages={["không để trống dòng này"]}
+          required
         />
       )}
     />
