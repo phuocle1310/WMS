@@ -47,18 +47,16 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 #chạy post man bỏ biến này ra
-# OAUTH2_PROVIDER = {
-#     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-# }
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+}
 
 
 #auth
-# may phuoc
 OAUTH2_INFO = {
-    "client_id": "XvBL4fPalVBkPEs5Tynuf67kp6OViQp0kZnreFH1",
-    "client_secret": "RFP7KKeUkx9FXul7OV3sw5gjjJMtzrUIDlwJQUPkV3RF0lDzqEH7jLRxmHgou253XdulRWKBoa3OV70GKShEwDFdtFoG7FaDL6OcWwnR1KZFWX9TWjvMl6oA7075NmeS"
+    "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
+    "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
 }
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
@@ -118,7 +116,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '12345',
+        'PASSWORD': '123456789',
         'HOST': ''  # mặc định localhost
     }
 }
