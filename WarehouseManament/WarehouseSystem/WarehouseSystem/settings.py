@@ -101,10 +101,6 @@ OAUTH2_PROVIDER = {
 
 #auth
 OAUTH2_INFO = {
-    "client_id": "dCCsKciaksXAHxESE9b4a9n20YFPpWT35ksOaIgE",
-    "client_secret": "hKu2rhDnB6vV9Tr5hAEDyXIzOn1ZvDzyDTKiL9AKbLFvw4vq1DK5jDNg97BjGNPiAuyc6ADdjrn63GpBruayllvRUluW6QqS7HIVwIJ93DZKX7qP02oWUvAqyH72Os86"
-}
-OAUTH2_INFO = {
     "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
     "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
 }

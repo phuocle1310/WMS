@@ -9,7 +9,7 @@ from ..models import SO
 from ..serializers import SOSerializer, SOCreateSerializer
 
 
-class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
+class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
     queryset = SO.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     action_required_auth = ['list', 'retrieve', 'create',
@@ -23,7 +23,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     def get_serializer_class(self):
         if self.action in ['create']:
             return SOCreateSerializer
-        if self.action in ["list", "get_po"]:
+        if self.action in ["list", "get_so"]:
             return SOSerializer
 
     @action(methods=['get'], detail=True)
@@ -38,3 +38,43 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         instance = serializer.save(**{"supplier": self.request.user.supplier, "items": self.request.data.get('items')})
         return Response(SOSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['put'], detail=True, url_path='update')
+    def update_so(self, request, pk):
+        if request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            instance = self.get_object()
+            stt = request.data.pop('status')
+        except SO.DoesNotExist:
+            return Response({"Falied": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+        if stt in [3, 1]:
+            instance.add_who = request.user
+            instance.edit_who = request.user
+        if stt == 0:
+            instance.edit_who = request.user
+        if stt == 2:
+            return Response({"Falied": "SO is pending already"}, status=status.HTTP_400_BAD_REQUEST)
+        instance.status = stt
+        instance.save()
+        serializer = SOSerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except SO.DoesNotExist:
+            return Response({"Falied": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+        if instance.status != 2:
+            return Response({"Falied": "You can't delete SO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            if request.user.supplier == self.get_object().supplier:
+                return super().destroy(request, *args, **kwargs)
+            return Response({"Falied": "You dont have permission to delete this SO"}, status=status.HTTP_403_FORBIDDEN)
+
+
+
+
