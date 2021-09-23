@@ -58,7 +58,6 @@ const AddNewsProduct = (props) => {
   };
   let form = "";
   //xử lý hàm delete
-
   const handleDelete = (e) => {
     setProduct({
       name: "",
@@ -70,6 +69,11 @@ const AddNewsProduct = (props) => {
     handleDateChange("");
     handleDateChangeP("");
   };
+  // truyền dữ liệu submit
+  const onSubmit = (e) => {
+    e.preventDefault();
+    props.onProduct(product);
+  };
   return (
     <ValidatorForm
       className={classes.form}
@@ -77,6 +81,7 @@ const AddNewsProduct = (props) => {
         form = r;
       }}
       instantValidate
+      onSubmit={onSubmit}
     >
       <div className={classes.box}>
         <div className={classes.boxChild}>
@@ -120,7 +125,8 @@ const AddNewsProduct = (props) => {
                 handleDateChangeP(date);
                 setProduct((prevState) => {
                   let newProduct = { ...prevState };
-                  newProduct["production_date"] = date.toLocaleDateString();
+                  newProduct["production_date"] =
+                    date.toLocaleDateString("en-CA");
                   return newProduct;
                 });
               }
@@ -147,7 +153,7 @@ const AddNewsProduct = (props) => {
                 handleDateChange(date);
                 setProduct((prevState) => {
                   let newProduct = { ...prevState };
-                  newProduct["expire_date"] = date.toLocaleDateString();
+                  newProduct["expire_date"] = date.toLocaleDateString("en-CA");
                   return newProduct;
                 });
               }

@@ -4,5 +4,9 @@ const productApi = {
     const url = `/item/get-item-by-supplier/`;
     return axiosClient.get(url);
   },
+  createdProduct: (data) => {
+    const url = `/item/`;
+    return axiosClient.post(url, data);
+  },
 };
 export default productApi;

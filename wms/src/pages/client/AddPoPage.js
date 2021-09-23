@@ -12,6 +12,8 @@ import Box from "@material-ui/core/Box";
 import AddIcon from "@material-ui/icons/Add";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import AddNewsProduct from "../../components/Product/AddNewsProduct";
+//api
+import productApi from "../../../src/api/productApi"
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -82,6 +84,22 @@ const AddPoPage = (props) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  let dataProduct;
+  const handleAddProduct = (data) => {
+  // xử lý api thêm sản phẩm
+  const fetchLogin = async () => {
+    try {
+      console.log(data)
+      //gọi từ axios
+      const response = await productApi.createdProduct(data);
+      console.log(response);
+    } catch (error) {
+       console.log(error.response.data)
+    }
+  };
+  fetchLogin();
+  };
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.box}>
@@ -111,7 +129,7 @@ const AddPoPage = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
         <TabPanel value={value} index={0} component={"div"}>
-          <AddNewsProduct />
+          <AddNewsProduct onProduct={handleAddProduct} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <h3>{language.titleRPo}</h3>
