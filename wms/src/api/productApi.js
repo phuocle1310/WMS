@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 const productApi = {
   getProductBySupplier: () => {
-    const url = `/items/`;
+    const url = `/item/get-item-by-supplier/`;
     return axiosClient.get(url);
   },
 };
