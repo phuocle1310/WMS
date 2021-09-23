@@ -85,8 +85,8 @@ class POSerializer(ModelSerializer):
         if instance.status == 0:
             if instance.closed_date is None:
                 raise ValidationError({'closed_date': 'PO\'s status was done, so close date can be null'})
-        if instance.effective_date < instance.add_date or instance.closed_date < instance.add_date:
-            raise ValidationError({'Close date or Effective date can be < created date'})
+        if instance.effective_date < date.today():
+            raise ValidationError({'effective_date': 'Effective date can be earlier today'})
         return attrs
 
 
@@ -143,6 +143,8 @@ class SOSerializer(ModelSerializer):
         if instance.status == 0:
             if instance.closed_date is None:
                 raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
+        if instance.effective_date < date.today():
+            raise ValidationError({'effective_date': 'Effective date can be earlier today'})
         return attrs
 
 
