@@ -51,28 +51,6 @@ INSTALLED_APPS = [
 #     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 # }
 
-# SWAGGER_SETTINGS = {
-#     'SHOW_REQUEST_HEADERS': True,
-#     'SECURITY_DEFINITIONS': {
-#         "oauth": {
-#             "type": "oauth2",
-#             "authorizationUrl": "http://127.0.0.1:8000/api-auth/",
-#             "flow": "implicit",
-#             "scopes": {
-#             }
-#         }
-#     },
-#     'USE_SESSION_AUTH': False,
-#     'JSON_EDITOR': True,
-#     'SUPPORTED_SUBMIT_METHODS': [
-#         'get',
-#         'post',
-#         'put',
-#         'delete',
-#         'patch',
-#     ],
-# }
-
 
 #auth
 # may phuoc
@@ -80,11 +58,6 @@ OAUTH2_INFO = {
     "client_id": "XvBL4fPalVBkPEs5Tynuf67kp6OViQp0kZnreFH1",
     "client_secret": "RFP7KKeUkx9FXul7OV3sw5gjjJMtzrUIDlwJQUPkV3RF0lDzqEH7jLRxmHgou253XdulRWKBoa3OV70GKShEwDFdtFoG7FaDL6OcWwnR1KZFWX9TWjvMl6oA7075NmeS"
 }
-# may cau
-# OAUTH2_INFO = {
-#     "client_id": "Hn9VGL0a2J6Ae2zljKWLeFYqy6cqXOXKJCrEorut",
-#     "client_secret": "otkt7K0JhNT19A4tmBMDAHC1XzFtCetrN2npK7h3ZgKtFCIKHrIF6jl4TADwIv5GkgRgJsA7lbxGxnvIV6qO88uS6PjVekdW6NV0hqqB6PnqkBMXrAsEXUmPUemZ5Im0"
-# }
 
 
 REST_FRAMEWORK = {
