@@ -77,8 +77,8 @@ INSTALLED_APPS = [
 #auth
 # may phuoc
 OAUTH2_INFO = {
-    "client_id": "rFHqkLDS66o8QLm30zlUXTzd787R60jQcXKBoKNS",
-    "client_secret": "5kXZ9ZRFEpyyfKPT97z4sNWLYX4IeD5488CEv5umO43iGhfrzSuBbcpNo7gUgPgffi5qCcdAaGadbyJ3ZLZbZnrsBJpIMXLgMZM9VmXFW5eRY8GRr95y1j5X1aJNT40i"
+    "client_id": "XvBL4fPalVBkPEs5Tynuf67kp6OViQp0kZnreFH1",
+    "client_secret": "RFP7KKeUkx9FXul7OV3sw5gjjJMtzrUIDlwJQUPkV3RF0lDzqEH7jLRxmHgou253XdulRWKBoa3OV70GKShEwDFdtFoG7FaDL6OcWwnR1KZFWX9TWjvMl6oA7075NmeS"
 }
 # may cau
 # OAUTH2_INFO = {

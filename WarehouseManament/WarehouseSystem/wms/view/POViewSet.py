@@ -10,8 +10,9 @@ from ..models import PO, Item
 from ..serializers import *
 
 
-class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView):
+class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPIView):
     queryset = PO.objects.all()
+    serializer_class = POSerializer
     action_required_auth = ['list', 'retrieve', 'create',
                             'update']
 
@@ -23,7 +24,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView):
     def get_serializer_class(self):
         if self.action in ['create']:
             return POCreateSerializer
-        if self.action in ["list","get_po"]:
+        if self.action in ["list", 'update', "get_po", 'delete', 'un_active_po']:
             return POSerializer
 
     @action(methods=['get'], detail=True)
@@ -36,5 +37,59 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView):
     def create(self, request, *args, **kwargs):
         serializer = POCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if self.request.user.role == 1:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         instance = serializer.save(**{"supplier": self.request.user.supplier, "items": self.request.data.get('items')})
         return Response(POSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['put'], detail=True, url_path='update')
+    def update_po(self, request, pk):
+        if request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            instance = PO.objects.get(pk=pk)
+            stt = request.data.pop('status')
+        except PO.DoesNotExist:
+            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if stt in [3, 1]:
+            instance.add_who = request.user
+            instance.edit_who = request.user
+        if stt == 0:
+            instance.edit_who = request.user
+        if stt == 2:
+            return Response({"Falied": "PO is pending already"}, status=status.HTTP_400_BAD_REQUEST)
+        instance.status = stt
+        instance.save()
+        serializer = POSerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+
+        except PO.DoesNotExist:
+            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+        if instance.status != 2:
+            return Response({"Falied": "You can't delete PO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            if request.user.supplier == self.get_object().supplier:
+                return super().destroy(request, *args, **kwargs)
+            return Response({"Falied": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
+
+    # @action(methods=['patch'], detail=True, url_path='un-active-po')
+    # def un_active_po(self, request, pk):
+    #     try:
+    #         instance = self.get_object()
+    #         print(instance.status)
+    #     except PO.DoesNotExist:
+    #         return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+    #
+    #     if request.user.role == 2:
+    #         raise PermissionDenied()
+    #     instance.edit_who = request.user
+    #     instance.status = 3
+    #     instance.save()
+    #     return Response("kkajaja", status=status.HTTP_200_OK)
