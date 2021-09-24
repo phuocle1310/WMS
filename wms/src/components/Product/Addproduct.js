@@ -4,7 +4,14 @@ import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { TextValidator } from "react-material-ui-form-validator";
 import ClearIcon from "@material-ui/icons/Clear";
 import IconButton from "@material-ui/core/IconButton";
-import ValidatedCombox from "../UI/ValidatedCombox";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Button from "@material-ui/core/Button";
+
+// import ValidatedCombox from "../UI/ValidatedCombox";
+import ComboBox from "../UI/ComboBox";
 //css
 import AddProductStyles from "./AddProductStyles";
 //lang
@@ -29,6 +36,21 @@ const Addproduct = (props) => {
       moment(new Date(selectedDate.manufactureDate)).format("YYYY/MM/DD"),
     );
   }, [values.manufactureDate]);
+  const [age, setAge] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   const itemProduct = () => {
     return (
       <>
@@ -37,81 +59,53 @@ const Addproduct = (props) => {
           <p>{props.id}</p>
         </div>
         <div>
-          {" "}
-          <ValidatedCombox
-            name="nameproduct"
+          <ComboBox
+            value={values.product}
+            handlesetValue={props.handlesetValue}
             product={props.product}
-            handleChange={props.handleChangeSelect}
-            validators={["required"]}
-            value={values.nameproduct ? values.nameproduct : " "}
-            errorMessages={[`${language.requiredError}`]}
-          ></ValidatedCombox>
+          ></ComboBox>
         </div>
         <div>
-          {" "}
-          <ValidatedDatePicker
-            autoOk
-            variant="inline"
-            style={{ width: 100 }}
+          <TextValidator
+            value={values.production_date ? values.production_date : ""}
             className={classes.textField}
-            inputVariant="outlined"
-            format="dd/MM/yyyy"
-            size="small"
             label={language.manufactureDate}
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            size="small"
+            onChange={props.handleChange}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}
-            style={{ width: "100%" }}
-            InputAdornmentProps={{ position: "start" }}
-            value={
-              values.manufactureDate
-                ? moment(new Date(selectedDate.manufactureDate)).format(
-                    "YYYY/MM/DD",
-                  )
-                : selectedDate
-            }
-            onChange={(e) => console.log(e)}
-            readOnly={true}
-          />{" "}
+            inputProps={{ readOnly: true }}
+          ></TextValidator>
         </div>
         <div>
-          {" "}
-          <ValidatedDatePicker
-            autoOk
-            variant="inline"
-            fullWidth
+          <TextValidator
+            value={values.expire_date ? values.expire_date : ""}
             className={classes.textField}
             label={language.expirationDate}
-            inputVariant="outlined"
-            format="dd/MM/yyyy"
+            variant="outlined"
+            margin="normal"
+            fullWidth
             size="small"
+            onChange={props.handleChange}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}
-            style={{ width: "100%" }}
-            InputAdornmentProps={{ position: "start" }}
-            value={
-              values.expirationDate
-                ? moment(new Date(values.expirationDate)).format("YYYY/MM/DD")
-                : selectedDate
-            }
-            onChange={props.handleChangeExpirationDate}
-            readOnly={true}
-          />{" "}
+            inputProps={{ readOnly: true }}
+          ></TextValidator>
         </div>
         <div>
           <TextValidator
             className={classes.textField}
             variant="outlined"
             margin="normal"
-            style={{ width: 130 }}
+            style={{ width: 180 }}
             size="small"
             type="number"
             label={language.quantity}
             name="quantity"
-            defaultValue={
-              values.expirationDate
-                ? moment(new Date(values.expirationDate)).format("DD/MM/YYYY")
-                : selectedDate
-            }
+            value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
             validators={["required"]}
             errorMessages={[`${language.requiredError}`]}

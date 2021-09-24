@@ -19,12 +19,15 @@ import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useSelector } from "react-redux";
+
 //print
 import ReactToPrint from "react-to-print";
 //css
 import ListPoStyles from "./ListPoStyles";
-
+//api
+import {listPo} from "../../store/poSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
 export default function DataGridProDemo() {
   const classes = ListPoStyles();
   //lang
@@ -37,25 +40,19 @@ export default function DataGridProDemo() {
       field: "id",
       headerName: language.id,
       sortable: true,
-      width: 130,
+      width: 180,
     },
     {
-      field: "createDate",
+      field: "add_date",
       headerName: language.dateCreated,
       sortable: false,
-      width: 130,
+      width: 180,
     },
     {
-      field: "inputDate",
+      field: "effective_date",
       headerName: language.importDate,
       sortable: false,
-      width: 130,
-    },
-    {
-      field: "quantity",
-      headerName: language.quantity,
-      sortable: false,
-      width: 130,
+      width: 180,
     },
     {
       field: "status",
@@ -89,94 +86,44 @@ export default function DataGridProDemo() {
       },
     },
   ];
-  const rows = [
-    {
-      id: 1,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "FAILED",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 2,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "PENDING",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 3,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "FAILED",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 4,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "PENDING",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 5,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "FAILED",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 6,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "PENDING",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 7,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "FAILED",
-      quantity: "30",
-      detail: "aa",
-    },
-    {
-      id: 8,
-      createDate: "2000-1-1",
-      inputDate: "2002-1-1",
-      status: "DONE",
-      quantity: "30",
-      detail: "aa",
-    },
-  ];
+  // const rows = [
+  //   {
+  //     id: 7,
+  //     createDate: "2000-1-1",
+  //     inputDate: "2002-1-1",
+  //     status: 2,
+  //     detail: "aa",
+  //   },
+  //   {
+  //     id: 8,
+  //     createDate: "2000-1-1",
+  //     inputDate: "2002-1-1",
+  //     status: 4,
+  //     detail: "aa",
+  //   },
+  // ];
   //hàm show trạng thái
   const showAlert = (status) => {
     switch (status) {
-      case "PENDING":
+      case 2:
         return (
           <Alert severity="warning" variant="filled" className={classes.alert}>
             {language.PENDING}
           </Alert>
         );
-      case "ACCEPTED":
+      case 1:
         return (
           <Alert severity="info" variant="filled" className={classes.alert}>
             {language.ACCEPTED}
           </Alert>
         );
-      case "FAILED":
+      case 3:
         return (
           <Alert severity="error" variant="filled" className={classes.alert}>
             {language.FAILED}
           </Alert>
         );
-      case "DONE":
+      case 0:
         return (
           <Alert severity="success" variant="filled" className={classes.alert}>
             {language.DONE}
@@ -233,10 +180,10 @@ export default function DataGridProDemo() {
     );
   }
 
-  const [rowss, setRowss] = React.useState(rows);
-  function escapeRegExp(value) {
-    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-  }
+  // const [rowss, setRowss] = React.useState(rows);
+  // function escapeRegExp(value) {
+  //   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  // }
 
   const CustomToolbar = () => {
     return (
@@ -246,27 +193,76 @@ export default function DataGridProDemo() {
       </div>
     );
   };
-  const [value, setValue] = useState("");
-  const handlerOnchange = (e) => {
-    setValue(e.target.value);
-  };
-  useEffect(() => {
-    const searchRegex = new RegExp(escapeRegExp(value), "i");
-    const filteredRows = rows.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    setRowss(filteredRows);
-  }, [value]);
-  const deleteValue = () => {
-    setValue("");
-    setRowss([]);
-  };
+  // const [value, setValue] = useState("");
+  // const handlerOnchange = (e) => {
+  //   setValue(e.target.value);
+  // };
+  // useEffect(() => {
+  //   const searchRegex = new RegExp(escapeRegExp(value), "i");
+  //   const filteredRows = rows.filter((row) => {
+  //     return Object.keys(row).some((field) => {
+  //       return searchRegex.test(row[field].toString());
+  //     });
+  //   });
+  //   setRowss(filteredRows);
+  // }, [value]);
+  // const deleteValue = () => {
+  //   setValue("");
+  //   setRowss([]);
+  // };
+  //test
+  // const { data } = useDemoData({
+  //   dataSet: "Commodity",
+  //   rowLength: 100,
+  //   maxColumns: 6,
+  // });
 
+  // const [page, setPage] = React.useState(0);
+  // const [rows, setRows] = React.useState([]);
+  // const [loading, setLoading] = React.useState(false);
+
+  // React.useEffect(() => {
+  //   let active = true;
+
+  //   (async () => {
+  //     setLoading(true);
+  //     const newRows = await loadServerRows(page, data);
+
+  //     if (!active) {
+  //       return;
+  //     }
+
+  //     setRows(newRows);
+  //     setLoading(false);
+  //   })();
+
+  //   return () => {
+  //     active = false;
+  //   };
+  // }, [page, data]);
+  const rows = useSelector((state) => state.po.listPo);
+  const rowsCount= useSelector((state) => state.po.rowCount);
+  const [page,setPage] = useState(0);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchLogin = async () => {
+      try {
+        const action = listPo(page+1);
+        const actionResult = await dispatch(action);
+        unwrapResult(actionResult);
+    
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLogin();
+  }, [page]);
+  const handlePageChange =(page) => {
+    setPage(page)
+  }
   return (
     <div style={{ height: 520, width: "auto" }}>
-      <TextField
+      {/* <TextField
         value={value}
         onChange={handlerOnchange}
         placeholder={language.sreach}
@@ -286,22 +282,23 @@ export default function DataGridProDemo() {
           ),
         }}
       />
+ */}
       <DataGridPro
-        rows={rowss}
-        columns={columns}
-        className={classes.root}
-        rowHeight={40}
-        checkboxSelection
-        pagination
-        pageSize={8}
-        rowsPerPageOptions={[5]}
-        sortingOrder={["desc", "asc"]}
-        editMode="none"
-        components={{
-          Toolbar: CustomToolbar,
-          NoRowsOverlay: CustomNoRowsOverlay,
-        }}
-      />
+      rows={rows}
+      className={classes.root}
+      rowCount={rowsCount}
+      columns={columns}
+      pageSize={10}
+      pagination
+      paginationMode="server"
+      onPageChange={handlePageChange}
+      page={page}
+      editMode="none"
+      components={{
+        Toolbar: CustomToolbar,
+        NoRowsOverlay: CustomNoRowsOverlay,
+      }}
+      /> 
     </div>
   );
 }

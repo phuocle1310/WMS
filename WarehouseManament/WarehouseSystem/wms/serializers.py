@@ -54,7 +54,6 @@ class PODetailSerializer(ModelSerializer):
     def validate(self, attrs):
         instance = PODetail(**attrs)
         fields = ['item']
-
         for field in fields:
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
@@ -65,7 +64,7 @@ class POSerializer(ModelSerializer):
 
     class Meta:
         model = PO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'status', 'podetail', 'status']
+        fields = ['id', 'supplier', 'effective_date', 'closed_date','add_date','status', 'podetail']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
