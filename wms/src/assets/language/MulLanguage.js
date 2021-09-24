@@ -48,6 +48,7 @@ const MulLanguage = {
     //thêm sản phẩm mới
     addNewProduct: "Add new product",
     muCase: " Quantity/Case",
+    errList: "List cannot be empty",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -97,6 +98,7 @@ const MulLanguage = {
     //addnewproduct
     addNewProduct: "Thêm sản phẩm mới",
     muCase: "Số lượng trên một thùng",
+    errList: "Danh sách không được rỗng",
   },
 };
 export default MulLanguage;

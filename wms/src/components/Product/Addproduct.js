@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { TextValidator } from "react-material-ui-form-validator";
 import ClearIcon from "@material-ui/icons/Clear";
 import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
 
 // import ValidatedCombox from "../UI/ValidatedCombox";
 import ComboBox from "../UI/ComboBox";
@@ -36,21 +30,6 @@ const Addproduct = (props) => {
       moment(new Date(selectedDate.manufactureDate)).format("YYYY/MM/DD"),
     );
   }, [values.manufactureDate]);
-  const [age, setAge] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   const itemProduct = () => {
     return (
       <>

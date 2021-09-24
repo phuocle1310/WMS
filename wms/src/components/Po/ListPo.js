@@ -261,7 +261,7 @@ export default function DataGridProDemo() {
     setPage(page)
   }
   return (
-    <div style={{ height: 520, width: "auto" }}>
+    <div style={{ height: 580, width: "auto" }}>
       {/* <TextField
         value={value}
         onChange={handlerOnchange}
@@ -284,21 +284,23 @@ export default function DataGridProDemo() {
       />
  */}
       <DataGridPro
-      rows={rows}
-      className={classes.root}
-      rowCount={rowsCount}
-      columns={columns}
-      pageSize={10}
-      pagination
-      paginationMode="server"
-      onPageChange={handlePageChange}
-      page={page}
-      editMode="none"
-      components={{
-        Toolbar: CustomToolbar,
-        NoRowsOverlay: CustomNoRowsOverlay,
-      }}
-      /> 
+        rows={rows}
+        className={classes.root}
+        rowCount={rowsCount}
+        columns={columns}
+        pageSize={10}
+        pagination
+        paginationMode="server"
+        onPageChange={handlePageChange}
+        page={page}
+        editMode="none"
+        rowHeight={40}
+        components={{
+          Toolbar: CustomToolbar,
+          NoRowsOverlay: CustomNoRowsOverlay,
+        }}
+        loading={rows.length === 0}
+      />
     </div>
   );
 }
