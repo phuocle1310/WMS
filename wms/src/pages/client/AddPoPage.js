@@ -2,9 +2,7 @@ import AddPo from "../../components/Po/AddPo";
 import Grid from "@material-ui/core/Grid";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -12,6 +10,14 @@ import Box from "@material-ui/core/Box";
 import AddIcon from "@material-ui/icons/Add";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import AddNewsProduct from "../../components/Product/AddNewsProduct";
+import React, { useRef, useEffect, useState } from "react";
+import CustomizedSnackbars from "../../components/UI/CustomizedSnackbars";
+//redux api
+import { addRequestPo } from "../../store/poSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
+//api
+import productApi from "../../../src/api/productApi";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -82,6 +88,63 @@ const AddPoPage = (props) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  //open
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [alert, setAlert] = useState({
+    nameAlert: "",
+    message: "",
+    open: false,
+  });
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ nameAlert: "", message: "", open: false });
+  };
+  const handleAddProduct = (data) => {
+    // xử lý api thêm sản phẩm
+    const fetchLogin = async () => {
+      try {
+        const response = await productApi.createdProduct(data);
+        console.log(response + "ủa");
+        if (response) {
+          setAlert({ nameAlert: "success", message: "Thành công", open: true });
+          setIsSuccess(true);
+        }
+      } catch (error) {
+        console.log(error.response.data);
+        setAlert({
+          nameAlert: "Error",
+          message: error.response.data.non_field_errors,
+          open: true,
+        });
+        console.log(alert);
+      }
+    };
+    fetchLogin();
+  };
+  const dispatch = useDispatch();
+  //xứ lý thêm po
+  const handleAddPo = (data) => {
+    // xử lý api thêm sản phẩm
+    const fetchLogin = async () => {
+      try {
+        console.log(data);
+        dispatch(addRequestPo(data));
+      } catch (error) {
+        // console.log(error.response.data);
+        // setAlert({
+        //   nameAlert: "Error",
+        //   message: error.response.data.non_field_errors,
+        //   open: true,
+        // });
+        // console.log(alert);
+      }
+    };
+    fetchLogin();
+  };
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.box}>
@@ -111,12 +174,20 @@ const AddPoPage = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
         <TabPanel value={value} index={0} component={"div"}>
-          <AddNewsProduct />
+          <AddNewsProduct onProduct={handleAddProduct} isSuccess={isSuccess} />
+          {alert.nameAlert && (
+            <CustomizedSnackbars
+              open={alert.open}
+              handleClose={handleClose}
+              nameAlert={alert.nameAlert}
+              message={alert.message}
+            ></CustomizedSnackbars>
+          )}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <h3>{language.titleRPo}</h3>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <AddPo></AddPo>
+            <AddPo onAddProduct={handleAddPo}></AddPo>
           </Grid>
         </TabPanel>
       </Grid>

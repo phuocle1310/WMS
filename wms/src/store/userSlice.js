@@ -32,7 +32,6 @@ const userSlice = createSlice({
       state.loading = true;
       state.error = false;
       const token = cookies.load("access-token");
-      console.log(token);
       token ? (state.isLoggedIn = true) : (state.isLoggedIn = false);
     },
   },
@@ -48,7 +47,6 @@ const userSlice = createSlice({
       state.loading = false;
       state.currentUser = action.payload;
       const token = cookies.load("access-token");
-      console.log(token);
       token ? (state.isLoggedIn = true) : (state.isLoggedIn = false);
     },
   },

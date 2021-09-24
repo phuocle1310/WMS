@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import ClearIcon from "@material-ui/icons/Clear";
-import IconButton from "@material-ui/core/IconButton";
-import ValidatedCombox from "../UI/ValidatedCombox";
-import AddIcon from "@material-ui/icons/Add";
 import SendIcon from "@material-ui/icons/Send";
 import Button from "@material-ui/core/Button";
 //css
@@ -13,7 +9,6 @@ import AddProductStyles from "./AddProductStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-import { alpha } from "@material-ui/core/styles";
 const AddNewsProduct = (props) => {
   const [selectedDate, handleDateChange] = useState("");
   const [selectedDateP, handleDateChangeP] = useState("");
@@ -58,8 +53,7 @@ const AddNewsProduct = (props) => {
   };
   let form = "";
   //xử lý hàm delete
-
-  const handleDelete = (e) => {
+  const handleDelete = () => {
     setProduct({
       name: "",
       expire_date: "",
@@ -67,8 +61,16 @@ const AddNewsProduct = (props) => {
       mu_case: "",
       unit: "",
     });
-    handleDateChange("");
-    handleDateChangeP("");
+    handleDateChange(null);
+    handleDateChangeP(null);
+  };
+  // truyền dữ liệu submit
+  const onSubmit = (e) => {
+    e.preventDefault();
+    props.onProduct(product);
+    if (props.isSuccess) {
+      handleDelete();
+    }
   };
   return (
     <ValidatorForm
@@ -77,6 +79,7 @@ const AddNewsProduct = (props) => {
         form = r;
       }}
       instantValidate
+      onSubmit={onSubmit}
     >
       <div className={classes.box}>
         <div className={classes.boxChild}>
@@ -120,7 +123,8 @@ const AddNewsProduct = (props) => {
                 handleDateChangeP(date);
                 setProduct((prevState) => {
                   let newProduct = { ...prevState };
-                  newProduct["production_date"] = date.toLocaleDateString();
+                  newProduct["production_date"] =
+                    date.toLocaleDateString("en-CA");
                   return newProduct;
                 });
               }
@@ -147,7 +151,7 @@ const AddNewsProduct = (props) => {
                 handleDateChange(date);
                 setProduct((prevState) => {
                   let newProduct = { ...prevState };
-                  newProduct["expire_date"] = date.toLocaleDateString();
+                  newProduct["expire_date"] = date.toLocaleDateString("en-CA");
                   return newProduct;
                 });
               }
