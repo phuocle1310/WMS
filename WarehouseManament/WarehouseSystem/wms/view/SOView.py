@@ -36,7 +36,10 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
     def create(self, request, *args, **kwargs):
         serializer = SOCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance = serializer.save(**{"supplier": self.request.user.supplier, "items": self.request.data.get('items')})
+        items = request.data.get("items")
+        if not bool(items):
+            return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
+        instance = serializer.save(**{"supplier": self.request.user.supplier, "items": items})
         return Response(SOSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['put'], detail=True, url_path='update')
