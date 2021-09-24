@@ -65,7 +65,7 @@ class POSerializer(ModelSerializer):
 
     class Meta:
         model = PO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'status', 'podetail', 'status']
+        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'close_date', 'add_who', 'edit_who', 'podetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
@@ -119,7 +119,7 @@ class SOSerializer(ModelSerializer):
 
     class Meta:
         model = SO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'status', 'sodetail', 'status']
+        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'close_date', 'add_who', 'edit_who', 'sodetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
