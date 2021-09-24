@@ -35,10 +35,19 @@ const AddPo = (props) => {
   const [listProduct, setListProduct] = useState([
     {
       isNew: true,
-      nameproduct: "",
       quantity: "",
-      manufactureDate: "",
-      expirationDate: "",
+      production_date: "",
+      expire_date: "",
+      product: {
+        Qty_total: 0,
+        expire_date: "",
+        id: 8,
+        mu_case: 13,
+        name: "",
+        production_date: "",
+        status: true,
+        unit: "",
+      },
     },
   ]);
   // lấy sản phẩm từ api
@@ -63,11 +72,9 @@ const AddPo = (props) => {
           isNew={item.isNew}
           id={index + 1}
           values={item}
-          onClear={removeItemHandler.bind(this, item)}
+          onClear={removeItemHandler.bind(this, index)}
           handleChange={handleChangeAll(index)}
-          handleChangeSelect={handleChangeSelect(index)}
-          handleChangeManufactureDate={handleChangeManufactureDate(index)}
-          handleChangeExpirationDate={handleChangeExpirationDate(index)}
+          handlesetValue={handleChangeSelect(index)}
           product={product}
         ></Addproduct>
       );
@@ -80,19 +87,44 @@ const AddPo = (props) => {
         ...prevState,
         {
           isNew: true,
-          nameproduct: "",
           quantity: "",
-          manufactureDate: "",
-          expirationDate: "",
+          production_date: "",
+          expire_date: "",
+          product: {
+            Qty_total: 0,
+            expire_date: "",
+            id: 8,
+            mu_case: 13,
+            name: "",
+            production_date: "",
+            status: true,
+            unit: "",
+          },
         },
       ];
     });
   };
+  const getItem = (e) => {
+    const item = product.find((item) => item === e);
+    return item;
+  };
   //xóa
-  const removeItemHandler = (selIndex) => {
-    setListProduct((prevState) => {
-      return prevState.filter((item, index) => item !== selIndex);
+  const removeItemHandler = (index) => {
+    //lấy item tính xóa
+    let a = { ...listProduct[index].product };
+    //thêm lại vào product
+    setProduct((pre) => {
+      let newlist = [...pre];
+      newlist.push(a);
+      //sắp xếp lại
+      return newlist.sort(function (a, b) {
+        return a.id - b.id;
+      });
     });
+    //xóa
+    const list = [...listProduct];
+    list.splice(index, 1);
+    setListProduct(list);
   };
   //hàm xử lý onchange
   const handleChangeAll = (id) => (e) => {
@@ -105,54 +137,34 @@ const AddPo = (props) => {
       }
       return newlist;
     });
-    console.log(listProduct);
   };
-  //xứ lý ngày sản xuất
-  const handleChangeManufactureDate = (id) => (e) => {
+  const handleChangeSelect = (id) => (e, a) => {
     setListProduct((prevState) => {
       let newlist = [...prevState];
       for (let i = 0; i < newlist.length; i++) {
         if (i === id) {
-          newlist[i]["manufactureDate"] = e.toLocaleDateString();
-        }
-      }
-      return newlist;
-    });
-    console.log(listProduct);
-  };
-  //xử lý chọn ngày sử dụng
-  const handleChangeExpirationDate = (id) => (e) => {
-    setListProduct((prevState) => {
-      let newlist = [...prevState];
-      for (let i = 0; i < newlist.length; i++) {
-        if (i === id) {
-          newlist[i]["expirationDate"] = e.toLocaleDateString();
-        }
-      }
-      return newlist;
-    });
-  };
-  const getItem = (e) => {
-    const item = product.find(({ name }) => name === e);
-    return item;
-  };
-  const handleChangeSelect = (id) => (e) => {
-    setListProduct((prevState) => {
-      let newlist = [...prevState];
-      for (let i = 0; i < newlist.length; i++) {
-        if (i === id) {
-          console.log("vo");
-          newlist[i]["nameproduct"] = e.target.value;
-          if (newlist[i]["nameproduct"]) {
-            const item = getItem(e.target.value);
-            newlist[i]["manufactureDate"] = item.expire_date;
-            newlist[i]["expirationDate"] = item.production_date;
+          newlist[i]["product"] = a;
+          if (a !== null) {
+            console.log(a);
+            const item = getItem(a);
+            newlist[i]["production_date"] = new Date(
+              a.production_date,
+            ).toLocaleDateString("en-CA");
+            newlist[i]["expire_date"] = new Date(
+              a.expire_date,
+            ).toLocaleDateString("en-CA");
+            //xử lý bỏ item đã chon ra khỏi mảng product
+            setProduct((pre) =>
+              pre.filter((items) => {
+                return items !== item;
+              }),
+            );
+            console.log(product);
           }
         }
       }
       return newlist;
     });
-    console.log(listProduct);
   };
   //xử lý PO
   const [timepoRequest, setTimePoRequest] = useState("");
@@ -160,7 +172,25 @@ const AddPo = (props) => {
     setTimePoRequest("");
     setListProduct([]);
   };
-
+  // xử lý submit
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    //lấy items về đúng định dạng
+    let items = listProduct.map((item) => {
+      let rObj = { pk: item.product.id, Qty_order: Number(item.quantity) };
+      return rObj;
+    });
+    //xử lý dữ liệu đưa lên api
+    const dataPo = {
+      effective_date: timepoRequest.toLocaleDateString("en-CA"),
+      items: items,
+    };
+    console.log(dataPo);
+    props.onAddProduct(dataPo);
+    if (props.isSuccess) {
+      onDelete();
+    }
+  };
   return (
     <ValidatorForm
       className={classes.form}
@@ -168,6 +198,7 @@ const AddPo = (props) => {
         form = r;
       }}
       instantValidate
+      onSubmit={handleOnSubmit}
     >
       <div className={classes.root}>
         <Grid container>
@@ -211,7 +242,10 @@ const AddPo = (props) => {
               InputAdornmentProps={{ position: "start" }}
               value={timepoRequest}
               onChange={(date) => {
-                setTimePoRequest(date);
+                if (moment.isDate(date)) {
+                  date.setHours(0, 0, 0, 0);
+                  setTimePoRequest(date);
+                }
               }}
             />
           </Grid>

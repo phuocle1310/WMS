@@ -87,7 +87,7 @@ const AddProductStyles = makeStyles((theme) => ({
     rowGap: "10px",
     "& div": {
       marginRight: 10,
-      marginBottom: 10,
+      marginBottom: 5,
     },
     [theme.breakpoints.up("lg")]: {
       display: "flex",
