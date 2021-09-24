@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from datetime import date
 
 # Create your models here.
 
@@ -176,7 +176,7 @@ class BasePOSO(models.Model):
                 raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
 
     def __str__(self):
-        return '%s -- %s' % (self.user.first_name, self.add_date)
+        return '%d -- %s' % (self.id, self.supplier.user.first_name)
 
 
 class PO(BasePOSO):
@@ -187,35 +187,6 @@ class PO(BasePOSO):
 class SO(BasePOSO):
     add_who = models.ForeignKey(User, related_name="so_add_who", on_delete=models.SET_NULL, null=True)
     edit_who = models.ForeignKey(User, related_name="so_edit_who", on_delete=models.SET_NULL, null=True)
-
-
-# class ItemTemp(models.Model):
-#     name = models.CharField(max_length=100, null=False)
-#     expire_date = models.DateField()  # HSD
-#     production_date = models.DateField()  # NSX
-#     mu_case = models.IntegerField(default=1, null=False,
-#                                   validators=[MinValueValidator(1, 'Quantity MU/CASE at least 1 CASE')])  # MU/Case
-#
-#     class Meta:
-#         unique_together = ['name', 'production_date']
-#
-#     def __str__(self):
-#         return self.name
-#
-#     def clean(self):
-#         if self.expire_date is not None or self.production_date is not None:
-#             if self.expire_date <= self.production_date:
-#                 # Nếu ko chỉ đỉnh trường nào thì nó sẽ raise trên cùng
-#                 raise ValidationError({'expire_date': 'Expire date can be < Production date'})
-
-
-# class PODetailTemp(models.Model):
-#     PO = models.ForeignKey(PO, related_name= "podetail_temp", on_delete=models.CASCADE, null=False)
-#     item = models.ForeignKey(ItemTemp, related_name= "po_detail_temp", on_delete=models.SET_NULL, null=True)
-#     Qty_order = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity order at least 1 CASE')])
-#
-#     class Meta:
-#         ordering = ['-id']
 
 
 class BasePOSODetail(models.Model):
