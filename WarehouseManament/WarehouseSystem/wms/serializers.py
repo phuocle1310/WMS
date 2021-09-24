@@ -12,6 +12,8 @@ from .models import *
 # SERIALIZER cho user class
 
 class UserSerializer(ModelSerializer):
+    role = serializers.CharField(source='get_role_display')
+
     class Meta:
         model = User
         fields = ['id', 'username', 'password', 'last_name', 'avatar', 'first_name', 'role', 'is_active']
@@ -26,8 +28,15 @@ class UserSerializer(ModelSerializer):
         return user
 
 
-class ItemViewSOSerializer(ModelSerializer):
+class SupplierSerializer(ModelSerializer):
+    user = UserSerializer(many=False)
 
+    class Meta:
+        model = Supplier
+        fields = ['id', 'company_name', 'address', 'phone', 'email', 'status', 'user']
+
+
+class ItemViewSOSerializer(ModelSerializer):
     class Meta:
         model = Item
         fields = ['id', 'name', 'Qty_total']
@@ -54,6 +63,7 @@ class PODetailSerializer(ModelSerializer):
     def validate(self, attrs):
         instance = PODetail(**attrs)
         fields = ['item']
+
         for field in fields:
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
@@ -61,10 +71,15 @@ class PODetailSerializer(ModelSerializer):
 
 class POSerializer(ModelSerializer):
     podetail = PODetailSerializer(many=True)
+    supplier = SupplierSerializer(many=False)
+    status = serializers.CharField(source='get_status_display')
+    add_who = UserSerializer(many=False)
+    edit_who = UserSerializer(many=False)
 
     class Meta:
         model = PO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date','add_date','status', 'podetail']
+        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'closed_date', 'add_who', 'edit_who',
+                  'podetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
@@ -118,7 +133,8 @@ class SOSerializer(ModelSerializer):
 
     class Meta:
         model = SO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'status', 'sodetail', 'status']
+        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'closed_date', 'add_who', 'edit_who',
+                  'sodetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
@@ -168,13 +184,13 @@ class POCreateSerializer(ModelSerializer):
         for item in items:
             Qty_order = item.get("Qty_order", None)
             pk = item.get("pk", None)
-            if Qty_order is None or Qty_order <= 0: raise ValidationError("Quantity order can't be null")
-            if pk is None or pk <= 0: raise ValidationError("Item can't be null")
             try:
                 Qty_order = int(Qty_order)
                 pk = int(pk)
             except:
                 raise ValidationError("Quantity order must be numeric characters")
+            if Qty_order is None or Qty_order <= 0: raise ValidationError("Quantity order can't be null")
+            if pk is None or pk <= 0: raise ValidationError("Item can't be null")
 
         '''
             + Bắt lỗi xong xuôi mới bắt đầu lưu PO, PO Detail
@@ -207,7 +223,7 @@ class POCreateSerializer(ModelSerializer):
                 raise ValidationError({field: 'This is required field'})
 
         if instance.effective_date < date.today():
-            raise ValidationError({'effective_date':'Effective date can be earlier today'})
+            raise ValidationError({'effective_date': 'Effective date can be earlier today'})
         return attrs
 
 
@@ -269,14 +285,15 @@ class SOCreateSerializer(ModelSerializer):
 
             for item in all_this_item:
                 Qty_total = Qty_total + item.Qty_total
-            print(str(Qty_order) + "----" + str(item))
-            if int(Qty_order) > Qty_total: raise ValidationError("Quantity order can't be greater than quantity of inventory")
-            if Qty_order is None: raise ValidationError("Quantity can be null")
-            if name is None: raise ValidationError("Name Item can be null")
+
+            if int(Qty_order) > Qty_total: raise ValidationError(
+                "Quantity order can't be greater than quantity of inventory")
             try:
                 Qty_order = int(Qty_order)
             except:
                 raise ValidationError("Quantity order must be numeric characters")
+            if Qty_order is None: raise ValidationError("Quantity can be null")
+            if name is None: raise ValidationError("Name Item can be null")
 
         '''
             + Lưu SO và SO detail
@@ -307,7 +324,7 @@ class SOCreateSerializer(ModelSerializer):
                 raise ValidationError({field: 'This is required field'})
 
         if instance.effective_date < date.today():
-            raise ValidationError({'effective_date':'Effective date can be earlier today'})
+            raise ValidationError({'effective_date': 'Effective date can be earlier today'})
         return attrs
 
 
@@ -338,6 +355,7 @@ class OrderCreateSerializer(ModelSerializer):
 
     def create(self, validated_data):
         pass
+
 
 # TABLE RECEIPT SERIALIZER
 
