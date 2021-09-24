@@ -12,6 +12,7 @@ from .models import *
 # SERIALIZER cho user class
 
 class UserSerializer(ModelSerializer):
+    role = serializers.CharField(source='get_role_display')
     class Meta:
         model = User
         fields = ['id', 'username', 'password', 'last_name', 'avatar', 'first_name', 'role', 'is_active']
@@ -24,6 +25,14 @@ class UserSerializer(ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class SupplierSerializer(ModelSerializer):
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = Supplier
+        fields = ['id', 'company_name', 'address', 'phone', 'email', 'status', 'user']
 
 
 class ItemViewSOSerializer(ModelSerializer):
@@ -54,6 +63,7 @@ class PODetailSerializer(ModelSerializer):
     def validate(self, attrs):
         instance = PODetail(**attrs)
         fields = ['item']
+
         for field in fields:
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
@@ -61,11 +71,14 @@ class PODetailSerializer(ModelSerializer):
 
 class POSerializer(ModelSerializer):
     podetail = PODetailSerializer(many=True)
+    supplier = SupplierSerializer(many=False)
+    status = serializers.CharField(source='get_status_display')
+    add_who = UserSerializer(many=False)
+    edit_who = UserSerializer(many=False)
 
     class Meta:
         model = PO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'close_date', 'add_who', 'edit_who', 'podetail', 'status']
-
+        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'closed_date', 'add_who', 'edit_who', 'podetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
@@ -119,7 +132,7 @@ class SOSerializer(ModelSerializer):
 
     class Meta:
         model = SO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'close_date', 'add_who', 'edit_who', 'sodetail', 'status']
+        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'closed_date', 'add_who', 'edit_who', 'sodetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
         }
