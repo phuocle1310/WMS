@@ -37,9 +37,12 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
     def create(self, request, *args, **kwargs):
         serializer = POCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        items = request.data.get("items")
+        if not bool(items):
+            return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
         if self.request.user.role == 1:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        instance = serializer.save(**{"supplier": self.request.user.supplier, "items": self.request.data.get('items')})
+        instance = serializer.save(**{"supplier": self.request.user.supplier, "items": items})
         return Response(POSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['put'], detail=True, url_path='update')
