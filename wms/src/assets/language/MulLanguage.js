@@ -86,7 +86,7 @@ const MulLanguage = {
     detail: "Chi tiết",
     see: "Xem",
     //trang thái
-    PENDING: "chưa giả quyết",
+    PENDING: "chưa giải quyết",
     ACCEPTED: "Được chấp nhận",
     FAILED: "thất bại",
     DONE: "Hoàn tất",

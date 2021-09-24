@@ -147,8 +147,12 @@ const AddPo = (props) => {
           if (a !== null) {
             console.log(a);
             const item = getItem(a);
-            newlist[i]["production_date"] = a.production_date;
-            newlist[i]["expire_date"] = a.expire_date;
+            newlist[i]["production_date"] = new Date(
+              a.production_date,
+            ).toLocaleDateString("en-CA");
+            newlist[i]["expire_date"] = new Date(
+              a.expire_date,
+            ).toLocaleDateString("en-CA");
             //xử lý bỏ item đã chon ra khỏi mảng product
             setProduct((pre) =>
               pre.filter((items) => {

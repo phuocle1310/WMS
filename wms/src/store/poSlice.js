@@ -9,7 +9,6 @@ export const addRequestPo = createAsyncThunk(
       const response = await poApi.createRequestPo(data);
       return response;
     } catch (err) {
-      console.log(err);
       return rejectWithValue(err.response.data);
     }
   },
@@ -19,7 +18,7 @@ export const listPo = createAsyncThunk(
   "po",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await poApi.createRequestPo(data);
+      const response = await poApi.getAllPo(data);
       return response;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -31,11 +30,18 @@ const poSlice = createSlice({
   name: "po",
   initialState: {
     listPo: [],
+    pageSize: 0,
+    rowCount: 0,
   },
   reducers: {},
   extraReducers: {
     [addRequestPo.fulfilled]: (state, action) => {
-      state.listPo.push(action.payload);
+      //   state.listPo.push(action.payload);
+    },
+    [listPo.fulfilled]: (state, action) => {
+      state.listPo = action.payload.results;
+      state.rowCount = action.payload.count;
+      state.pageSize = Math.ceil(state.rowCount / state.listPo.length);
     },
   },
 });
