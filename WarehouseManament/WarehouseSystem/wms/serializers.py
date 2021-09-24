@@ -54,7 +54,6 @@ class PODetailSerializer(ModelSerializer):
     def validate(self, attrs):
         instance = PODetail(**attrs)
         fields = ['item']
-
         for field in fields:
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
