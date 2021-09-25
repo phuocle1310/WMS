@@ -41,7 +41,7 @@ function App() {
           {isLoggedIn && (
             <>
               <DashboardLayoutRoute
-                path="/"
+                path="/po/:poId"
                 exact
                 component={Podetail}
               ></DashboardLayoutRoute>

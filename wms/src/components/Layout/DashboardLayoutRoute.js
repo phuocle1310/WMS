@@ -24,6 +24,9 @@ const styles = makeStyles((theme) => ({
     },
     color: "#afb2d5",
   },
+  content: {
+    padding: "0px 30px",
+  },
 }));
 
 const DashboardLayout = ({ children, ...rest }) => {
@@ -42,7 +45,14 @@ const DashboardLayout = ({ children, ...rest }) => {
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Appbar></Appbar>
           </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            className={classes.content}
+          >
             {children}
           </Grid>
         </Grid>

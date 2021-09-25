@@ -40,19 +40,31 @@ export default function DataGridProDemo() {
       field: "id",
       headerName: language.id,
       sortable: true,
-      width: 180,
+      width: 100,
     },
     {
       field: "add_date",
       headerName: language.dateCreated,
       sortable: false,
-      width: 180,
+      width: 130,
     },
     {
       field: "effective_date",
       headerName: language.importDate,
       sortable: false,
+      width: 130,
+    },
+    {
+      field: "add_who",
+      headerName: language.nameStaff,
+      sortable: false,
       width: 180,
+      renderCell: (params) => {
+        let staff = params.getValue(params.id, "add_who");
+        if (staff === null) {
+          return <p>rỗng</p>;
+        }
+      },
     },
     {
       field: "status",
@@ -68,7 +80,7 @@ export default function DataGridProDemo() {
       field: "detail",
       headerName: language.detail,
       sortable: false,
-      width: 160,
+      width: 100,
       disableClickEventBubbling: true,
       renderCell: (params) => {
         return (
@@ -86,44 +98,27 @@ export default function DataGridProDemo() {
       },
     },
   ];
-  // const rows = [
-  //   {
-  //     id: 7,
-  //     createDate: "2000-1-1",
-  //     inputDate: "2002-1-1",
-  //     status: 2,
-  //     detail: "aa",
-  //   },
-  //   {
-  //     id: 8,
-  //     createDate: "2000-1-1",
-  //     inputDate: "2002-1-1",
-  //     status: 4,
-  //     detail: "aa",
-  //   },
-  // ];
-  //hàm show trạng thái
   const showAlert = (status) => {
     switch (status) {
-      case 2:
+      case "PENDING":
         return (
           <Alert severity="warning" variant="filled" className={classes.alert}>
             {language.PENDING}
           </Alert>
         );
-      case 1:
+      case "ACCEPTED":
         return (
           <Alert severity="info" variant="filled" className={classes.alert}>
             {language.ACCEPTED}
           </Alert>
         );
-      case 3:
+      case "FAILED":
         return (
           <Alert severity="error" variant="filled" className={classes.alert}>
             {language.FAILED}
           </Alert>
         );
-      case 0:
+      case "DONE":
         return (
           <Alert severity="success" variant="filled" className={classes.alert}>
             {language.DONE}
