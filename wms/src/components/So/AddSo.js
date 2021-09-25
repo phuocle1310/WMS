@@ -11,7 +11,7 @@ import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";
 import Grid from "@material-ui/core/Grid";
 //css
-import FormStyles from "./FormStyles";
+import FormStyles from "../Po/FormStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,7 +19,8 @@ import { useSelector, useDispatch } from "react-redux";
 import productApi from "../../api/productApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
-const AddPo = (props) => {
+import AddProductSo from "./AddProductSo";
+const AddSo = (props) => {
   const classes = FormStyles();
   //lang
   const currentLanguage = useSelector(
@@ -41,14 +42,7 @@ const AddPo = (props) => {
       production_date: "",
       expire_date: "",
       product: {
-        Qty_total: 0,
-        expire_date: "",
-        id: 8,
-        mu_case: 13,
         name: "",
-        production_date: "",
-        status: true,
-        unit: "",
       },
     },
   ]);
@@ -69,7 +63,7 @@ const AddPo = (props) => {
   const listItems = () => {
     return listProduct.map((item, index) => {
       return (
-        <Addproduct
+        <AddProductSo
           key={index}
           isNew={item.isNew}
           id={index + 1}
@@ -78,7 +72,7 @@ const AddPo = (props) => {
           handleChange={handleChangeAll(index)}
           handlesetValue={handleChangeSelect(index)}
           product={product}
-        ></Addproduct>
+        ></AddProductSo>
       );
     });
   };
@@ -93,14 +87,7 @@ const AddPo = (props) => {
           production_date: "",
           expire_date: "",
           product: {
-            Qty_total: 0,
-            expire_date: "",
-            id: 8,
-            mu_case: 13,
             name: "",
-            production_date: "",
-            status: true,
-            unit: "",
           },
         },
       ];
@@ -112,22 +99,23 @@ const AddPo = (props) => {
   };
   //xóa
   const removeItemHandler = (index) => {
-    if(listProduct.length >1){
-    //lấy item tính xóa
-    let a = { ...listProduct[index].product };
-    //thêm lại vào product
-    setProduct((pre) => {
-      let newlist = [...pre];
-      newlist.push(a);
-      //sắp xếp lại
-      return newlist.sort(function (a, b) {
-        return a.id - b.id;
+    if (listProduct.length > 1) {
+      //lấy item tính xóa
+      let a = { ...listProduct[index].product };
+      //thêm lại vào product
+      setProduct((pre) => {
+        let newlist = [...pre];
+        newlist.push(a);
+        //sắp xếp lại
+        return newlist.sort(function (a, b) {
+          return a.id - b.id;
+        });
       });
-    });
-    //xóa
-    const list = [...listProduct];
-    list.splice(index, 1);
-    setListProduct(list);}
+      //xóa
+      const list = [...listProduct];
+      list.splice(index, 1);
+      setListProduct(list);
+    }
   };
   //hàm xử lý onchange
   const handleChangeAll = (id) => (e) => {
@@ -148,14 +136,7 @@ const AddPo = (props) => {
         if (i === id) {
           newlist[i]["product"] = a;
           if (a !== null) {
-            console.log(a);
             const item = getItem(a);
-            newlist[i]["production_date"] = new Date(
-              a.production_date,
-            ).toLocaleDateString("en-CA");
-            newlist[i]["expire_date"] = new Date(
-              a.expire_date,
-            ).toLocaleDateString("en-CA");
             //xử lý bỏ item đã chon ra khỏi mảng product
             setProduct((pre) =>
               pre.filter((items) => {
@@ -173,22 +154,17 @@ const AddPo = (props) => {
   const [timepoRequest, setTimePoRequest] = useState("");
   const onDelete = () => {
     setTimePoRequest(null);
-    setListProduct([{
-      isNew: true,
-      quantity: "",
-      production_date: "",
-      expire_date: "",
-      product: {
-        Qty_total: 0,
-        expire_date: "",
-        id: 8,
-        mu_case: 13,
-        name: "",
+    setListProduct([
+      {
+        isNew: true,
+        quantity: "",
         production_date: "",
-        status: true,
-        unit: "",
+        expire_date: "",
+        product: {
+          name: "",
+        },
       },
-    },]);
+    ]);
   };
   // xử lý submit
   const handleOnSubmit = (e) => {
@@ -205,9 +181,9 @@ const AddPo = (props) => {
         items: items,
       };
       props.onAddProduct(dataPo);
-    }
-    if (props.isSuccess) {
-      onDelete();
+      if (props.isSuccess) {
+        onDelete();
+      }
     }
   };
   return (
@@ -319,16 +295,8 @@ const AddPo = (props) => {
           {language.sendRequire}
         </Button>
       </div>
-    {/* {listProduct.length <=0 &&      
-    <CustomizedSnackbars
-              open={true}
-              // handleClose={handleClose}
-              nameAlert={"error"}
-              message={language.errList}
-            ></CustomizedSnackbars>} */}
     </ValidatorForm>
-    
   );
 };
 
-export default AddPo;
+export default AddSo;

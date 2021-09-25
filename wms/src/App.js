@@ -10,12 +10,12 @@ import AddPoPage from "./pages/client/AddPoPage";
 import Login from "./components/Login/Login";
 import ListPoPage from "./pages/client/ListPoPage";
 import Podetail from "./pages/client/Podetail";
+import AddSoPage from "./pages/client/AddSoPage";
 //
 import { getMe } from "./store/userSlice";
 import { getProductBySupplier } from "./store/productSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -55,7 +55,12 @@ function App() {
                 path="/po"
                 exact
                 component={AddPoPage}
-              ></DashboardLayoutRoute>{" "}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/so"
+                exact
+                component={AddSoPage}
+              ></DashboardLayoutRoute>
             </>
           )}
         </Switch>
