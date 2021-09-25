@@ -4,12 +4,14 @@ const MulLanguage = {
     //itemmenu
     inputPo: "Create Po",
     inputSo: "Create So",
-    listPo: "list Po",
-    litsSo: "list So",
+    listPo: "List Po",
+    litsSo: "List So",
     nameMenuPO: "Purchase Order",
     nameMenuSo: "Supplier Orders",
     title: "manage",
     titleHome: "Home",
+    setting: "Setting",
+    logout: "Logout",
     //tạo yêu cầu po
     titleRPo: "Create the purchase order request",
     supplier: "Supplier",
@@ -70,6 +72,8 @@ const MulLanguage = {
     nameMenuSo: "đặt hàng",
     title: "quản lý",
     titleHome: "Trang chủ",
+    setting: "Cài đặt",
+    logout: "Đăng xuất",
     //tạo yêu cầu po
     titleRPo: "Tạo yêu cầu nhập hàng",
     supplier: "Nhà cung cấp",

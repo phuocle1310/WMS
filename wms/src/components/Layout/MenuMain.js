@@ -55,7 +55,7 @@ export default function MenuMain(props) {
           >
             <SettingsIcon></SettingsIcon>
           </IconButton>
-          <p>cài đặt</p>
+          <p>{language.setting}</p>
         </MenuItem>
         <MenuItem className={classes.menuItem} onClick={handleLogout}>
           <IconButton
@@ -67,7 +67,7 @@ export default function MenuMain(props) {
           >
             <ExitToAppIcon></ExitToAppIcon>
           </IconButton>
-          <p>Đăng xuất</p>
+          <p>{language.logout}</p>
         </MenuItem>
       </MenuList>
     </div>
