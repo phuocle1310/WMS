@@ -17,6 +17,8 @@ import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
 import productApi from "../../api/productApi";
+//alert
+import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 const AddPo = (props) => {
   const classes = FormStyles();
   //lang
@@ -110,6 +112,7 @@ const AddPo = (props) => {
   };
   //xóa
   const removeItemHandler = (index) => {
+    if(listProduct.length >1){
     //lấy item tính xóa
     let a = { ...listProduct[index].product };
     //thêm lại vào product
@@ -124,7 +127,7 @@ const AddPo = (props) => {
     //xóa
     const list = [...listProduct];
     list.splice(index, 1);
-    setListProduct(list);
+    setListProduct(list);}
   };
   //hàm xử lý onchange
   const handleChangeAll = (id) => (e) => {
@@ -169,26 +172,42 @@ const AddPo = (props) => {
   //xử lý PO
   const [timepoRequest, setTimePoRequest] = useState("");
   const onDelete = () => {
-    setTimePoRequest("");
-    setListProduct([]);
+    setTimePoRequest(null);
+    setListProduct([{
+      isNew: true,
+      quantity: "",
+      production_date: "",
+      expire_date: "",
+      product: {
+        Qty_total: 0,
+        expire_date: "",
+        id: 8,
+        mu_case: 13,
+        name: "",
+        production_date: "",
+        status: true,
+        unit: "",
+      },
+    },]);
   };
   // xử lý submit
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    //lấy items về đúng định dạng
-    let items = listProduct.map((item) => {
-      let rObj = { pk: item.product.id, Qty_order: Number(item.quantity) };
-      return rObj;
-    });
-    //xử lý dữ liệu đưa lên api
-    const dataPo = {
-      effective_date: timepoRequest.toLocaleDateString("en-CA"),
-      items: items,
-    };
-    console.log(dataPo);
-    props.onAddProduct(dataPo);
-    if (props.isSuccess) {
-      onDelete();
+    if (listProduct.length > 0) {
+      //lấy items về đúng định dạng
+      let items = listProduct.map((item) => {
+        let rObj = { pk: item.product.id, Qty_order: Number(item.quantity) };
+        return rObj;
+      });
+      //xử lý dữ liệu đưa lên api
+      const dataPo = {
+        effective_date: timepoRequest.toLocaleDateString("en-CA"),
+        items: items,
+      };
+      props.onAddProduct(dataPo);
+      if (props.isSuccess) {
+        onDelete();
+      }
     }
   };
   return (
@@ -300,7 +319,15 @@ const AddPo = (props) => {
           {language.sendRequire}
         </Button>
       </div>
+    {/* {listProduct.length <=0 &&      
+    <CustomizedSnackbars
+              open={true}
+              // handleClose={handleClose}
+              nameAlert={"error"}
+              message={language.errList}
+            ></CustomizedSnackbars>} */}
     </ValidatorForm>
+    
   );
 };
 

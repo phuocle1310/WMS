@@ -16,6 +16,7 @@ import { getProductBySupplier } from "./store/productSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 
+
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   console.log(isLoggedIn);
@@ -41,7 +42,7 @@ function App() {
           {isLoggedIn && (
             <>
               <DashboardLayoutRoute
-                path="/"
+                path="/po/:poId"
                 exact
                 component={Podetail}
               ></DashboardLayoutRoute>

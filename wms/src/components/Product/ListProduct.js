@@ -28,14 +28,22 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+// function createData(
+//   id,
+//   name,
+//   production_date,
+//   expire_date,
+//   unit,
+//   mu_case,
+//   Qty_order,
+// ) {
+//   return { id, name, production_date, expire_date, unit, mu_case, Qty_order };
+// }
 
-const rows = [
-  createData(1, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData(2, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-];
+// const rows = [
+//   createData(1, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+//   createData(2, "Ice cream sandwich", 237, 9.0, 37, 4.3),
+// ];
 
 const useStyles = makeStyles({
   table: {
@@ -43,7 +51,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CustomizedTables() {
+export default function CustomizedTables(props) {
   const classes = useStyles();
   //lang
   const currentLanguage = useSelector(
@@ -64,21 +72,29 @@ export default function CustomizedTables() {
               {language.expirationDate}
             </StyledTableCell>
             <StyledTableCell align="right">
+              {language.unit}
+            </StyledTableCell>
+            <StyledTableCell align="right">
+              {language.muCase}
+            </StyledTableCell>
+            <StyledTableCell align="right">
               {" "}
               {language.quantity}
             </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {props.rows.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
-                {row.name}
+                {row.item.id}
               </StyledTableCell>
-              <StyledTableCell align="left">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="left">{row.item.name}</StyledTableCell>
+              <StyledTableCell align="right">{row.item.expire_date}</StyledTableCell>
+              <StyledTableCell align="right">{row.item.production_date}</StyledTableCell>
+              <StyledTableCell align="right">{row.item.unit}</StyledTableCell>
+              <StyledTableCell align="right">{row.item.mu_case}</StyledTableCell>
+              <StyledTableCell align="right">{row.Qty_order}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

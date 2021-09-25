@@ -13,10 +13,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
-import ClearIcon from "@material-ui/icons/Clear";
-import SearchIcon from "@material-ui/icons/Search";
-import IconButton from "@material-ui/core/IconButton";
+import AlertNoti from "../UI/AlertNoti";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 
@@ -25,9 +22,10 @@ import ReactToPrint from "react-to-print";
 //css
 import ListPoStyles from "./ListPoStyles";
 //api
-import {listPo} from "../../store/poSlice";
+import { listPo } from "../../store/poSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+import Podetail from "../../pages/client/Podetail";
 export default function DataGridProDemo() {
   const classes = ListPoStyles();
   //lang
@@ -40,19 +38,31 @@ export default function DataGridProDemo() {
       field: "id",
       headerName: language.id,
       sortable: true,
-      width: 180,
+      width: 100,
     },
     {
       field: "add_date",
       headerName: language.dateCreated,
       sortable: false,
-      width: 180,
+      width: 130,
     },
     {
       field: "effective_date",
       headerName: language.importDate,
       sortable: false,
+      width: 130,
+    },
+    {
+      field: "add_who",
+      headerName: language.nameStaff,
+      sortable: false,
       width: 180,
+      renderCell: (params) => {
+        let staff = params.getValue(params.id, "add_who");
+        if (staff === null) {
+          return <p>rỗng</p>;
+        }
+      },
     },
     {
       field: "status",
@@ -68,62 +78,54 @@ export default function DataGridProDemo() {
       field: "detail",
       headerName: language.detail,
       sortable: false,
-      width: 160,
+      width: 100,
       disableClickEventBubbling: true,
       renderCell: (params) => {
+        let id = params.getValue(params.id, "id");
         return (
           <NavLink
-            to="/faq"
+            to={`/po/${id}`}
             activeStyle={{
               fontWeight: "bold",
               color: "red",
             }}
+            target={"_blank"}
             style={{ textDecoration: "none" }}
           >
             {language.see}
           </NavLink>
+          // <button
+          //   onClick={() => {
+          //     setNewsForm(true);
+          //   }}
+          // >
+          //   xem
+          // </button>
         );
       },
     },
   ];
-  // const rows = [
-  //   {
-  //     id: 7,
-  //     createDate: "2000-1-1",
-  //     inputDate: "2002-1-1",
-  //     status: 2,
-  //     detail: "aa",
-  //   },
-  //   {
-  //     id: 8,
-  //     createDate: "2000-1-1",
-  //     inputDate: "2002-1-1",
-  //     status: 4,
-  //     detail: "aa",
-  //   },
-  // ];
-  //hàm show trạng thái
   const showAlert = (status) => {
     switch (status) {
-      case 2:
+      case "PENDING":
         return (
           <Alert severity="warning" variant="filled" className={classes.alert}>
             {language.PENDING}
           </Alert>
         );
-      case 1:
+      case "ACCEPTED":
         return (
           <Alert severity="info" variant="filled" className={classes.alert}>
             {language.ACCEPTED}
           </Alert>
         );
-      case 3:
+      case "FAILED":
         return (
           <Alert severity="error" variant="filled" className={classes.alert}>
             {language.FAILED}
           </Alert>
         );
-      case 0:
+      case "DONE":
         return (
           <Alert severity="success" variant="filled" className={classes.alert}>
             {language.DONE}
@@ -241,27 +243,37 @@ export default function DataGridProDemo() {
   //   };
   // }, [page, data]);
   const rows = useSelector((state) => state.po.listPo);
-  const rowsCount= useSelector((state) => state.po.rowCount);
-  const [page,setPage] = useState(0);
+  const rowsCount = useSelector((state) => state.po.rowCount);
+  const [page, setPage] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const action = listPo(page+1);
+        const action = listPo(page + 1);
         const actionResult = await dispatch(action);
         unwrapResult(actionResult);
-    
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogin();
   }, [page]);
-  const handlePageChange =(page) => {
-    setPage(page)
-  }
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+  const [openNewsForm, setNewsForm] = useState(false);
+  const handerClose = () => {
+    setNewsForm(false);
+  };
+  const renderConfirm = () => {
+    return (
+      <form className={classes.form}>
+        <Podetail poId={1}></Podetail>
+      </form>
+    );
+  };
   return (
-    <div style={{ height: 520, width: "auto" }}>
+    <div style={{ height: 580, width: "auto" }}>
       {/* <TextField
         value={value}
         onChange={handlerOnchange}
@@ -284,21 +296,28 @@ export default function DataGridProDemo() {
       />
  */}
       <DataGridPro
-      rows={rows}
-      className={classes.root}
-      rowCount={rowsCount}
-      columns={columns}
-      pageSize={10}
-      pagination
-      paginationMode="server"
-      onPageChange={handlePageChange}
-      page={page}
-      editMode="none"
-      components={{
-        Toolbar: CustomToolbar,
-        NoRowsOverlay: CustomNoRowsOverlay,
-      }}
-      /> 
+        rows={rows}
+        className={classes.root}
+        rowCount={rowsCount}
+        columns={columns}
+        pageSize={10}
+        pagination
+        paginationMode="server"
+        onPageChange={handlePageChange}
+        page={page}
+        editMode="none"
+        rowHeight={40}
+        components={{
+          Toolbar: CustomToolbar,
+          NoRowsOverlay: CustomNoRowsOverlay,
+        }}
+        loading={rows.length === 0}
+      />
+      {openNewsForm && (
+        <AlertNoti onClose={handerClose} open={true}>
+          {renderConfirm()}
+        </AlertNoti>
+      )}{" "}
     </div>
   );
 }

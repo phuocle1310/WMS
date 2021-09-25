@@ -11,7 +11,6 @@ const axiosClient = axios.create({
 });
 axiosClient.interceptors.request.use(async (config) => {
   const token = cookies.load("access-token");
-  console.log(token);
   config.headers.Authorization = token ? `Bearer ${token}` : "";
   return config;
 });

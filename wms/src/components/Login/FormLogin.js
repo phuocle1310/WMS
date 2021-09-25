@@ -67,7 +67,6 @@ const FormLogin = function FormLogin() {
         //gọi từ axios
         // const response = await userApi.login()
         const authInfo = await userApi.getAuthInfo();
-        console.log(authInfo);
         //from data
         const fromData = {
           ...info.formData,

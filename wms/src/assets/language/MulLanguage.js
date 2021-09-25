@@ -4,12 +4,14 @@ const MulLanguage = {
     //itemmenu
     inputPo: "Create Po",
     inputSo: "Create So",
-    listPo: "list Po",
-    litsSo: "list So",
+    listPo: "List Po",
+    litsSo: "List So",
     nameMenuPO: "Purchase Order",
     nameMenuSo: "Supplier Orders",
     title: "manage",
     titleHome: "Home",
+    setting: "Setting",
+    logout: "Logout",
     //tạo yêu cầu po
     titleRPo: "Create the purchase order request",
     supplier: "Supplier",
@@ -48,6 +50,16 @@ const MulLanguage = {
     //thêm sản phẩm mới
     addNewProduct: "Add new product",
     muCase: " Quantity/Case",
+    errList: "List cannot be empty",
+    nameStaff: "Confirmation staff",
+    //nhà cc
+    address: "Address",
+    phone: " Phone",
+    email: "Email",
+    print: "Print",
+    //lang
+    vietnamese: "Vietnamese",
+    english: "English",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -60,6 +72,8 @@ const MulLanguage = {
     nameMenuSo: "đặt hàng",
     title: "quản lý",
     titleHome: "Trang chủ",
+    setting: "Cài đặt",
+    logout: "Đăng xuất",
     //tạo yêu cầu po
     titleRPo: "Tạo yêu cầu nhập hàng",
     supplier: "Nhà cung cấp",
@@ -96,7 +110,17 @@ const MulLanguage = {
     errLogin: "Tên đăng nhập hoặc mật khẩu không đúng!!",
     //addnewproduct
     addNewProduct: "Thêm sản phẩm mới",
-    muCase: "Số lượng trên một thùng",
+    muCase: "Số lượng/thùng",
+    errList: "Danh sách không được rỗng",
+    nameStaff: "Nhân viên xác nhận",
+    //nhà cc
+    address: "Địa chỉ",
+    phone: "Số điện thoại",
+    email: "email",
+    //
+    print: "In",
+    vietnamese: "Tiếng Việt",
+    english: "Tiếng Anh",
   },
 };
 export default MulLanguage;

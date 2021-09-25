@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     textAlign: "center",
     color: "#4251b5",
-    marginTop: 100,
     padding: 5,
   },
   tabs: {
@@ -90,6 +89,7 @@ const AddPoPage = (props) => {
   };
   //open
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess1, setIsSuccess1] = useState(false);
   const [alert, setAlert] = useState({
     nameAlert: "",
     message: "",
@@ -110,19 +110,17 @@ const AddPoPage = (props) => {
         console.log(response + "ủa");
         if (response) {
           setAlert({ nameAlert: "success", message: "Thành công", open: true });
-          setIsSuccess(true);
         }
       } catch (error) {
-        console.log(error.response.data);
         setAlert({
           nameAlert: "Error",
           message: error.response.data.non_field_errors,
           open: true,
         });
-        console.log(alert);
       }
     };
     fetchLogin();
+    setIsSuccess(true);
   };
   const dispatch = useDispatch();
   //xứ lý thêm po
@@ -130,19 +128,14 @@ const AddPoPage = (props) => {
     // xử lý api thêm sản phẩm
     const fetchLogin = async () => {
       try {
-        console.log(data);
         dispatch(addRequestPo(data));
+        setAlert({ nameAlert: "success", message: "Thành công", open: true });
       } catch (error) {
-        // console.log(error.response.data);
-        // setAlert({
-        //   nameAlert: "Error",
-        //   message: error.response.data.non_field_errors,
-        //   open: true,
-        // });
-        // console.log(alert);
+        console.log(error.response.data);
       }
     };
     fetchLogin();
+    setIsSuccess1(true);
   };
 
   return (
@@ -187,7 +180,15 @@ const AddPoPage = (props) => {
         <TabPanel value={value} index={1}>
           <h3>{language.titleRPo}</h3>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <AddPo onAddProduct={handleAddPo}></AddPo>
+            <AddPo isSuccess={isSuccess1} onAddProduct={handleAddPo}></AddPo>
+            {alert.nameAlert && (
+              <CustomizedSnackbars
+                open={alert.open}
+                handleClose={handleClose}
+                nameAlert={alert.nameAlert}
+                message={alert.message}
+              ></CustomizedSnackbars>
+            )}
           </Grid>
         </TabPanel>
       </Grid>
