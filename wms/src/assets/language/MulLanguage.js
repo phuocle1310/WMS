@@ -55,6 +55,9 @@ const MulLanguage = {
     phone: " Phone",
     email: "Email",
     print: "Print",
+    //lang
+    vietnamese: "Vietnamese",
+    english: "English",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -112,6 +115,8 @@ const MulLanguage = {
     email: "email",
     //
     print: "In",
+    vietnamese: "Tiếng Việt",
+    english: "Tiếng Anh",
   },
 };
 export default MulLanguage;

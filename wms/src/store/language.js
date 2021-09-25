@@ -5,7 +5,7 @@ const language = createSlice({
   name: "ui",
   initialState: { currentLanguage: "vn" },
   reducers: {
-    registered(state, action) {
+    changeLanguage(state, action) {
       state.currentLanguage = action.payload;
     },
   },

@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     textAlign: "center",
     color: "#4251b5",
-    marginTop: 100,
     padding: 5,
   },
   tabs: {

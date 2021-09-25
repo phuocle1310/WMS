@@ -21,18 +21,18 @@ function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   console.log(isLoggedIn);
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const fetchLogin = async () => {
-  //     try {
-  //       const action = getMe();
-  //       const actionResult = await dispatch(action);
-  //       unwrapResult(actionResult);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchLogin();
-  // }, []);
+  useEffect(() => {
+    const fetchLogin = async () => {
+      try {
+        const action = getMe();
+        const actionResult = await dispatch(action);
+        unwrapResult(actionResult);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLogin();
+  }, []);
   return (
     <>
       <Router>
