@@ -26,6 +26,7 @@ const styles = makeStyles((theme) => ({
   },
   content: {
     padding: "0px 30px",
+    marginTop: 100,
   },
 }));
 

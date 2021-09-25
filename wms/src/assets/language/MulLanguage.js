@@ -54,6 +54,7 @@ const MulLanguage = {
     address: "Address",
     phone: " Phone",
     email: "Email",
+    print: "Print",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -109,6 +110,8 @@ const MulLanguage = {
     address: "Địa chỉ",
     phone: "Số điện thoại",
     email: "email",
+    //
+    print: "In",
   },
 };
 export default MulLanguage;

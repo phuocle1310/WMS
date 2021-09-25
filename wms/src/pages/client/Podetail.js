@@ -7,9 +7,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import useHttp from "../../Hook/useHttp";
 //api
 import poApi from "../../api/poApi";
-const QuoteDetail = () => {
+const Podetail = (props) => {
   const params = useParams();
   const { poId } = params;
+  // const poId = props.poId;
   const {
     sendRequest,
     status,
@@ -44,12 +45,12 @@ const QuoteDetail = () => {
   }
 
   return (
-    <>
+    <div style={{ width: "100%" }}>
       <Print>
         <PoItem items={{ ...item }}></PoItem>
       </Print>
-    </>
+    </div>
   );
 };
 
-export default QuoteDetail;
+export default Podetail;

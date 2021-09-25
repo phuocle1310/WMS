@@ -13,10 +13,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
-import ClearIcon from "@material-ui/icons/Clear";
-import SearchIcon from "@material-ui/icons/Search";
-import IconButton from "@material-ui/core/IconButton";
+import AlertNoti from "../UI/AlertNoti";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 
@@ -25,9 +22,10 @@ import ReactToPrint from "react-to-print";
 //css
 import ListPoStyles from "./ListPoStyles";
 //api
-import {listPo} from "../../store/poSlice";
+import { listPo } from "../../store/poSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+import Podetail from "../../pages/client/Podetail";
 export default function DataGridProDemo() {
   const classes = ListPoStyles();
   //lang
@@ -83,17 +81,26 @@ export default function DataGridProDemo() {
       width: 100,
       disableClickEventBubbling: true,
       renderCell: (params) => {
+        let id = params.getValue(params.id, "id");
         return (
           <NavLink
-            to="/faq"
+            to={`/po/${id}`}
             activeStyle={{
               fontWeight: "bold",
               color: "red",
             }}
+            target={"_blank"}
             style={{ textDecoration: "none" }}
           >
             {language.see}
           </NavLink>
+          // <button
+          //   onClick={() => {
+          //     setNewsForm(true);
+          //   }}
+          // >
+          //   xem
+          // </button>
         );
       },
     },
@@ -236,25 +243,35 @@ export default function DataGridProDemo() {
   //   };
   // }, [page, data]);
   const rows = useSelector((state) => state.po.listPo);
-  const rowsCount= useSelector((state) => state.po.rowCount);
-  const [page,setPage] = useState(0);
+  const rowsCount = useSelector((state) => state.po.rowCount);
+  const [page, setPage] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const action = listPo(page+1);
+        const action = listPo(page + 1);
         const actionResult = await dispatch(action);
         unwrapResult(actionResult);
-    
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogin();
   }, [page]);
-  const handlePageChange =(page) => {
-    setPage(page)
-  }
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+  const [openNewsForm, setNewsForm] = useState(false);
+  const handerClose = () => {
+    setNewsForm(false);
+  };
+  const renderConfirm = () => {
+    return (
+      <form className={classes.form}>
+        <Podetail poId={1}></Podetail>
+      </form>
+    );
+  };
   return (
     <div style={{ height: 580, width: "auto" }}>
       {/* <TextField
@@ -296,6 +313,11 @@ export default function DataGridProDemo() {
         }}
         loading={rows.length === 0}
       />
+      {openNewsForm && (
+        <AlertNoti onClose={handerClose} open={true}>
+          {renderConfirm()}
+        </AlertNoti>
+      )}{" "}
     </div>
   );
 }
