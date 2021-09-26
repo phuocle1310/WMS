@@ -12,6 +12,7 @@ import ListPoPage from "./pages/client/ListPoPage";
 import Podetail from "./pages/client/Podetail";
 import AddSoPage from "./pages/client/AddSoPage";
 import ListSoPage from "./pages/client/ListSoPage";
+import SoDetail from "./pages/client/SoDetail";
 //
 import { getMe } from "./store/userSlice";
 import { getProductBySupplier } from "./store/productSlice";
@@ -62,6 +63,11 @@ function App() {
                 path="/so"
                 exact
                 component={AddSoPage}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/so/:soId"
+                exact
+                component={SoDetail}
               ></DashboardLayoutRoute>
               <DashboardLayoutRoute
                 path="/listso"

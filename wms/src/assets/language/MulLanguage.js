@@ -7,7 +7,7 @@ const MulLanguage = {
     listPo: "List Po",
     litsSo: "List So",
     nameMenuPO: "Purchase Order",
-    nameMenuSo: "Supplier Orders",
+    nameMenuSo: "Supplier Order",
     title: "manage",
     titleHome: "Home",
     setting: "Setting",
@@ -62,6 +62,8 @@ const MulLanguage = {
     //lang
     vietnamese: "Vietnamese",
     english: "English",
+    detailPo: "Purchase Order detail",
+    detailSo: "Supplier Order detail",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -124,6 +126,8 @@ const MulLanguage = {
     print: "In",
     vietnamese: "Tiếng Việt",
     english: "Tiếng Anh",
+    detailPo: "Chi tiết đơn nhập kho",
+    detailSo: "Chi tiết đơn xuất kho",
   },
 };
 export default MulLanguage;

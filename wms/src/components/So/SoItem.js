@@ -12,13 +12,13 @@ import Button from "@material-ui/core/Button";
 import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";
 //css
-import PoItemStyles from "./PoItemStyles";
+import PoItemStyles from "../Po/PoItemStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 //list product
 import ListProduct from "../Product/ListProduct";
-const AddPo = (props) => {
+const SoItem = (props) => {
   const classes = PoItemStyles();
   //lang
   const currentLanguage = useSelector(
@@ -40,7 +40,7 @@ const AddPo = (props) => {
     >
       <Grid container>
         <Grid item xs={12} className={classes.title}>
-          <h3>{language.detailPo}</h3>
+          <h3>{language.detailSo}</h3>
         </Grid>
         <Grid item xs={12} className={classes.box}>
           <Grid container>
@@ -90,7 +90,7 @@ const AddPo = (props) => {
             </Grid>
             <Grid item xs={12} lg={12} className={classes.list}>
               <p className={classes.left}>{language.listProducts}:</p>
-              <ListProduct rows={item.podetail}></ListProduct>
+              <ListProduct rows={item.sodetail}></ListProduct>
             </Grid>
           </Grid>
         </Grid>
@@ -99,4 +99,4 @@ const AddPo = (props) => {
   );
 };
 
-export default AddPo;
+export default SoItem;

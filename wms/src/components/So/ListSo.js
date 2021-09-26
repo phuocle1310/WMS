@@ -103,25 +103,25 @@ export default function ListSo() {
       case "PENDING":
         return (
           <Alert severity="warning" variant="filled" className={classes.alert}>
-            {language.PENDING}
+           {status}
           </Alert>
         );
       case "ACCEPTED":
         return (
           <Alert severity="info" variant="filled" className={classes.alert}>
-            {language.ACCEPTED}
+           {status}
           </Alert>
         );
       case "FAILED":
         return (
           <Alert severity="error" variant="filled" className={classes.alert}>
-            {language.FAILED}
+                   {status}
           </Alert>
         );
       case "DONE":
         return (
           <Alert severity="success" variant="filled" className={classes.alert}>
-            {language.DONE}
+               {status}
           </Alert>
         );
       default:

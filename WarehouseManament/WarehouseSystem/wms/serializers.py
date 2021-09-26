@@ -356,7 +356,7 @@ class OrderDetailSerializer(ModelSerializer):
 
     class Meta:
         model = OrderDetail
-        fields = ['id', 'order', 'item', 'Qty_order', 'Qty_just', 'Qty_receipt', 'status']
+        fields = ['id', 'order', 'item', 'Qty_receipt', 'status']
         read_only_fields = ['status']
 
 
@@ -386,7 +386,7 @@ class ReceiptDetailSerializer(ModelSerializer):
 
     class Meta:
         model = ReceiptDetail
-        fields = ['id', 'receipt', 'item', 'Qty_order', 'Qty_just', 'Qty_receipt', 'status']
+        fields = ['id', 'receipt', 'item', 'Qty_receipt', 'status']
         read_only_fields = ['status']
 
 
