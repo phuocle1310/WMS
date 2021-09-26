@@ -11,11 +11,13 @@ import Login from "./components/Login/Login";
 import ListPoPage from "./pages/client/ListPoPage";
 import Podetail from "./pages/client/Podetail";
 import AddSoPage from "./pages/client/AddSoPage";
+import ListSoPage from "./pages/client/ListSoPage";
 //
 import { getMe } from "./store/userSlice";
 import { getProductBySupplier } from "./store/productSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+import { listSo } from "./store/soSlice";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -60,6 +62,11 @@ function App() {
                 path="/so"
                 exact
                 component={AddSoPage}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/listso"
+                exact
+                component={ListSoPage}
               ></DashboardLayoutRoute>
             </>
           )}

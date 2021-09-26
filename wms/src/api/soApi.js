@@ -8,5 +8,9 @@ const soApi = {
     const url = `/so/?page=${data}`;
     return axiosClient.get(url);
   },
+  gePoDetail: (data) => {
+    const url = `/po/${data}/get_po/`;
+    return axiosClient.get(url);
+  },
 };
 export default soApi;

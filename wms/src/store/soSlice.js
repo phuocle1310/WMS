@@ -3,7 +3,7 @@ import soApi from "../api/soApi";
 
 //thêm
 export const addRequestSo = createAsyncThunk(
-  "po/addRequestPo",
+  "so/addRequestPo",
   async (data, { rejectWithValue }) => {
     try {
       const response = await soApi.createRequestSo(data);
@@ -15,10 +15,10 @@ export const addRequestSo = createAsyncThunk(
 );
 //getList
 export const listSo = createAsyncThunk(
-  "po",
+  "so/getAll",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await soApi.getAllSo();
+      const response = await soApi.getAllSo(data);
       return response;
     } catch (err) {
       return rejectWithValue(err.response.data);
