@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom";
 import AlertNoti from "../UI/AlertNoti";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-
+import { useDispatch, useSelector } from "react-redux";
 //print
 import ReactToPrint from "react-to-print";
 //css
@@ -24,9 +24,9 @@ import ListPoStyles from "./ListPoStyles";
 //api
 import { listPo } from "../../store/poSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
+
 import Podetail from "../../pages/client/Podetail";
-export default function DataGridProDemo() {
+export default function ListPo() {
   const classes = ListPoStyles();
   //lang
   const currentLanguage = useSelector(

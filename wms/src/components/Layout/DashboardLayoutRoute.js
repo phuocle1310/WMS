@@ -25,8 +25,11 @@ const styles = makeStyles((theme) => ({
     color: "#afb2d5",
   },
   content: {
-    padding: "0px 30px",
+    padding: "0px 10px",
     marginTop: 100,
+    [theme.breakpoints.up("lg")]: {
+      padding: "0px 30px",
+    },
   },
 }));
 

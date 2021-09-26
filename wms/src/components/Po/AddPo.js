@@ -242,8 +242,8 @@ const classes = FormStyles();
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
-          const response = await poApi.createRequestPo(dataPo)
-          console.log(dataPo)
+          const response = await poApi.createRequestPo(dataPo);
+          console.log(dataPo);
           onDelete();
           setAlert({
             nameAlert: "success",
@@ -251,9 +251,10 @@ const classes = FormStyles();
             open: true,
           });
         } catch (error) {
+          console.log(error.response['data'])
           setAlert({
             nameAlert: "Error",
-            message: error.response.data,
+            message: error.response['data'].item,
             open: true,
           });
         }

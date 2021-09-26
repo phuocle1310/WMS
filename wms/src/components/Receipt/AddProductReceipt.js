@@ -11,7 +11,7 @@ import AddProductStyles from "../Product/AddProductStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-const AddProductSo = (props) => {
+const AddProductReceipt = (props) => {
   if (!ValidatorForm.hasValidationRule("isquantity")) {
     ValidatorForm.addValidationRule("isquantity", (value) => {
       if (value > values.Qty_total) {
@@ -108,4 +108,4 @@ const AddProductSo = (props) => {
   return <div className={classes.product}>{props.isNew && itemProduct()}</div>;
 };
 
-export default AddProductSo;
+export default AddProductReceipt;
