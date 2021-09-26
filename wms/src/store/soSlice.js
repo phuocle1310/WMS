@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import poApi from "../api/poApi";
+import soApi from "../api/soApi";
 
 //thêm
-export const addRequestPo = createAsyncThunk(
+export const addRequestSo = createAsyncThunk(
   "po/addRequestPo",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await poApi.createRequestPo(data);
+      const response = await soApi.createRequestSo(data);
       return response;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -14,11 +14,11 @@ export const addRequestPo = createAsyncThunk(
   },
 );
 //getList
-export const listPo = createAsyncThunk(
+export const listSo = createAsyncThunk(
   "po",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await poApi.getAllPo(data);
+      const response = await soApi.getAllSo();
       return response;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -26,26 +26,26 @@ export const listPo = createAsyncThunk(
   },
 );
 //tạo ra poSlice
-const poSlice = createSlice({
-  name: "po",
+const soSlice = createSlice({
+  name: "so",
   initialState: {
-    listPo: [],
+    listSo: [],
     pageSize: 0,
     rowCount: 0,
   },
   reducers: {},
   extraReducers: {
-    [addRequestPo.fulfilled]: (state, action) => {
-       state.listPo.push(action.payload);
+    [addRequestSo.fulfilled]: (state, action) => {
+      state.listSo.push(action.payload);
     },
-    [listPo.fulfilled]: (state, action) => {
-      state.listPo = action.payload.results;
+    [listSo.fulfilled]: (state, action) => {
+      state.listSo = action.payload.results;
       state.rowCount = action.payload.count;
-      state.pageSize = Math.ceil(state.rowCount / state.listPo.length);
+      state.pageSize = Math.ceil(state.rowCount / state.listSo.length);
     },
   },
 });
 
-export const poActions = poSlice.actions;
+export const soActions = soSlice.actions;
 
-export default poSlice;
+export default soSlice;

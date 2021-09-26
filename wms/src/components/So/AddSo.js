@@ -22,6 +22,7 @@ import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import AddProductSo from "./AddProductSo";
 const AddSo = (props) => {
   const classes = FormStyles();
+
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -29,6 +30,7 @@ const AddSo = (props) => {
   const language = MulLanguage[`${currentLanguage}`];
   //khai báo form ban đầu rỗng
   let form = null;
+
   var moment = require("moment");
   //readonly
   const TextFieldComponent = (props) => {
@@ -39,26 +41,42 @@ const AddSo = (props) => {
     {
       isNew: true,
       quantity: "",
+      Qty_total: "",
       production_date: "",
       expire_date: "",
       product: {
         name: "",
+        Qty_total: "",
       },
     },
   ]);
   // lấy sản phẩm từ api
   let [product, setProduct] = useState([]);
+  let [product1, setProduct1] = useState([]);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await productApi.getProductBySupplier();
+        const response = await productApi.getProductBySupplierForSo();
         setProduct(response);
+        setProduct1(response);
       } catch (error) {
         console.log(error);
       }
     };
     fetchProduct();
   }, []);
+  //cập nhật product
+  useEffect(() => {
+    let newa = [...product1];
+    for (var i = 0; i < listProduct.length; i++) {
+      const item = getItem(listProduct[i].product);
+      if (listProduct[i].product === item) {
+        //xóa
+        removeElement(newa, listProduct[i].product);
+      }
+    }
+    setProduct(newa);
+  }, [listProduct]);
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
@@ -78,23 +96,27 @@ const AddSo = (props) => {
   };
   //xử lý thêm mới / nhưng cũ
   const addItemProductHandler = () => {
-    setListProduct((prevState) => {
-      return [
-        ...prevState,
-        {
-          isNew: true,
-          quantity: "",
-          production_date: "",
-          expire_date: "",
-          product: {
-            name: "",
+    if (listProduct.length < product1.length) {
+      setListProduct((prevState) => {
+        return [
+          ...prevState,
+          {
+            isNew: true,
+            quantity: "",
+            Qty_total: "",
+            production_date: "",
+            expire_date: "",
+            product: {
+              name: "",
+              Qty_total: "",
+            },
           },
-        },
-      ];
-    });
+        ];
+      });
+    }
   };
   const getItem = (e) => {
-    const item = product.find((item) => item === e);
+    const item = product1.find((item) => item === e);
     return item;
   };
   //xóa
@@ -102,15 +124,17 @@ const AddSo = (props) => {
     if (listProduct.length > 1) {
       //lấy item tính xóa
       let a = { ...listProduct[index].product };
-      //thêm lại vào product
-      setProduct((pre) => {
-        let newlist = [...pre];
-        newlist.push(a);
-        //sắp xếp lại
-        return newlist.sort(function (a, b) {
-          return a.id - b.id;
+      if (a.name !== "") {
+        //thêm lại vào product
+        setProduct((pre) => {
+          let newlist = [...pre];
+          newlist.push(a);
+          //sắp xếp lại
+          return newlist.sort(function (a, b) {
+            return a.id - b.id;
+          });
         });
-      });
+      }
       //xóa
       const list = [...listProduct];
       list.splice(index, 1);
@@ -130,26 +154,32 @@ const AddSo = (props) => {
     });
   };
   const handleChangeSelect = (id) => (e, a) => {
+    console.log(listProduct);
     setListProduct((prevState) => {
+      console.log(listProduct);
       let newlist = [...prevState];
+      const item = getItem(a);
       for (let i = 0; i < newlist.length; i++) {
         if (i === id) {
           newlist[i]["product"] = a;
           if (a !== null) {
-            const item = getItem(a);
-            //xử lý bỏ item đã chon ra khỏi mảng product
-            setProduct((pre) =>
-              pre.filter((items) => {
-                return items !== item;
-              }),
-            );
-            console.log(product);
+            //lấy số lượng item có trong xe
+            newlist[i]["Qty_total"] = a.Qty_total;
           }
         }
       }
+      console.log("ủa 3");
       return newlist;
     });
+    console.log("ủa 2");
   };
+  //ham xoa
+  function removeElement(array, elem) {
+    var index = array.indexOf(elem);
+    if (index > -1) {
+      array.splice(index, 1);
+    }
+  }
   //xử lý PO
   const [timepoRequest, setTimePoRequest] = useState("");
   const onDelete = () => {
@@ -180,11 +210,23 @@ const AddSo = (props) => {
         effective_date: timepoRequest.toLocaleDateString("en-CA"),
         items: items,
       };
+      console.log(dataPo);
       props.onAddProduct(dataPo);
       if (props.isSuccess) {
         onDelete();
       }
     }
+  };
+  const item = {
+    isNew: true,
+    quantity: "",
+    Qty_total: "",
+    production_date: "",
+    expire_date: "",
+    product: {
+      name: "",
+      Qty_total: "",
+    },
   };
   return (
     <ValidatorForm

@@ -101,7 +101,9 @@ export default function ComboBox(props) {
         options={product}
         renderOption={(option) => (
           <React.Fragment>
-            {option.id.toString() + " " + option.name},
+            {option.id
+              ? option.id.toString() + " " + option.name
+              : option.name + "-total: " + option.Qty_total}
           </React.Fragment>
         )}
         getOptionLabel={(option) => option.name || ""}

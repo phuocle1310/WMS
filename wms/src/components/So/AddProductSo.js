@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import { TextValidator } from "react-material-ui-form-validator";
 import ClearIcon from "@material-ui/icons/Clear";
 import IconButton from "@material-ui/core/IconButton";
-
+import { ValidatorForm } from "react-material-ui-form-validator";
 // import ValidatedCombox from "../UI/ValidatedCombox";
 import ComboBox from "../UI/ComboBox";
 //css
@@ -12,6 +12,20 @@ import AddProductStyles from "../Product/AddProductStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 const AddProductSo = (props) => {
+  if (!ValidatorForm.hasValidationRule("isquantity")) {
+    ValidatorForm.addValidationRule("isquantity", (value) => {
+      if (value > values.Qty_total) {
+        return false;
+      }
+      return true;
+    });
+  }
+  //xử lý lỗi
+  useEffect(() => {
+    if (ValidatorForm.hasValidationRule("isquantity")) {
+      ValidatorForm.removeValidationRule("isquantity");
+    }
+  }, []);
   const classes = AddProductStyles();
   //lang
   const currentLanguage = useSelector(
@@ -30,10 +44,11 @@ const AddProductSo = (props) => {
       moment(new Date(selectedDate.manufactureDate)).format("YYYY/MM/DD"),
     );
   }, [values.manufactureDate]);
+  let form = null;
+  console.log(values.Qty_total);
   const itemProduct = () => {
     return (
       <>
-        {" "}
         <div>
           <p>{props.id}</p>
         </div>
@@ -56,8 +71,11 @@ const AddProductSo = (props) => {
             name="quantity"
             value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
-            validators={["required"]}
-            errorMessages={[`${language.requiredError}`]}
+            validators={["required", "isquantity"]}
+            errorMessages={[
+              `${language.requiredError}`,
+              `${language.soQuantityError}`,
+            ]}
           />
         </div>
         <div>

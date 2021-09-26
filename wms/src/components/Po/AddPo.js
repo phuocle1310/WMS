@@ -54,11 +54,13 @@ const AddPo = (props) => {
   ]);
   // lấy sản phẩm từ api
   let [product, setProduct] = useState([]);
+  let [product1, setProduct1] = useState([]);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await productApi.getProductBySupplier();
         setProduct(response);
+        setProduct1(response);
       } catch (error) {
         console.log(error);
       }
@@ -82,6 +84,25 @@ const AddPo = (props) => {
       );
     });
   };
+  //ham xoa
+  function removeElement(array, elem) {
+    var index = array.indexOf(elem);
+    if (index > -1) {
+      array.splice(index, 1);
+    }
+  }
+  //cập nhật product
+  useEffect(() => {
+    let newa = [...product1];
+    for (var i = 0; i < listProduct.length; i++) {
+      const item = getItem(listProduct[i].product);
+      if (listProduct[i].product === item) {
+        //xóa
+        removeElement(newa, listProduct[i].product);
+      }
+    }
+    setProduct(newa);
+  }, [listProduct]);
   //xử lý thêm mới / nhưng cũ
   const addItemProductHandler = () => {
     setListProduct((prevState) => {
@@ -106,28 +127,32 @@ const AddPo = (props) => {
       ];
     });
   };
+  //lấy product chính
   const getItem = (e) => {
-    const item = product.find((item) => item === e);
+    const item = product1.find((item) => item === e);
     return item;
   };
   //xóa
   const removeItemHandler = (index) => {
-    if(listProduct.length >1){
-    //lấy item tính xóa
-    let a = { ...listProduct[index].product };
-    //thêm lại vào product
-    setProduct((pre) => {
-      let newlist = [...pre];
-      newlist.push(a);
-      //sắp xếp lại
-      return newlist.sort(function (a, b) {
-        return a.id - b.id;
-      });
-    });
-    //xóa
-    const list = [...listProduct];
-    list.splice(index, 1);
-    setListProduct(list);}
+    if (listProduct.length > 1) {
+      //lấy item tính xóa
+      let a = { ...listProduct[index].product };
+      if (a.name !== "") {
+        //thêm lại vào product
+        setProduct((pre) => {
+          let newlist = [...pre];
+          newlist.push(a);
+          //sắp xếp lại
+          return newlist.sort(function (a, b) {
+            return a.id - b.id;
+          });
+        });
+      }
+      //xóa
+      const list = [...listProduct];
+      list.splice(index, 1);
+      setListProduct(list);
+    }
   };
   //hàm xử lý onchange
   const handleChangeAll = (id) => (e) => {
@@ -156,13 +181,6 @@ const AddPo = (props) => {
             newlist[i]["expire_date"] = new Date(
               a.expire_date,
             ).toLocaleDateString("en-CA");
-            //xử lý bỏ item đã chon ra khỏi mảng product
-            setProduct((pre) =>
-              pre.filter((items) => {
-                return items !== item;
-              }),
-            );
-            console.log(product);
           }
         }
       }

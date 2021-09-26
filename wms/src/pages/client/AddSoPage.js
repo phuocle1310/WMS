@@ -13,7 +13,7 @@ import AddNewsProduct from "../../components/Product/AddNewsProduct";
 import React, { useRef, useEffect, useState } from "react";
 import CustomizedSnackbars from "../../components/UI/CustomizedSnackbars";
 //redux api
-import { addRequestPo } from "../../store/poSlice";
+import { addRequestSo } from "../../store/soSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 //api
@@ -124,11 +124,11 @@ const AddSoPage = (props) => {
   };
   const dispatch = useDispatch();
   //xứ lý thêm po
-  const handleAddPo = (data) => {
+  const handleAddSo = (data) => {
     // xử lý api thêm sản phẩm
     const fetchLogin = async () => {
       try {
-        dispatch(addRequestPo(data));
+        dispatch(addRequestSo(data));
         setAlert({ nameAlert: "success", message: "Thành công", open: true });
       } catch (error) {
         console.log(error.response.data);
@@ -142,7 +142,15 @@ const AddSoPage = (props) => {
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.box}>
         <h4>Thêm yêu cầu po</h4>
-        <AddSo></AddSo>
+        <AddSo isSuccess={isSuccess} onAddProduct={handleAddSo}></AddSo>
+        {alert.nameAlert && (
+          <CustomizedSnackbars
+            open={alert.open}
+            handleClose={handleClose}
+            nameAlert={alert.nameAlert}
+            message={alert.message}
+          ></CustomizedSnackbars>
+        )}
       </Grid>
     </Grid>
   );
