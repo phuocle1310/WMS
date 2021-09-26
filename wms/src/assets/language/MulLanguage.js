@@ -33,6 +33,8 @@ const MulLanguage = {
     requiredError: "Please enter this line",
     requiredExpirationDate:
       "Prodcution date can be less or equal than expire date",
+    soQuantityError:
+      "Quantity order can't be greater than quantity of inventory",
     //list Po
     id: "Id",
     status: "Status",
@@ -94,6 +96,7 @@ const MulLanguage = {
     //error
     requiredError: "vui lòng nhập dòng này",
     requiredExpirationDate: "Hạn sử dụng phải lớn hơn ngày sản xuất",
+    soQuantityError: "Vui lòng nhập ít hơn số lượng trong kho",
     //list Po
     id: "Mã",
     status: "Trạng thái",
