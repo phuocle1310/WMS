@@ -202,7 +202,10 @@ const AddSo = (props) => {
     if (listProduct.length > 0) {
       //lấy items về đúng định dạng
       let items = listProduct.map((item) => {
-        let rObj = { pk: item.product.id, Qty_order: Number(item.quantity) };
+        let rObj = {
+          name: item.product.name,
+          Qty_order: Number(item.quantity),
+        };
         return rObj;
       });
       //xử lý dữ liệu đưa lên api
@@ -297,6 +300,7 @@ const AddSo = (props) => {
                   color="primary"
                   aria-label="upload picture"
                   component="span"
+                  disabled={listProduct.length < product1.length ? false : true}
                   classes={{
                     root: classes.button, // class name, e.g. `classes-nesting-root-x`
                     label: classes.label, // class name, e.g. `classes-nesting-label-x`

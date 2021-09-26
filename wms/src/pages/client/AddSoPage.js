@@ -129,9 +129,15 @@ const AddSoPage = (props) => {
     const fetchLogin = async () => {
       try {
         dispatch(addRequestSo(data));
+        console.log(data);
         setAlert({ nameAlert: "success", message: "Thành công", open: true });
       } catch (error) {
         console.log(error.response.data);
+        setAlert({
+          nameAlert: "Error",
+          message: error.response.data,
+          open: true,
+        });
       }
     };
     fetchLogin();

@@ -295,6 +295,7 @@ const AddPo = (props) => {
                 <IconButton
                   onClick={addItemProductHandler}
                   color="primary"
+                  disabled={listProduct.length < product1.length ? false : true}
                   aria-label="upload picture"
                   component="span"
                   classes={{
@@ -337,7 +338,7 @@ const AddPo = (props) => {
           {language.sendRequire}
         </Button>
       </div>
-    {/* {listProduct.length <=0 &&      
+      {/* {listProduct.length <=0 &&      
     <CustomizedSnackbars
               open={true}
               // handleClose={handleClose}
@@ -345,7 +346,6 @@ const AddPo = (props) => {
               message={language.errList}
             ></CustomizedSnackbars>} */}
     </ValidatorForm>
-    
   );
 };
 
