@@ -19,8 +19,11 @@ import { useSelector, useDispatch } from "react-redux";
 import productApi from "../../api/productApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
+//redux api
+import poApi from "../../api/poApi";
+
 const AddPo = (props) => {
-  const classes = FormStyles();
+const classes = FormStyles();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -32,6 +35,19 @@ const AddPo = (props) => {
   //readonly
   const TextFieldComponent = (props) => {
     return <TextField fullWidth {...props} disabled={true} />;
+  };
+  //alert
+  const [alert, setAlert] = useState({
+    nameAlert: "",
+    message: "",
+    open: false,
+  });
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ nameAlert: "", message: "", open: false });
   };
   // lưu vào danh sách
   const [listProduct, setListProduct] = useState([
@@ -173,8 +189,6 @@ const AddPo = (props) => {
         if (i === id) {
           newlist[i]["product"] = a;
           if (a !== null) {
-            console.log(a);
-            const item = getItem(a);
             newlist[i]["production_date"] = new Date(
               a.production_date,
             ).toLocaleDateString("en-CA");
@@ -191,22 +205,24 @@ const AddPo = (props) => {
   const [timepoRequest, setTimePoRequest] = useState("");
   const onDelete = () => {
     setTimePoRequest(null);
-    setListProduct([{
-      isNew: true,
-      quantity: "",
-      production_date: "",
-      expire_date: "",
-      product: {
-        Qty_total: 0,
-        expire_date: "",
-        id: 8,
-        mu_case: 13,
-        name: "",
+    setListProduct([
+      {
+        isNew: true,
+        quantity: "",
         production_date: "",
-        status: true,
-        unit: "",
+        expire_date: "",
+        product: {
+          Qty_total: 0,
+          expire_date: "",
+          id: 8,
+          mu_case: 13,
+          name: "",
+          production_date: "",
+          status: true,
+          unit: "",
+        },
       },
-    },]);
+    ]);
   };
   // xử lý submit
   const handleOnSubmit = (e) => {
@@ -222,10 +238,27 @@ const AddPo = (props) => {
         effective_date: timepoRequest.toLocaleDateString("en-CA"),
         items: items,
       };
-      props.onAddProduct(dataPo);
-    }
-    if (props.isSuccess) {
-      onDelete();
+      console.log(dataPo)
+      // xử lý api thêm sản phẩm
+      const fetchLogin = async () => {
+        try {
+          const response = await poApi.createRequestPo(dataPo)
+          console.log(dataPo)
+          onDelete();
+          setAlert({
+            nameAlert: "success",
+            message: language.success,
+            open: true,
+          });
+        } catch (error) {
+          setAlert({
+            nameAlert: "Error",
+            message: error.response.data,
+            open: true,
+          });
+        }
+      };
+      fetchLogin();
     }
   };
   return (
@@ -338,13 +371,14 @@ const AddPo = (props) => {
           {language.sendRequire}
         </Button>
       </div>
-      {/* {listProduct.length <=0 &&      
-    <CustomizedSnackbars
-              open={true}
-              // handleClose={handleClose}
-              nameAlert={"error"}
-              message={language.errList}
-            ></CustomizedSnackbars>} */}
+      {alert.nameAlert && (
+        <CustomizedSnackbars
+          open={alert.open}
+          handleClose={handleClose}
+          nameAlert={alert.nameAlert}
+          message={alert.message}
+        ></CustomizedSnackbars>
+      )}
     </ValidatorForm>
   );
 };

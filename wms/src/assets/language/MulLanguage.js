@@ -14,6 +14,7 @@ const MulLanguage = {
     logout: "Logout",
     //tạo yêu cầu po
     titleRPo: "Create the purchase order request",
+    titleRSo: "Create the Supplier Order request",
     supplier: "Supplier",
     dateCreated: "Date created",
     importDate: "Import date",
@@ -64,12 +65,13 @@ const MulLanguage = {
     english: "English",
     detailPo: "Purchase Order detail",
     detailSo: "Supplier Order detail",
+    success: "Success",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
     //itemmenu
-    inputPo: "tạo đơn đặt hàng",
-    inputSo: "tạo đơn nhập hàng",
+    inputSo: "tạo đơn đặt hàng",
+    inputPo: "tạo đơn nhập hàng",
     listPo: "Danh sách các đơn nhập hàng",
     listSo: "Danh sách các đơn xuất hàng",
     nameMenuPO: "nhập hàng",
@@ -80,6 +82,7 @@ const MulLanguage = {
     logout: "Đăng xuất",
     //tạo yêu cầu po
     titleRPo: "Tạo yêu cầu nhập hàng",
+    titleRSo: "Tạo yêu cầu xuất hàng",
     supplier: "Nhà cung cấp",
     dateCreated: "Ngày tạo",
     importDate: "Ngày nhập",
@@ -128,6 +131,7 @@ const MulLanguage = {
     english: "Tiếng Anh",
     detailPo: "Chi tiết đơn nhập kho",
     detailSo: "Chi tiết đơn xuất kho",
+    success: "Thành công",
   },
 };
 export default MulLanguage;

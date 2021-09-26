@@ -4,15 +4,17 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import ClearIcon from "@material-ui/icons/Clear";
 import SendIcon from "@material-ui/icons/Send";
 import Button from "@material-ui/core/Button";
+import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 //css
 import AddProductStyles from "./AddProductStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
+//api
+import productApi from "../../api/productApi";
 const AddNewsProduct = (props) => {
   const [selectedDate, handleDateChange] = useState("");
   const [selectedDateP, handleDateChangeP] = useState("");
-
   if (!ValidatorForm.hasValidationRule("isexpireMatch")) {
     ValidatorForm.addValidationRule("isexpireMatch", (value) => {
       if (value < selectedDateP) {
@@ -28,6 +30,19 @@ const AddNewsProduct = (props) => {
     }
   }, []);
   const classes = AddProductStyles();
+  //alert
+  const [alert, setAlert] = useState({
+    nameAlert: "",
+    message: "",
+    open: false,
+  });
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ nameAlert: "", message: "", open: false });
+  };
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -67,10 +82,25 @@ const AddNewsProduct = (props) => {
   // truyền dữ liệu submit
   const onSubmit = (e) => {
     e.preventDefault();
-    props.onProduct(product);
-    if (props.isSuccess) {
-      handleDelete();
-    }
+    const fetchLogin = async () => {
+      try {
+        const response = await productApi.createdProduct(product);
+        handleDelete();
+        setAlert({
+          nameAlert: "success",
+          message: language.success,
+          open: true,
+        });
+        return response;
+      } catch (error) {
+        setAlert({
+          nameAlert: "Error",
+          message: error.response.data.non_field_errors,
+          open: true,
+        });
+      }
+    };
+    fetchLogin();
   };
   return (
     <ValidatorForm
@@ -219,6 +249,14 @@ const AddNewsProduct = (props) => {
           </Button>
         </div>
       </div>
+      {alert.nameAlert && (
+        <CustomizedSnackbars
+          open={alert.open}
+          handleClose={handleClose}
+          nameAlert={alert.nameAlert}
+          message={alert.message}
+        ></CustomizedSnackbars>
+      )}
     </ValidatorForm>
   );
 };

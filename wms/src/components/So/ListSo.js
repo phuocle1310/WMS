@@ -84,7 +84,7 @@ export default function ListSo() {
         let id = params.getValue(params.id, "id");
         return (
           <NavLink
-            to={`/po/${id}`}
+            to={`/so/${id}`}
             activeStyle={{
               fontWeight: "bold",
               color: "red",

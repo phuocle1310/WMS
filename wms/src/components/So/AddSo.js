@@ -17,12 +17,26 @@ import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
 import productApi from "../../api/productApi";
+import soApi from "../../api/soApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import AddProductSo from "./AddProductSo";
+
 const AddSo = (props) => {
   const classes = FormStyles();
+  //alert
+  const [alert, setAlert] = useState({
+    nameAlert: "",
+    message: "",
+    open: false,
+  });
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
+    setAlert({ nameAlert: "", message: "", open: false });
+  };
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -205,27 +219,30 @@ const AddSo = (props) => {
         return rObj;
       });
       //xử lý dữ liệu đưa lên api
-      const dataPo = {
+      const dataSo = {
         effective_date: timepoRequest.toLocaleDateString("en-CA"),
         items: items,
       };
-      console.log(dataPo);
-      props.onAddProduct(dataPo);
-      if (props.isSuccess) {
-        onDelete();
-      }
+      // xử lý api thêm sản phẩm
+      const fetchLogin = async () => {
+        try {
+          const response = await soApi.createRequestSo(dataSo);
+          onDelete();
+          setAlert({
+            nameAlert: "success",
+            message: language.success,
+            open: true,
+          });
+        } catch (error) {
+          setAlert({
+            nameAlert: "Error",
+            message: error.response.data,
+            open: true,
+          });
+        }
+      };
+      fetchLogin();
     }
-  };
-  const item = {
-    isNew: true,
-    quantity: "",
-    Qty_total: "",
-    production_date: "",
-    expire_date: "",
-    product: {
-      name: "",
-      Qty_total: "",
-    },
   };
   return (
     <ValidatorForm
@@ -337,6 +354,14 @@ const AddSo = (props) => {
           {language.sendRequire}
         </Button>
       </div>
+      {alert.nameAlert && (
+        <CustomizedSnackbars
+          open={alert.open}
+          handleClose={handleClose}
+          nameAlert={alert.nameAlert}
+          message={alert.message}
+        ></CustomizedSnackbars>
+      )}
     </ValidatorForm>
   );
 };
