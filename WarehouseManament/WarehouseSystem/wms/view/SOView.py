@@ -5,15 +5,15 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
-from ..models import SO
+from ..models import SO, Item
 from ..serializers import SOSerializer, SOCreateSerializer
 
 
 class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
     queryset = SO.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    action_required_auth = ['list', 'retrieve', 'create',
-                            'update']
+    action_required_auth = ['list', 'create',
+                            'update_so', 'destroy', 'get_so']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -39,6 +39,13 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         items = request.data.get("items")
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
+        list_item_exist = []
+        items_in_stock = Item.objects.filter(status=True)
+        for item in items_in_stock:
+            list_item_exist.append(item.name)
+        for item in items:
+            if item.get('name') not in list_item_exist or item.get('Qty_order') <= 0:
+                return Response({"Failed": "Quantity must be greater than 0 and item must be exist"})
         instance = serializer.save(**{"supplier": self.request.user.supplier, "items": items})
         return Response(SOSerializer(instance).data, status=status.HTTP_201_CREATED)
 

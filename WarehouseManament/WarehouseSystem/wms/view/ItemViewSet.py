@@ -14,8 +14,8 @@ from ..serializers import ItemSerializer, ItemCreateSerializer, ItemViewSOSerial
 class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Item.objects.filter(status=True)
     serializer_class = ItemSerializer
-    action_required_auth = ['list', 'retrieve', 'create',
-                            'update']
+    action_required_auth = ['list', 'create',
+                            'update', 'get_item_by_supplier', 'get_item_by_supplier_for_so']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -43,7 +43,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     @action(methods=['get'], detail=False, url_path='get-item-by-supplier-for-so')
     def get_item_by_supplier_for_so(self, request):
         try:
-            if request.user.role == 0:
+            if request.user.role == 2:
                 items = Item.objects.filter(supplier=request.user.supplier, Qty_total__gt=0, status=True).values("name").distinct()
             else:
                 items = Item.objects.all().values("name").distinct()

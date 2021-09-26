@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
-from ..models import Receipt
+from ..models import Receipt, PODetail
 from ..serializers import ReceiptSerializer, ReceiptCreateSerializer
 
 
@@ -25,4 +25,7 @@ class ReceiptView(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView
 
         return ReceiptSerializer
 
+    @action(methods=['get'], detail=False, url_path='get-item-po')
+    def get_item_po(self, request):
 
+        return Response(status=status.HTTP_200_OK)

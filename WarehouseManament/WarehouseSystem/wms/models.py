@@ -234,7 +234,7 @@ class Receipt(BaseReceiptOrder):
     edit_who = models.ForeignKey(User, related_name="receipt_edit_who", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        str_receipt = '%s - %s' % (self.user.first_name, self.add_date)
+        str_receipt = '%s - %s' % (self.add_who.first_name, self.add_date)
         return str_receipt
 
 
@@ -244,15 +244,13 @@ class Order(BaseReceiptOrder):
     edit_who = models.ForeignKey(User, related_name="order_edit_who", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        str_order = '%s - %s' % (self.user.first_name, self.add_date)
+        str_order = '%s - %s' % (self.add_who.first_name, self.add_date)
         return str_order
 
 
 class BaseReceiptOrderDetail(models.Model):
     item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
-    Qty_order = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity order must greater than 0')], null=True)
-    Qty_just = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity just must greater than 0')], null=True)
-    Qty_receipt = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity just must greater than 0')], null=True)
+    Qty_receipt = models.IntegerField(default=0, validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')], null=True)
     status = models.BooleanField(default=True)
 
     class Meta:
@@ -264,7 +262,7 @@ class ReceiptDetail(BaseReceiptOrderDetail):
     receipt = models.ForeignKey(Receipt, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
-        return ReceiptDetail.item
+        return self.item.name
 
     class Meta:
         unique_together = ['receipt', 'item']
@@ -274,7 +272,7 @@ class OrderDetail(BaseReceiptOrderDetail):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
-        return ReceiptDetail.item
+        return self.item.name
 
     class Meta:
         unique_together = ['order', 'item']

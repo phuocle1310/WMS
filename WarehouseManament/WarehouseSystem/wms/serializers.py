@@ -36,6 +36,9 @@ class SupplierSerializer(ModelSerializer):
         fields = ['id', 'company_name', 'address', 'phone', 'email', 'status', 'user']
 
 
+# ITEM SERIALIZER CLASS
+
+
 class ItemViewSOSerializer(ModelSerializer):
     class Meta:
         model = Item
@@ -47,6 +50,20 @@ class ItemSerializer(ModelSerializer):
         model = Item
         fields = ['id', 'name', 'unit', 'expire_date', 'production_date', 'mu_case', 'Qty_total', 'status']
         read_only_fields = ['status']
+
+
+class ItemForReceiptSerializer(ModelSerializer):
+    Qty_receipt = serializers.IntegerField()
+    Qty_order = serializers.IntegerField()
+
+    class Meta:
+        model = Item
+        fields = ['id', 'name', 'unit', 'expire_date', 'production_date', 'mu_case', 'status',
+                  'Qty_order', 'Qty_receipt']
+        read_only_fields = ['status']
+
+
+# PO SERIALIZER CLASS
 
 
 class PODetailSerializer(ModelSerializer):
@@ -130,6 +147,10 @@ class SODetailSerializer(ModelSerializer):
 
 class SOSerializer(ModelSerializer):
     sodetail = SODetailSerializer(many=True)
+    add_who = UserSerializer(many=False)
+    edit_who = UserSerializer(many=False)
+    supplier = SupplierSerializer(many=False)
+    status = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = SO
@@ -381,7 +402,7 @@ class ReceiptSerializer(ModelSerializer):
 class ReceiptCreateSerializer(ModelSerializer):
     class Meta:
         model = Receipt
-        fields = ['id', 'PO']
+        fields = ['id', ]
 
     def create(self, validated_data):
         pass
