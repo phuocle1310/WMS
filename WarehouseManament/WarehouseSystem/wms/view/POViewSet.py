@@ -41,8 +41,11 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         items = request.data.get("items")
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
+
         for item in items:
-            if item.expire_date <= request.data.get('effective_date'):
+            it = Item.objects.get(pk=item.get('pk'))
+            expire_date = request.data.get('effective_date')
+            if it.expire_date <= datetime.datetime.strptime(expire_date, '%Y-%m-%d').date():
                 return Response({"item": "Item's expire date is over"}, status=status.HTTP_400_BAD_REQUEST)
         if self.request.user.role == 1:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
@@ -89,8 +92,6 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
                 return super().destroy(request, *args, **kwargs)
             return Response({"Falied": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
 
-    def create_receipt(self, request):
-        pass
 
     @action(methods=['get'], detail=True, url_path='get-item-for-receipt')
     def get_item_receipt_by_po(self, request, pk):
@@ -130,7 +131,8 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
                         return Response(status=status.HTTP_400_BAD_REQUEST)
                     else:
                         return Response({"kakak": "jjjj"}, status=status.HTTP_200_OK)
-                    # item["Qty_receipt"] =
+                        list["Qty_receipt"] = item.get('Qty_receipt') + list.get('Qty_receipt')
+                        item['Qty_receipt'] = item.get('Qty_receipt')
 
 
 

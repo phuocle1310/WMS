@@ -63,5 +63,8 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     def create(self, request, *args, **kwargs):
         serializer = ItemCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        expire_date = datetime.datetime.strptime(request.data.get('expire_date'), '%Y-%m-%d').date()
+        if expire_date <= date.today():
+            return Response({"item": "Item's expire date is over"}, status=status.HTTP_400_BAD_REQUEST)
         instance = serializer.save(**{"supplier": self.request.user.supplier})
         return Response(ItemSerializer(instance).data, status=status.HTTP_201_CREATED)
