@@ -119,9 +119,9 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             if item.get('pk') not in list_id:
                 return Response({"Failed": "Item doesn't in po"}, status=status.HTTP_404_NOT_FOUND)
 
-        for list in list_item:
-            print(list)
-            for item in items:
+        for item in items:
+            for list in list_item:
+                print(list)
                 print(item)
                 if item.get('pk') == list.get('id'):
                     print(item.get('Qty_receipt') + list.get('Qty_receipt'))
@@ -130,6 +130,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
                         return Response(status=status.HTTP_400_BAD_REQUEST)
                     else:
                         return Response({"kakak": "jjjj"}, status=status.HTTP_200_OK)
+                    # item["Qty_receipt"] =
 
 
 
