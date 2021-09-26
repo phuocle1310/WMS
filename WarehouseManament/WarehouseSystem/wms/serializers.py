@@ -391,11 +391,12 @@ class ReceiptDetailSerializer(ModelSerializer):
 
 
 class ReceiptSerializer(ModelSerializer):
-    receipt = ReceiptDetailSerializer(many=True)
-
+    receiptdetail = ReceiptDetailSerializer(many=True)
+    add_who = UserSerializer(many=False)
+    edit_who = UserSerializer(many=False)
     class Meta:
         model = Receipt
-        fields = ['id', 'receipt', 'PO', 'add_who', 'edit_who', 'status']
+        fields = ['id', 'receiptdetail', 'PO', 'add_who', 'edit_who', 'status']
         read_only_fields = ['add_who', 'edit_who', 'status']
 
 
@@ -405,4 +406,16 @@ class ReceiptCreateSerializer(ModelSerializer):
         fields = ['id', ]
 
     def create(self, validated_data):
-        pass
+        items = validated_data.pop('items')
+        '''
+            + CASE 1: đầu vào rỗng
+        '''
+        if items is None and items is not list:
+            raise ValidationError("None items")
+
+        instance = super().create(validated_data)
+        for item in items:
+            Qty_receipt = item.get('Qty_receipt')
+            it = Item.objects.get(pk=item.get('pk'))
+            detail = ReceiptDetail.objects.create(receipt=instance, item=it, Qty_receipt=Qty_receipt)
+        return instance

@@ -9,7 +9,7 @@ from ..models import Receipt, PODetail
 from ..serializers import ReceiptSerializer, ReceiptCreateSerializer
 
 
-class ReceiptView(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView):
+class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView):
     queryset = Receipt.objects.all()
     action_required_auth = ['list', 'retrieve', 'create',
                             'update']
@@ -20,12 +20,4 @@ class ReceiptView(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView
         return [permissions.AllowAny()]
 
     def get_serializer_class(self):
-        if self.action in ['create']:
-            return ReceiptCreateSerializer
-
         return ReceiptSerializer
-
-    @action(methods=['get'], detail=False, url_path='get-item-po')
-    def get_item_po(self, request):
-
-        return Response(status=status.HTTP_200_OK)

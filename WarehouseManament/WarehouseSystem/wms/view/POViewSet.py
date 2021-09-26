@@ -92,7 +92,6 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
                 return super().destroy(request, *args, **kwargs)
             return Response({"Falied": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
 
-
     @action(methods=['get'], detail=True, url_path='get-item-for-receipt')
     def get_item_receipt_by_po(self, request, pk):
         if request.user.role == 2:
@@ -103,47 +102,92 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
     @action(methods=['post'], detail=True, url_path='create-receipt')
     def create_receipt(self, request, pk):
-        if self.request.user.role == 2:
+        if self.request.user.is_anonymous or self.request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+
         serializer = ReceiptCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         po = self.get_object()
-
         items = request.data.get("items")
+
+        '''
+            + Kiểm tra điều kiên: 
+                1 - Đầu vào items rỗng
+                2 - Số lượng là số ?
+                3 - Số lượng phải lớn hơn 0
+                4 - Item phải là những Item có trong PO
+        '''
+
+
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
-        list_item = self.get_item_receipted()
+        list_item_receipted = self.get_item_receipted()
         list_id = []
-        for id in list_item:
-            list_id.append(id.get('id'))
+        for item in list_item_receipted:
+            list_id.append(item.get('id'))
+
+        pk_item = []
+        qty_items = []
         for item in items:
+            Qty_receipt = item.get('Qty_receipt')
+            pk = item.get('pk')
+            try:
+                Qty_receipt = int(Qty_receipt)
+                pk = int(pk)
+            except:
+                return Response({"Failed": "Quantity receipt and pk must be numeric characters"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            if Qty_receipt <= 0:
+                return Response({"Failed": "Quantity must be greater than 0"},
+                                status=status.HTTP_400_BAD_REQUEST)
             if item.get('pk') not in list_id:
                 return Response({"Failed": "Item doesn't in po"}, status=status.HTTP_404_NOT_FOUND)
 
-        for item in items:
-            for list in list_item:
-                print(list)
-                print(item)
+            '''
+                + Gộp số lượng receipt của item lại, tránh tình trạng trùng item
+                    1 - Tạo ra 1 dict mới để chứa thông tin
+            '''
+
+            if item.get('pk') not in pk_item:
+                pk_item.append(item.get('pk'))
+                qty = {}
+                qty['pk'] = item.get('pk')
+                qty['Qty_receipt'] = item.get('Qty_receipt')
+                qty_items.append(qty)
+            else:
+                for i in qty_items:
+                    if i.get('pk') == item.get('pk'):
+                        i['Qty_receipt'] = i.get('Qty_receipt') + item.get('Qty_receipt')
+
+        '''
+            + Kiểm tra nếu tổng số lượng receipt nhập vào + với số lượng đã nhập mà lớn hơn số lượng trong PO thì 
+            return failed, ngược lại thì cho lưu
+        '''
+
+        for item in qty_items:
+            for list in list_item_receipted:
                 if item.get('pk') == list.get('id'):
-                    print(item.get('Qty_receipt') + list.get('Qty_receipt'))
-                    print(list.get('Qty_order'))
                     if item.get('Qty_receipt') + list.get('Qty_receipt') > list.get('Qty_order'):
-                        return Response(status=status.HTTP_400_BAD_REQUEST)
-                    else:
-                        return Response({"kakak": "jjjj"}, status=status.HTTP_200_OK)
-                        list["Qty_receipt"] = item.get('Qty_receipt') + list.get('Qty_receipt')
-                        item['Qty_receipt'] = item.get('Qty_receipt')
+                        return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
 
+        instance = serializer.save(
+            **{"add_who": self.request.user, "edit_who": self.request.user, "PO": po, "items": qty_items})
+        return Response(ReceiptSerializer(instance).data, status=status.HTTP_201_CREATED)
 
-
-
-        instance = serializer.save(**{"add_who": self.request.user, "edit_who": self.request.user, "PO": po, "items": items})
-        return Response(status=status.HTTP_200_OK)
+    '''
+        + Hàm lấy item cùng với số lượng item đã receipt
+    '''
 
     def get_item_receipted(self):
         po = self.get_object()
         po_details = PODetail.objects.filter(PO=po)
-        items=[]
+
+        '''
+            + Tạo 1 mảng các item trong PO Detail
+            + Mặc định số lượng đã nhập bằng 0
+        '''
+
+        items = []
         for po_detail in po_details:
             item = {}
             item["id"] = po_detail.item.pk
@@ -157,7 +201,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             items.append(item)
 
         '''
-            + Lấy số lượng đã được lưu vào kho, hiển thị số lượng đã nhập
+            + Tính tổng số lượng đã nhập của từng items
         '''
 
         list_items_id = []
@@ -169,11 +213,8 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             for receipt in receipts:
                 rc_details = ReceiptDetail.objects.filter(receipt=receipt, status=True)
                 for rc_detail in rc_details:
-                    if rc_detail.item.id not in list_items_id:
-                        return Response(status=status.HTTP_400_BAD_REQUEST)
-                    else:
-                        for item in items:
-                            if item.get('id') == rc_detail.item.id:
-                                item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
-                                break
+                    for item in items:
+                        if item.get('id') == rc_detail.item.id:
+                            item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
+                            break
         return items
