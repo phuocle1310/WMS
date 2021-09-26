@@ -259,7 +259,7 @@ class BaseReceiptOrderDetail(models.Model):
 
 
 class ReceiptDetail(BaseReceiptOrderDetail):
-    receipt = models.ForeignKey(Receipt, on_delete=models.CASCADE, null=False)
+    receipt = models.ForeignKey(Receipt, related_name="receiptdetail", on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return self.item.name
@@ -269,7 +269,7 @@ class ReceiptDetail(BaseReceiptOrderDetail):
 
 
 class OrderDetail(BaseReceiptOrderDetail):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
+    order = models.ForeignKey(Order, related_name="orderdetail", on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return self.item.name
