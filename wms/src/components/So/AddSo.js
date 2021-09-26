@@ -156,9 +156,7 @@ const AddSo = (props) => {
   const handleChangeSelect = (id) => (e, a) => {
     console.log(listProduct);
     setListProduct((prevState) => {
-      console.log(listProduct);
       let newlist = [...prevState];
-      const item = getItem(a);
       for (let i = 0; i < newlist.length; i++) {
         if (i === id) {
           newlist[i]["product"] = a;
@@ -168,10 +166,8 @@ const AddSo = (props) => {
           }
         }
       }
-      console.log("ủa 3");
       return newlist;
     });
-    console.log("ủa 2");
   };
   //ham xoa
   function removeElement(array, elem) {

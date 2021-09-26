@@ -20,13 +20,13 @@ import MulLanguage from "../../assets/language/MulLanguage";
 //print
 import ReactToPrint from "react-to-print";
 //css
-import ListPoStyles from "./ListPoStyles";
+import ListPoStyles from "../Po/ListPoStyles";
 //api
-import { listPo } from "../../store/poSlice";
+import { listSo } from "../../store/soSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import Podetail from "../../pages/client/Podetail";
-export default function DataGridProDemo() {
+export default function ListSo() {
   const classes = ListPoStyles();
   //lang
   const currentLanguage = useSelector(
@@ -103,25 +103,25 @@ export default function DataGridProDemo() {
       case "PENDING":
         return (
           <Alert severity="warning" variant="filled" className={classes.alert}>
-            {status}
+            {language.PENDING}
           </Alert>
         );
       case "ACCEPTED":
         return (
           <Alert severity="info" variant="filled" className={classes.alert}>
-            {status}
+            {language.ACCEPTED}
           </Alert>
         );
       case "FAILED":
         return (
           <Alert severity="error" variant="filled" className={classes.alert}>
-            {status}
+            {language.FAILED}
           </Alert>
         );
       case "DONE":
         return (
           <Alert severity="success" variant="filled" className={classes.alert}>
-            {status}
+            {language.DONE}
           </Alert>
         );
       default:
@@ -235,14 +235,14 @@ export default function DataGridProDemo() {
   //     active = false;
   //   };
   // }, [page, data]);
-  const rows = useSelector((state) => state.po.listPo);
-  const rowsCount = useSelector((state) => state.po.rowCount);
+  const rows = useSelector((state) => state.so.listSo);
+  const rowsCount = useSelector((state) => state.so.rowCount);
   const [page, setPage] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const action = listPo(page + 1);
+        const action = listSo(page + 1);
         const actionResult = await dispatch(action);
         unwrapResult(actionResult);
       } catch (error) {
