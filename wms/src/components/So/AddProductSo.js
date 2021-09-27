@@ -12,20 +12,7 @@ import AddProductStyles from "../Product/AddProductStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 const AddProductSo = (props) => {
-  if (!ValidatorForm.hasValidationRule("isquantity")) {
-    ValidatorForm.addValidationRule("isquantity", (value) => {
-      if (value > values.Qty_total) {
-        return false;
-      }
-      return true;
-    });
-  }
-  //xử lý lỗi
-  useEffect(() => {
-    if (ValidatorForm.hasValidationRule("isquantity")) {
-      ValidatorForm.removeValidationRule("isquantity");
-    }
-  }, []);
+
   const classes = AddProductStyles();
   //lang
   const currentLanguage = useSelector(
@@ -45,7 +32,6 @@ const AddProductSo = (props) => {
     );
   }, [values.manufactureDate]);
   let form = null;
-  console.log(values.Qty_total);
   const itemProduct = () => {
     return (
       <>
@@ -85,7 +71,7 @@ const AddProductSo = (props) => {
             name="quantity"
             value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
-            validators={["required", "isquantity"]}
+            validators={["required", `${props.err}`]}
             errorMessages={[
               `${language.requiredError}`,
               `${language.soQuantityError}`,

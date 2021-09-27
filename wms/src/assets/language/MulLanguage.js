@@ -67,6 +67,8 @@ const MulLanguage = {
     detailSo: "Supplier Order detail",
     success: "Success",
     Qty_total: " total quantity",
+    Qty_order: "    total receipt",
+    Qty_receipt: "    total receipt",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -135,6 +137,8 @@ const MulLanguage = {
     success: "Thành công",
     //so
     Qty_total: "Tồn kho",
+    Qty_order: "Số lượng đặt hàng",
+    Qty_receipt: "Số lượng nhập kho",
   },
 };
 export default MulLanguage;

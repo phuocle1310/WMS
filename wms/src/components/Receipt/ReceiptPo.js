@@ -15,13 +15,17 @@ import ReactToPrint from "react-to-print";
 import Print from "../../components/UI/Print";
 import { useParams, Route, Link, useRouteMatch } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import AddIcon from "@material-ui/icons/Add";
+import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
+import ClearIcon from "@material-ui/icons/Clear";
+import CrupReceipt from "./CrupReceipt";
 //api
 import poApi from "../../api/poApi";
 import useHttp from "../../Hook/useHttp";
 import PoDetailByID from "./PoDetailByID";
 
-const AddReceipt = () => {
+const ReceiptPo = () => {
   //css
   const classes = AddReceiptStyle();
   //lang
@@ -72,10 +76,17 @@ const AddReceipt = () => {
           </Paper>{" "}
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} className={classes.po}>
-          {isOpen && renderPoItem()}
+          <Grid container>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              {isOpen && renderPoItem()}
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <CrupReceipt></CrupReceipt>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </>
   );
 };
-export default AddReceipt;
+export default ReceiptPo;

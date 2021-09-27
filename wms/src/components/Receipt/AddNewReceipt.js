@@ -17,12 +17,13 @@ import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
 import productApi from "../../api/productApi";
-import soApi from "../../api/soApi";
+import receiptApi from "../../api/receiptApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
-import AddProductSo from "./AddProductSo";
+import AddProductReceipt from "./AddProductReceipt";
+import soApi from "../../api/soApi";
 
-const AddSo = (props) => {
+const AddNewReceipt = (props) => {
   const classes = FormStyles();
   //alert
   const [alert, setAlert] = useState({
@@ -30,6 +31,12 @@ const AddSo = (props) => {
     message: "",
     open: false,
   });
+  //xử lý lỗi
+  // useEffect(() => {
+  //   if (ValidatorForm.hasValidationRule("isquantity")) {
+  //     ValidatorForm.removeValidationRule("isquantity");
+  //   }
+  // }, []);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -55,7 +62,8 @@ const AddSo = (props) => {
     {
       isNew: true,
       quantity: "",
-      Qty_total: "",
+      Qty_receipt: "",
+      Qty_order: "",
       production_date: "",
       expire_date: "",
       product: {
@@ -70,11 +78,15 @@ const AddSo = (props) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await productApi.getProductBySupplierForSo();
+        //thay page
+        const response = await receiptApi.getProduct(18);
+
         setProduct(response);
         setProduct1(response);
+        console.log(response);
       } catch (error) {
         console.log(error);
+        console.log("eeee");
       }
     };
     fetchProduct();
@@ -97,14 +109,14 @@ const AddSo = (props) => {
       let err = `isquantity${index}`;
       if (!ValidatorForm.hasValidationRule(err)) {
         ValidatorForm.addValidationRule(err, (value) => {
-          if (value > item.Qty_total) {
+          if (Number(value) > Number(item.Qty_order - item.Qty_receipt)) {
             return false;
           }
           return true;
         });
       }
       return (
-        <AddProductSo
+        <AddProductReceipt
           key={index}
           isNew={item.isNew}
           id={index + 1}
@@ -114,7 +126,7 @@ const AddSo = (props) => {
           handleChange={handleChangeAll(index)}
           handlesetValue={handleChangeSelect(index)}
           product={product}
-        ></AddProductSo>
+        ></AddProductReceipt>
       );
     });
   };
@@ -127,7 +139,8 @@ const AddSo = (props) => {
           {
             isNew: true,
             quantity: "",
-            Qty_total: "",
+            Qty_receipt: "",
+            Qty_order: "",
             production_date: "",
             expire_date: "",
             product: {
@@ -185,8 +198,9 @@ const AddSo = (props) => {
         if (i === id) {
           newlist[i]["product"] = a;
           if (a !== null) {
-            //lấy số lượng item có trong xe
-            newlist[i]["Qty_total"] = a.Qty_total;
+            //lấy số lượng item có trong xe'
+            newlist[i]["Qty_order"] = a.Qty_order;
+            newlist[i]["Qty_receipt"] = a.Qty_receipt;
           }
         }
       }
@@ -208,10 +222,13 @@ const AddSo = (props) => {
       {
         isNew: true,
         quantity: "",
+        Qty_receipt: "",
+        Qty_order: "",
         production_date: "",
         expire_date: "",
         product: {
           name: "",
+          Qty_total: "",
         },
       },
     ]);
@@ -223,20 +240,20 @@ const AddSo = (props) => {
       //lấy items về đúng định dạng
       let items = listProduct.map((item) => {
         let rObj = {
-          name: item.product.name,
-          Qty_order: Number(item.quantity),
+          pk: item.product.id,
+          Qty_receipt: Number(item.quantity),
         };
         return rObj;
       });
       //xử lý dữ liệu đưa lên api
-      const dataSo = {
-        effective_date: timepoRequest.toLocaleDateString("en-CA"),
+      const data = {
         items: items,
       };
+      console.log(data);
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
-          const response = await soApi.createRequestSo(dataSo);
+          const response = await receiptApi.createReceipt(18, data);
           onDelete();
           setAlert({
             nameAlert: "success",
@@ -244,11 +261,12 @@ const AddSo = (props) => {
             open: true,
           });
         } catch (error) {
-          setAlert({
-            nameAlert: "Error",
-            message: error.response.data,
-            open: true,
-          });
+          console.log(error);
+          //   setAlert({
+          //     nameAlert: "Error",
+          //     message: error.response.data,
+          //     open: true,
+          //   });
         }
       };
       fetchLogin();
@@ -266,7 +284,7 @@ const AddSo = (props) => {
       <div className={classes.root}>
         <Grid container>
           <Grid item lg={3}>
-            <p className={classes.labelId}>{language.supplier}:</p>{" "}
+            {/* <p className={classes.labelId}>{language.supplier}:</p>{" "}
             <TextValidator
               className={classes.textField}
               variant="outlined"
@@ -276,43 +294,9 @@ const AddSo = (props) => {
               type="text"
               value="Tra dao"
               readOnly={true}
-            ></TextValidator>
-            <p className={classes.labelId}>{language.dateCreated}:</p>{" "}
-            <ValidatedDatePicker
-              autoOk
-              variant="inline"
-              className={classes.textFieldDate}
-              inputVariant="outlined"
-              format="dd/MM/yyyy"
-              size="small"
-              style={{ width: "100%" }}
-              InputAdornmentProps={{ position: "start" }}
-              TextFieldComponent={TextFieldComponent}
-              readOnly={true}
-            />
-            <p className={classes.labelId}>{language.importDate}:</p>{" "}
-            <ValidatedDatePicker
-              autoOk
-              variant="inline"
-              className={classes.textFieldDate}
-              inputVariant="outlined"
-              format="dd/MM/yyyy"
-              size="small"
-              validators={["required"]}
-              errorMessages={["không để trống dòng này"]}
-              minDate={new Date()}
-              style={{ width: "100%" }}
-              InputAdornmentProps={{ position: "start" }}
-              value={timepoRequest}
-              onChange={(date) => {
-                if (moment.isDate(date)) {
-                  date.setHours(0, 0, 0, 0);
-                  setTimePoRequest(date);
-                }
-              }}
-            />
+            ></TextValidator> */}
           </Grid>
-          <Grid item lg={9}>
+          <Grid item lg={12}>
             <div className={classes.box}>
               <nav>
                 <p className={classes.labelId}>{language.addProduct}</p>{" "}
@@ -376,4 +360,4 @@ const AddSo = (props) => {
   );
 };
 
-export default AddSo;
+export default AddNewReceipt;
