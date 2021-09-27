@@ -27,6 +27,8 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             return POSerializer
         if self.action in ['get_item_receipt_by_po']:
             return ItemForReceiptSerializer
+        if self.action in ['receipts']:
+            return ReceiptSerializer
 
     @action(methods=['get'], detail=True)
     def get_po(self, request, pk):
@@ -118,7 +120,6 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
                 4 - Item phải là những Item có trong PO
         '''
 
-
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
         list_item_receipted = self.get_item_receipted()
@@ -173,6 +174,14 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "PO": po, "items": qty_items})
         return Response(ReceiptSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['get'], detail=True, url_path='receipts')
+    def get_receipt(self, request, pk):
+        if request.user.is_anonymous or request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        receipts = Receipt.objects.filter(PO__id=pk)
+        serializer = ReceiptSerializer(receipts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     '''
         + Hàm lấy item cùng với số lượng item đã receipt
