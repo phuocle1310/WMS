@@ -76,6 +76,9 @@ const AddProductSo = (props) => {
               `${language.requiredError}`,
               `${language.soQuantityError}`,
             ]}
+            inputProps={
+              language.Qty_total ? { readOnly: false } : { readOnly: true }
+            }
           />
         </div>
         <div>

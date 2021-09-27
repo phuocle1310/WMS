@@ -12,9 +12,9 @@ import PostAddIcon from "@material-ui/icons/PostAdd";
 import AddNewsProduct from "../../components/Product/AddNewsProduct";
 import React from "react";
 import PageStyles from "../../pages/client/PageStyles";
-
 import { useSelector } from "react-redux";
 import AddNewReceipt from "./AddNewReceipt";
+import ReceiptList from "./ReceiptList";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -48,7 +48,7 @@ function a11yProps(index) {
   };
 }
 
-const CrupReceipt = (props) => {
+const CrudReceipt = (props) => {
   const classes = PageStyles();
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -94,7 +94,7 @@ const CrupReceipt = (props) => {
         <TabPanel value={value} index={1}>
           <h3>{language.titleRPo}</h3>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            {/* <AddPo></AddPo> */}
+            <ReceiptList></ReceiptList>
           </Grid>
         </TabPanel>
       </Grid>
@@ -102,4 +102,4 @@ const CrupReceipt = (props) => {
   );
 };
 
-export default CrupReceipt;
+export default CrudReceipt;

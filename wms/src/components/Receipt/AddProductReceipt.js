@@ -87,11 +87,14 @@ const AddProductReceipt = (props) => {
             name="quantity"
             value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
-            validators={["required",  `${props.err}`]}
+            validators={["required", `${props.err}`]}
             errorMessages={[
               `${language.requiredError}`,
               `${language.soQuantityError}`,
             ]}
+            inputProps={
+              values.product ? { readOnly: false } : { readOnly: true }
+            }
           />
         </div>
         <div>

@@ -109,10 +109,13 @@ const AddNewReceipt = (props) => {
       let err = `isquantity${index}`;
       if (!ValidatorForm.hasValidationRule(err)) {
         ValidatorForm.addValidationRule(err, (value) => {
-          if (Number(value) > Number(item.Qty_order - item.Qty_receipt)) {
-            return false;
+          if (
+            Number(value) <=
+            Number(Number(item.Qty_order) - Number(item.Qty_receipt))
+          ) {
+            return true;
           }
-          return true;
+          return false;
         });
       }
       return (
@@ -261,12 +264,12 @@ const AddNewReceipt = (props) => {
             open: true,
           });
         } catch (error) {
-          console.log(error);
-          //   setAlert({
-          //     nameAlert: "Error",
-          //     message: error.response.data,
-          //     open: true,
-          //   });
+          console.log(error.response.data);
+          setAlert({
+            nameAlert: "Error",
+            message: JSON.stringify(error.response.data),
+            open: true,
+          });
         }
       };
       fetchLogin();

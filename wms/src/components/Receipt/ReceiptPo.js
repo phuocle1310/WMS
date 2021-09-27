@@ -19,7 +19,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";
-import CrupReceipt from "./CrupReceipt";
+import CrudReceipt from "./CrudReceipt";
 //api
 import poApi from "../../api/poApi";
 import useHttp from "../../Hook/useHttp";
@@ -81,7 +81,7 @@ const ReceiptPo = () => {
               {isOpen && renderPoItem()}
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={12}>
-              <CrupReceipt></CrupReceipt>
+              <CrudReceipt></CrudReceipt>
             </Grid>
           </Grid>
         </Grid>
