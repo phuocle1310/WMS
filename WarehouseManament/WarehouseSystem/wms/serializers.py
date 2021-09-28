@@ -52,7 +52,7 @@ class ItemSerializer(ModelSerializer):
         read_only_fields = ['status']
 
 
-class ItemForReceiptSerializer(ModelSerializer):
+class ItemForReceiptOrderSerializer(ModelSerializer):
     Qty_receipt = serializers.IntegerField()
     Qty_order = serializers.IntegerField()
 
@@ -361,21 +361,34 @@ class OrderDetailSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-    order = OrderDetailSerializer(many=True)
-
+    orderdetail = OrderDetailSerializer(many=True)
+    add_who = UserSerializer(many=False)
+    edit_who = UserSerializer(many=False)
     class Meta:
         model = Order
-        fields = ['id', 'order', 'SO', 'add_who', 'edit_who', 'status']
+        fields = ['id', 'orderdetail', 'SO', 'add_who', 'edit_who', 'status']
         read_only_fields = ['add_who', 'edit_who', 'status']
 
 
 class OrderCreateSerializer(ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'SO']
+        fields = ['id']
 
     def create(self, validated_data):
-        pass
+        items = validated_data.pop('items')
+        '''
+            + CASE 1: đầu vào rỗng
+        '''
+        if items is None and items is not list:
+            raise ValidationError("None items")
+
+        instance = super().create(validated_data)
+        for item in items:
+            Qty_receipt = item.get('Qty_receipt')
+            it = Item.objects.get(pk=item.get('pk'))
+            detail = OrderDetail.objects.create(order=instance, item=it, Qty_receipt=Qty_receipt)
+        return instance
 
 
 # TABLE RECEIPT SERIALIZER

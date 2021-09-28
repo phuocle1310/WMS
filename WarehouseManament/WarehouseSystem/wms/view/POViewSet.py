@@ -6,11 +6,12 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
+from .BaseView import BaseAPIView
 from ..models import PO, Item
 from ..serializers import *
 
 
-class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPIView):
+class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPIView, BaseAPIView):
     queryset = PO.objects.all()
     action_required_auth = ['list', 'create',
                             'update_po', 'destroy', 'get_po']
@@ -26,7 +27,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         if self.action in ["list", 'update_po', "get_po", 'delete', 'un_active_po']:
             return POSerializer
         if self.action in ['get_item_receipt_by_po']:
-            return ItemForReceiptSerializer
+            return ItemForReceiptOrderSerializer
         if self.action in ['receipts']:
             return ReceiptSerializer
 
@@ -58,7 +59,6 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
     def update_po(self, request, pk):
         if request.user.is_anonymous:
             return Response({"Failed": "You can't do that"}, status=status.HTTP_403_FORBIDDEN)
-
         if request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -75,6 +75,8 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             instance.edit_who = request.user
         if stt == 2:
             return Response({"Falied": "PO is pending already"}, status=status.HTTP_400_BAD_REQUEST)
+        if instance.status == 0:
+            return Response({"Falied": "PO have done already, can't edit!!"}, status=status.HTTP_400_BAD_REQUEST)
         instance.status = stt
         instance.save()
         serializer = POSerializer(instance)
@@ -96,10 +98,10 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
     @action(methods=['get'], detail=True, url_path='get-item-for-receipt')
     def get_item_receipt_by_po(self, request, pk):
-        if request.user.role == 2:
+        if self.request.user.is_anonymous or self.request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         items = self.get_item_receipted()
-        serializer = ItemForReceiptSerializer(items, many=True)
+        serializer = ItemForReceiptOrderSerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True, url_path='create-receipt')
@@ -122,6 +124,8 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
+        if po.status in [2, 3]:
+            return Response({"Failed": "This PO can't create receipt"}, status=status.HTTP_403_FORBIDDEN)
         list_item_receipted = self.get_item_receipted()
         list_id = []
         for item in list_item_receipted:
@@ -187,43 +191,43 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         + Hàm lấy item cùng với số lượng item đã receipt
     '''
 
-    def get_item_receipted(self):
-        po = self.get_object()
-        po_details = PODetail.objects.filter(PO=po)
-
-        '''
-            + Tạo 1 mảng các item trong PO Detail
-            + Mặc định số lượng đã nhập bằng 0
-        '''
-
-        items = []
-        for po_detail in po_details:
-            item = {}
-            item["id"] = po_detail.item.pk
-            item['name'] = po_detail.item.name
-            item["unit"] = po_detail.item.unit
-            item["mu_case"] = po_detail.item.mu_case
-            item["expire_date"] = po_detail.item.expire_date
-            item["production_date"] = po_detail.item.production_date
-            item["Qty_order"] = po_detail.Qty_order
-            item["Qty_receipt"] = 0
-            items.append(item)
-
-        '''
-            + Tính tổng số lượng đã nhập của từng items
-        '''
-
-        list_items_id = []
-        for item in items: list_items_id.append(item.get('id'))
-
-        receipts = Receipt.objects.filter(PO=po, status=True)
-
-        if receipts is not None:
-            for receipt in receipts:
-                rc_details = ReceiptDetail.objects.filter(receipt=receipt, status=True)
-                for rc_detail in rc_details:
-                    for item in items:
-                        if item.get('id') == rc_detail.item.id:
-                            item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
-                            break
-        return items
+    # def get_item_receipted(self, instance=None):
+    #     po = instance or self.get_object()
+    #     po_details = PODetail.objects.filter(PO=po)
+    #
+    #     '''
+    #         + Tạo 1 mảng các item trong PO Detail
+    #         + Mặc định số lượng đã nhập bằng 0
+    #     '''
+    #
+    #     items = []
+    #     for po_detail in po_details:
+    #         item = {}
+    #         item["id"] = po_detail.item.pk
+    #         item['name'] = po_detail.item.name
+    #         item["unit"] = po_detail.item.unit
+    #         item["mu_case"] = po_detail.item.mu_case
+    #         item["expire_date"] = po_detail.item.expire_date
+    #         item["production_date"] = po_detail.item.production_date
+    #         item["Qty_order"] = po_detail.Qty_order
+    #         item["Qty_receipt"] = 0
+    #         items.append(item)
+    #
+    #     '''
+    #         + Tính tổng số lượng đã nhập của từng items
+    #     '''
+    #
+    #     list_items_id = []
+    #     for item in items: list_items_id.append(item.get('id'))
+    #
+    #     receipts = Receipt.objects.filter(PO=po, status=True)
+    #
+    #     if receipts is not None:
+    #         for receipt in receipts:
+    #             rc_details = ReceiptDetail.objects.filter(receipt=receipt, status=True)
+    #             for rc_detail in rc_details:
+    #                 for item in items:
+    #                     if item.get('id') == rc_detail.item.id:
+    #                         item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
+    #                         break
+    #     return items
