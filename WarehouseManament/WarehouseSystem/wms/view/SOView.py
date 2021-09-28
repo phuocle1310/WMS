@@ -5,11 +5,13 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
-from ..models import SO, Item
-from ..serializers import SOSerializer, SOCreateSerializer
+from .BaseView import BaseAPIView
+from ..models import SO, Item, Order
+from ..serializers import SOSerializer, SOCreateSerializer, OrderCreateSerializer, OrderSerializer, \
+    ItemForReceiptOrderSerializer
 
 
-class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView):
+class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, generics.DestroyAPIView, BaseAPIView):
     queryset = SO.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     action_required_auth = ['list', 'create',
@@ -85,6 +87,97 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
                 return super().destroy(request, *args, **kwargs)
             return Response({"Falied": "You dont have permission to delete this SO"}, status=status.HTTP_403_FORBIDDEN)
 
+    @action(methods=['get'], detail=True, url_path='get-item-for-order')
+    def get_item_order_by_so(self, request, pk):
+        if self.request.user.is_anonymous or self.request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        items = self.get_item_receipted(self.get_object(), 1)
+        serializer = ItemForReceiptOrderSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    @action(methods=['post'], detail=True, url_path='create-order')
+    def create_order(self, request, pk):
+        if self.request.user.is_anonymous or self.request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = OrderCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        so = self.get_object()
+        items = request.data.get("items")
+
+        '''
+            + Kiểm tra điều kiên: 
+                1 - Đầu vào items rỗng
+                2 - Số lượng là số ?
+                3 - Số lượng phải lớn hơn 0
+                4 - Item phải là những Item có trong SO
+        '''
+
+        if not bool(items):
+            return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
+        if so.status in [2, 3]:
+            return Response({"Failed": "This SO can't create order"}, status=status.HTTP_403_FORBIDDEN)
+        list_item_receipted = self.get_item_receipted(self.get_object(), 1)
+        list_id = []
+        for item in list_item_receipted:
+            list_id.append(item.get('id'))
+
+        pk_item = []
+        qty_items = []
+        for item in items:
+            Qty_receipt = item.get('Qty_receipt')
+            pk = item.get('pk')
+            try:
+                Qty_receipt = int(Qty_receipt)
+                pk = int(pk)
+            except:
+                return Response({"Failed": "Quantity receipt and pk must be numeric characters"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            if Qty_receipt <= 0:
+                return Response({"Failed": "Quantity must be greater than 0"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            if item.get('pk') not in list_id:
+                return Response({"Failed": "Item doesn't in so"}, status=status.HTTP_404_NOT_FOUND)
+
+            '''
+               + Gộp số lượng receipt của item lại, tránh tình trạng trùng item
+                   1 - Tạo ra 1 dict mới để chứa thông tin
+            '''
+
+            if item.get('pk') not in pk_item:
+                pk_item.append(item.get('pk'))
+                qty = {}
+                qty['pk'] = item.get('pk')
+                qty['Qty_receipt'] = item.get('Qty_receipt')
+                qty_items.append(qty)
+            else:
+                for i in qty_items:
+                    if i.get('pk') == item.get('pk'):
+                        i['Qty_receipt'] = i.get('Qty_receipt') + item.get('Qty_receipt')
+
+        '''
+            + Kiểm tra nếu tổng số lượng receipt xuất ra + với số lượng đã xuất mà lớn hơn số lượng trong SO thì 
+            return failed, ngược lại thì cho lưu
+        '''
+
+        for item in qty_items:
+            for list in list_item_receipted:
+                if item.get('pk') == list.get('id'):
+                    if item.get('Qty_receipt') + list.get('Qty_receipt') > list.get('Qty_order'):
+                        return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
+
+        instance = serializer.save(
+            **{"add_who": self.request.user, "edit_who": self.request.user, "SO": so, "items": qty_items})
+        return Response(OrderSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['get'], detail=True, url_path='orders')
+    def get_order(self, request, pk):
+        if request.user.is_anonymous or request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        receipts = Order.objects.filter(SO__id=pk)
+        serializer = OrderSerializer(receipts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
