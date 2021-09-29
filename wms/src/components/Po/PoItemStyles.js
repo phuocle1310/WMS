@@ -21,7 +21,7 @@ const PoItemStyles = makeStyles((theme) => ({
   textChild: {
     display: "flex",
     "& p:first-child": {
-      marginRight: 20,
+      marginRight: 10,
       color: "#4251b5",
       fontWeight: 600,
     },

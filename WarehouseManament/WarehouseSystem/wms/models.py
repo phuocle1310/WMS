@@ -144,8 +144,8 @@ class ItemLocation(models.Model):
 
 class BasePOSO(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=False)
-    effective_date = models.DateTimeField()
-    closed_date = models.DateTimeField(blank=True, null=True)
+    effective_date = models.DateField()
+    # closed_date = models.DateField(blank=True, null=True)
     add_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
     description = models.TextField(null=True, blank=True)
@@ -167,13 +167,13 @@ class BasePOSO(models.Model):
         abstract = True
         ordering = ['-id']
 
-    def clean(self):
-        if self.closed_date is not None and self.effective_date is not None:
-            if self.closed_date.date() <= self.effective_date.date():
-                raise ValidationError({'closed_date': 'Close date can be < Effective date'})
-        if self.status == 0:
-            if self.closed_date is None:
-                raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
+    # def clean(self):
+    #     if self.closed_date is not None and self.effective_date is not None:
+    #         if self.closed_date.date() <= self.effective_date.date():
+    #             raise ValidationError({'closed_date': 'Close date can be < Effective date'})
+        # if self.status == 0:
+        #     if self.closed_date is None:
+        #         raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
 
     def __str__(self):
         return '%d -- %s' % (self.id, self.supplier.user.first_name)

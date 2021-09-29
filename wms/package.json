@@ -31,6 +31,7 @@
     "date-fns": "2.11.1",
     "formik": "^2.2.9",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-animated-slider": "^1.1.4",

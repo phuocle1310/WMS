@@ -95,7 +95,7 @@ class POSerializer(ModelSerializer):
 
     class Meta:
         model = PO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'closed_date', 'add_who', 'edit_who',
+        fields = ['id', 'supplier', 'effective_date', 'add_date', 'add_who', 'edit_who',
                   'podetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
@@ -110,12 +110,12 @@ class POSerializer(ModelSerializer):
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
 
-        if instance.closed_date is not None:
-            if instance.closed_date <= instance.effective_date:
-                raise ValidationError({'closed_date': 'Close date can be < Effective date'})
-        if instance.status == 0:
-            if instance.closed_date is None:
-                raise ValidationError({'closed_date': 'PO\'s status was done, so close date can be null'})
+        # if instance.closed_date is not None:
+        #     if instance.closed_date <= instance.effective_date:
+        #         raise ValidationError({'closed_date': 'Close date can be < Effective date'})
+        # if instance.status == 0:
+        #     if instance.closed_date is None:
+        #         raise ValidationError({'closed_date': 'PO\'s status was done, so close date can be null'})
         if instance.effective_date < date.today():
             raise ValidationError({'effective_date': 'Effective date can be earlier today'})
         return attrs
@@ -154,7 +154,7 @@ class SOSerializer(ModelSerializer):
 
     class Meta:
         model = SO
-        fields = ['id', 'supplier', 'effective_date', 'closed_date', 'add_date', 'closed_date', 'add_who', 'edit_who',
+        fields = ['id', 'supplier', 'effective_date', 'add_date', 'add_who', 'edit_who',
                   'sodetail', 'status']
         extra_kwargs = {
             'supplier': {'write_only': 'true'}
@@ -173,12 +173,12 @@ class SOSerializer(ModelSerializer):
             if not attrs.get(field):
                 raise ValidationError({field: 'This is required field'})
 
-        if instance.closed_date is not None:
-            if instance.closed_date <= instance.effective_date:
-                raise ValidationError({'closed_date': 'Close date can be < Effective date'})
-        if instance.status == 0:
-            if instance.closed_date is None:
-                raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
+        # if instance.closed_date is not None:
+        #     if instance.closed_date <= instance.effective_date:
+        #         raise ValidationError({'closed_date': 'Close date can be < Effective date'})
+        # if instance.status == 0:
+        #     if instance.closed_date is None:
+        #         raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
         if instance.effective_date < date.today():
             raise ValidationError({'effective_date': 'Effective date can be earlier today'})
         return attrs

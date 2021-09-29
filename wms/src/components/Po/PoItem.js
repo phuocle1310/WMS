@@ -18,6 +18,7 @@ import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 //list product
 import ListProduct from "../Product/ListProduct";
+import moment from "moment";
 const AddPo = (props) => {
   const classes = PoItemStyles();
   //lang
@@ -54,11 +55,11 @@ const AddPo = (props) => {
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.dateCreated}:</p>
-                      <p>{item.add_date}</p>
+                      <p>{moment(item.add_date).format("L, h:mm")}</p>
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.importDate}:</p>
-                      <p>{item.effective_date}</p>
+                      <p>{moment(item.effective_date).format("L")}</p>
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.status}:</p>
