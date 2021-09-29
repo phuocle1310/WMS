@@ -144,10 +144,10 @@ class ItemLocation(models.Model):
 
 class BasePOSO(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=False)
-    effective_date = models.DateField()
-    closed_date = models.DateField(blank=True, null=True)
-    add_date = models.DateField(auto_now_add=True)
-    edit_date = models.DateField(auto_now=True)
+    effective_date = models.DateTimeField()
+    closed_date = models.DateTimeField(blank=True, null=True)
+    add_date = models.DateTimeField(auto_now_add=True)
+    edit_date = models.DateTimeField(auto_now=True)
     description = models.TextField(null=True, blank=True)
 
     PENDING = 2
@@ -169,7 +169,7 @@ class BasePOSO(models.Model):
 
     def clean(self):
         if self.closed_date is not None and self.effective_date is not None:
-            if self.closed_date <= self.effective_date:
+            if self.closed_date.date() <= self.effective_date.date():
                 raise ValidationError({'closed_date': 'Close date can be < Effective date'})
         if self.status == 0:
             if self.closed_date is None:
@@ -219,8 +219,8 @@ class SODetail(BasePOSODetail):
 
 
 class BaseReceiptOrder(models.Model):
-    add_date = models.DateField(auto_now_add=True)
-    edit_date = models.DateField(auto_now=True)
+    add_date = models.DateTimeField(auto_now_add=True)
+    edit_date = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=True)
 
     class Meta:
