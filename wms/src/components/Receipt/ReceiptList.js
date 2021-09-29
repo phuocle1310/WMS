@@ -20,6 +20,7 @@ import Print from "../../components/UI/Print";
 import moment from "moment";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import ReceiptUpdate from "./ReceiptUpdate";
 export default function DataGridProDemo(props) {
   const classes = ListPoStyles();
   //lang
@@ -138,7 +139,7 @@ export default function DataGridProDemo(props) {
             </IconButton>
             <IconButton
               onClick={() => {
-                hanlerViewReceipt(id);
+                hanlerEditReceipt(id);
               }}
               color="primary"
               aria-label="upload picture"
@@ -181,9 +182,17 @@ export default function DataGridProDemo(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
+  //view
   function hanlerViewReceipt(params) {
+    setCrud(1);
     //the thing  you wanna do
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  //edit
+  function hanlerEditReceipt(params) {
+    //the thing  you wanna do
+    setCrud(2);
     setIdReceipt(params);
     handleClickOpen();
   }
@@ -259,6 +268,45 @@ export default function DataGridProDemo(props) {
     setValue("");
     setRowss([]);
   };
+  const [crud, setCrud] = useState(0);
+  const renderCrud = () => {
+    switch (crud) {
+      case 1:
+        return (
+          <CustomizedDialogs
+            open={open}
+            handleClose={handleClose}
+            children={
+              <Print>
+                <ReceiptItem id={idReceipt}></ReceiptItem>
+              </Print>
+            }
+          ></CustomizedDialogs>
+        );
+      case 2:
+        return (
+          <CustomizedDialogs
+            open={open}
+            handleClose={handleClose}
+            children={<ReceiptUpdate id={idReceipt}></ReceiptUpdate>}
+          ></CustomizedDialogs>
+        );
+      case 3:
+        return (
+          <CustomizedDialogs
+            open={open}
+            handleClose={handleClose}
+            children={
+              <Print>
+                <ReceiptItem id={idReceipt}></ReceiptItem>
+              </Print>
+            }
+          ></CustomizedDialogs>
+        );
+      default:
+      // code block
+    }
+  };
   return (
     <div style={{ height: "100%", width: "auto" }}>
       <TextField
@@ -297,15 +345,7 @@ export default function DataGridProDemo(props) {
         />
       </div>
       {/* show 1 receipt */}
-      <CustomizedDialogs
-        open={open}
-        handleClose={handleClose}
-        children={
-          <Print>
-            <ReceiptItem id={idReceipt}></ReceiptItem>
-          </Print>
-        }
-      ></CustomizedDialogs>
+      {renderCrud()}
     </div>
   );
 }

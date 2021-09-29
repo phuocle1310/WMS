@@ -20,9 +20,7 @@ import productApi from "../../api/productApi";
 import receiptApi from "../../api/receiptApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
-import AddProductReceipt from "./AddProductReceipt";
-import soApi from "../../api/soApi";
-
+import UpdateReceiptProduct from "./UpdateReceiptProduct";
 const ReceiptUpdate = (props) => {
   const { id } = props;
   const classes = FormStyles();
@@ -49,58 +47,12 @@ const ReceiptUpdate = (props) => {
   let form = null;
 
   var moment = require("moment");
-  //readonly
-  const TextFieldComponent = (props) => {
-    return <TextField fullWidth {...props} disabled={true} />;
-  };
   // lưu vào danh sách
-  const [listProduct, setListProduct] = useState([
-    {
-      isNew: true,
-      quantity: "",
-      Qty_receipt: "",
-      Qty_order: "",
-      production_date: "",
-      expire_date: "",
-      product: {
-        name: "",
-        Qty_total: "",
-      },
-    },
-  ]);
-  // lấy sản phẩm từ api
-  let [product, setProduct] = useState([]);
-  let [product1, setProduct1] = useState([]);
-  const [loadData, setloadData] = useState(false);
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        //thay page
-        const response = await receiptApi.getProduct(id);
+  const [listProduct, setListProduct] = useState([]);
+  const [receipt, setReceipt] = useState(null);
+  let listReceipt = [];
 
-        setProduct(response);
-        setProduct1(response);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-        console.log("eeee");
-      }
-    };
-    fetchProduct();
-  }, [loadData, id]);
-  //cập nhật product
-  useEffect(() => {
-    let newa = [...product1];
-    for (var i = 0; i < listProduct.length; i++) {
-      const item = getItem(listProduct[i].product);
-      if (listProduct[i].product === item) {
-        //xóa
-        removeElement(newa, listProduct[i].product);
-      }
-    }
-    setProduct(newa);
-  }, [listProduct]);
-  //show
+  // const [loadData, setloadData] = useState(false);
   const listItems = () => {
     return listProduct.map((item, index) => {
       let err = `isquantity${index}`;
@@ -117,68 +69,21 @@ const ReceiptUpdate = (props) => {
         });
       }
       return (
-        <AddProductReceipt
+        <UpdateReceiptProduct
           key={index}
           isNew={item.isNew}
           id={index + 1}
           values={item}
           err={err}
-          onClear={removeItemHandler.bind(this, index)}
+          //onClear={removeItemHandler.bind(this, index)}
           handleChange={handleChangeAll(index)}
-          handlesetValue={handleChangeSelect(index)}
-          product={product}
-        ></AddProductReceipt>
+          // handlesetValue={handleChangeSelect(index)}
+          product={item.product}
+        ></UpdateReceiptProduct>
       );
     });
   };
-  //xử lý thêm mới / nhưng cũ
-  const addItemProductHandler = () => {
-    if (listProduct.length < product1.length) {
-      setListProduct((prevState) => {
-        return [
-          ...prevState,
-          {
-            isNew: true,
-            quantity: "",
-            Qty_receipt: "",
-            Qty_order: "",
-            production_date: "",
-            expire_date: "",
-            product: {
-              name: "",
-              Qty_total: "",
-            },
-          },
-        ];
-      });
-    }
-  };
-  const getItem = (e) => {
-    const item = product1.find((item) => item === e);
-    return item;
-  };
-  //xóa
-  const removeItemHandler = (index) => {
-    if (listProduct.length > 1) {
-      //lấy item tính xóa
-      let a = { ...listProduct[index].product };
-      if (a.name !== "") {
-        //thêm lại vào product
-        setProduct((pre) => {
-          let newlist = [...pre];
-          newlist.push(a);
-          //sắp xếp lại
-          return newlist.sort(function (a, b) {
-            return a.id - b.id;
-          });
-        });
-      }
-      //xóa
-      const list = [...listProduct];
-      list.splice(index, 1);
-      setListProduct(list);
-    }
-  };
+
   //hàm xử lý onchange
   const handleChangeAll = (id) => (e) => {
     setListProduct((prevState) => {
@@ -191,50 +96,35 @@ const ReceiptUpdate = (props) => {
       return newlist;
     });
   };
-  const handleChangeSelect = (id) => (e, a) => {
-    console.log(listProduct);
-    setListProduct((prevState) => {
-      let newlist = [...prevState];
-      for (let i = 0; i < newlist.length; i++) {
-        if (i === id) {
-          newlist[i]["product"] = a;
-          if (a !== null) {
-            //lấy số lượng item có trong xe'
-            newlist[i]["Qty_order"] = a.Qty_order;
-            newlist[i]["Qty_receipt"] = a.Qty_receipt;
-          }
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        //thay page
+        const response = await receiptApi.getReceiptItem(id);
+        const pr = await receiptApi.getProduct(response.PO);
+        for (var i = 0; i < response.receiptdetail.length; i++) {
+          const items = pr.find(
+            ({ id }) => id === response.receiptdetail[i].item.id,
+          );
+          let item = {
+            isNew: true,
+            quantity: response.receiptdetail[i].Qty_receipt,
+            product: response.receiptdetail[i].item,
+            Qty_receipt: items.Qty_receipt,
+            Qty_order: items.Qty_order,
+          };
+          listReceipt.push(item);
         }
+        console.log(receipt);
+        setListProduct(listReceipt);
+        setReceipt(response);
+      } catch (error) {
+        console.log(error);
       }
-      return newlist;
-    });
-  };
-  //ham xoa
-  function removeElement(array, elem) {
-    var index = array.indexOf(elem);
-    if (index > -1) {
-      array.splice(index, 1);
-    }
-  }
-  //xử lý PO
-  const [timepoRequest, setTimePoRequest] = useState("");
-  const onDelete = () => {
-    setTimePoRequest(null);
-    setListProduct([
-      {
-        isNew: true,
-        quantity: "",
-        Qty_receipt: "",
-        Qty_order: "",
-        production_date: "",
-        expire_date: "",
-        product: {
-          name: "",
-          Qty_total: "",
-        },
-      },
-    ]);
-  };
-  // xử lý submit
+    };
+    fetchProduct();
+  }, []);
+  //xử lý submit
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if (listProduct.length > 0) {
@@ -250,13 +140,12 @@ const ReceiptUpdate = (props) => {
       const data = {
         items: items,
       };
-      console.log(data);
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
           const response = await receiptApi.createReceipt(id, data);
-          onDelete();
-          setloadData(!loadData);
+          // onDelete();
+          // setloadData(!loadData);
           setAlert({
             nameAlert: "success",
             message: language.success,
@@ -281,46 +170,49 @@ const ReceiptUpdate = (props) => {
         form = r;
       }}
       instantValidate
-      onSubmit={handleOnSubmit}
+      // onSubmit={handleOnSubmit}
     >
       <div className={classes.root}>
         <Grid container>
-          <Grid item lg={3}>
-            {/* <p className={classes.labelId}>{language.supplier}:</p>{" "}
-            <TextValidator
-              className={classes.textField}
-              variant="outlined"
-              margin="normal"
-              size="small"
-              fullWidth
-              type="text"
-              value="Tra dao"
-              readOnly={true}
-            ></TextValidator> */}
-          </Grid>
           <Grid item lg={12}>
-            <div className={classes.box}>
-              <nav>
-                <p className={classes.labelId}>{language.addProduct}</p>{" "}
-              </nav>
-              <nav>
-                <IconButton
-                  onClick={addItemProductHandler}
-                  color="primary"
-                  aria-label="upload picture"
-                  component="span"
-                  disabled={listProduct.length < product1.length ? false : true}
-                  classes={{
-                    root: classes.button, // class name, e.g. `classes-nesting-root-x`
-                    label: classes.label, // class name, e.g. `classes-nesting-label-x`
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
-              </nav>
+            <div className={classes.title}>
+              <h3>{language.detailReceipt}</h3>
             </div>
             <div className={classes.box}>
-              <p className={classes.labelId}>{language.listProducts}</p>
+              <div
+                className={classes.text}
+                style={{ float: "left", marginBottom: 20 }}
+              >
+                <div className={classes.textChild}>
+                  <p>{language.id}:</p>
+                  <p>{receipt.id}</p>
+                </div>
+                <div className={classes.textChild}>
+                  <p>{language.poID}:</p>
+                  <p>{receipt.PO}</p>
+                </div>
+                <div className={classes.textChild}>
+                  <p>{language.dateCreated}:</p>
+                  <p>{moment(receipt.add_date).format("L, h:mm")}</p>
+                </div>
+                <div className={classes.textChild}>
+                  <p>{language.editDate}:</p>
+                  <p>{moment(receipt.edit_date).format("L, h:mm")}</p>
+                </div>
+                <div className={classes.textChild}>
+                  <p>{language.add_who}:</p>
+                  <p>{receipt.add_who.username}</p>
+                </div>
+                <div className={classes.textChild}>
+                  <p>{language.edit_who_id}:</p>
+                  <p>{receipt.edit_who.username}</p>
+                </div>
+              </div>
+            </div>
+            <div className={classes.box}>
+              <p className={classes.labelId} style={{ marginBottom: 20 }}>
+                {language.listProducts}
+              </p>
             </div>
             <div className={classes.box1}>{listItems()}</div>
           </Grid>
@@ -329,7 +221,7 @@ const ReceiptUpdate = (props) => {
       <div className={classes.box2}>
         <Button
           variant="contained"
-          onClick={onDelete}
+          // onClick={onDelete}
           classes={{
             root: classes.submit, // class name, e.g. `classes-nesting-root-x`
             label: classes.label, // class name, e.g. `classes-nesting-label-x`
