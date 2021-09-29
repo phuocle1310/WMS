@@ -3,7 +3,6 @@ import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import AddReceiptStyle from "./AddReceiptStyle";
@@ -42,7 +41,13 @@ const ReceiptPo = () => {
   };
 
   const renderPoItem = () => {
-    return <PoDetailByID poId={poId1}></PoDetailByID>;
+    return (
+      <>
+        {" "}
+        <PoDetailByID poId={poId1}></PoDetailByID>
+        <CrudReceipt id={poId1} idPo={poId1}></CrudReceipt>
+      </>
+    );
   };
 
   function handleSubmit(e) {
@@ -80,9 +85,7 @@ const ReceiptPo = () => {
             <Grid item xs={12} sm={12} md={12} lg={12}>
               {isOpen && renderPoItem()}
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
-              <CrudReceipt></CrudReceipt>
-            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}></Grid>
           </Grid>
         </Grid>
       </Grid>

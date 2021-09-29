@@ -1,38 +1,45 @@
-// import * as React from "react";
-// import { XGrid } from "@material-ui/x-grid";
-import { useDemoData } from "@material-ui/x-grid-data-generator";
-import Alert from "@material-ui/lab/Alert";
+import ListPoStyles from "../Po/ListPoStyles";
+// //api
+import receiptApi from "../../api/receiptApi";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import {
-  DataGridPro,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridOverlay,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-} from "@mui/x-data-grid-pro";
+import { DataGridPro, GridOverlay } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import AlertNoti from "../UI/AlertNoti";
+import TextField from "@material-ui/core/TextField";
+import ClearIcon from "@material-ui/icons/Clear";
+import SearchIcon from "@material-ui/icons/Search";
+import IconButton from "@material-ui/core/IconButton";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useDispatch, useSelector } from "react-redux";
-//print
-import ReactToPrint from "react-to-print";
-//css
-import ListPoStyles from "../Po/ListPoStyles";
-//api
-import { listPo } from "../../store/poSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
-
-import Podetail from "../../pages/client/Podetail";
-export default function ReceiptList() {
+import { useSelector } from "react-redux";
+import AddIcon from "@material-ui/icons/Add";
+import CustomizedDialogs from "../UI/CustomizedDialogs";
+import ReceiptItem from "./ReceiptItem";
+import Print from "../../components/UI/Print";
+export default function DataGridProDemo(props) {
   const classes = ListPoStyles();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
+  let [rows, setrows] = useState([]);
+  useEffect(() => {
+    const fetchLogin = async () => {
+      try {
+        const action = await receiptApi.getAllReceipt(props.id);
+        console.log("id" + props.id);
+        setTimeout(() => {
+          setrows(action);
+          setRowss(action);
+        }, 500);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLogin();
+  }, [props.id]);
   const columns = [
     {
       field: "id",
@@ -47,8 +54,8 @@ export default function ReceiptList() {
       width: 130,
     },
     {
-      field: "effective_date",
-      headerName: language.importDate,
+      field: "edit_date",
+      headerName: language.editDate,
       sortable: false,
       width: 130,
     },
@@ -61,74 +68,79 @@ export default function ReceiptList() {
         let staff = params.getValue(params.id, "add_who");
         if (staff === null) {
           return <p>rỗng</p>;
+        } else {
+          return staff.username;
         }
       },
     },
     {
-      field: "status",
-      headerName: language.status,
+      field: "edit_who",
+      headerName: language.edit_who_id,
       sortable: false,
       width: 180,
       renderCell: (params) => {
-        let status = params.getValue(params.id, "status");
-        return showAlert(status);
+        let staff = params.getValue(params.id, "edit_who");
+        if (staff === null) {
+          return <p>rỗng</p>;
+        } else {
+          return staff.username;
+        }
       },
     },
     {
+      field: "PO",
+      headerName: language.poID,
+      sortable: false,
+      width: 180,
+    },
+    {
       field: "detail",
-      headerName: language.detail,
+      headerName: "action",
       sortable: false,
       width: 100,
       disableClickEventBubbling: true,
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
         return (
-          <NavLink
-            to={`/po/${id}`}
-            activeStyle={{
-              fontWeight: "bold",
-              color: "red",
+          <IconButton
+            onClick={() => {
+              hanlerViewReceipt(id);
             }}
-            target={"_blank"}
-            style={{ textDecoration: "none" }}
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+            // disabled={listProduct.length < product1.length ? false : true}
+            classes={{
+              root: classes.button, // class name, e.g. `classes-nesting-root-x`
+              label: classes.label, // class name, e.g. `classes-nesting-label-x`
+            }}
           >
-            {language.see}
-          </NavLink>
+            <VisibilityIcon />
+          </IconButton>
         );
       },
     },
   ];
-  const showAlert = (status) => {
-    switch (status) {
-      case "PENDING":
-        return (
-          <Alert severity="warning" variant="filled" className={classes.alert}>
-            {status}
-          </Alert>
-        );
-      case "ACCEPTED":
-        return (
-          <Alert severity="info" variant="filled" className={classes.alert}>
-            {status}
-          </Alert>
-        );
-      case "FAILED":
-        return (
-          <Alert severity="error" variant="filled" className={classes.alert}>
-            {status}
-          </Alert>
-        );
-      case "DONE":
-        return (
-          <Alert severity="success" variant="filled" className={classes.alert}>
-            {status}
-          </Alert>
-        );
-      default:
-    }
+  //lấy id idReceipt cần show
+  const [idReceipt, setIdReceipt] = useState(0);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function hanlerViewReceipt(params) {
+    //the thing  you wanna do
+    setIdReceipt(params);
+    handleClickOpen();
+  }
   //hàm xuất hiện thông báo
   function CustomNoRowsOverlay() {
+    const classes = ListPoStyles();
+
     return (
       <GridOverlay className={classes.overlay}>
         <svg
@@ -174,103 +186,35 @@ export default function ReceiptList() {
       </GridOverlay>
     );
   }
+  //xử ls data item
 
-  // const [rowss, setRowss] = React.useState(rows);
-  // function escapeRegExp(value) {
-  //   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-  // }
-
-  const CustomToolbar = () => {
-    return (
-      <div className={classes.root1}>
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-      </div>
-    );
+  const [rowss, setRowss] = React.useState(rows);
+  function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+  const [value, setValue] = useState("");
+  const handlerOnchange = (e) => {
+    setValue(e.target.value);
   };
-  // const [value, setValue] = useState("");
-  // const handlerOnchange = (e) => {
-  //   setValue(e.target.value);
-  // };
-  // useEffect(() => {
-  //   const searchRegex = new RegExp(escapeRegExp(value), "i");
-  //   const filteredRows = rows.filter((row) => {
-  //     return Object.keys(row).some((field) => {
-  //       return searchRegex.test(row[field].toString());
-  //     });
-  //   });
-  //   setRowss(filteredRows);
-  // }, [value]);
-  // const deleteValue = () => {
-  //   setValue("");
-  //   setRowss([]);
-  // };
-  //test
-  // const { data } = useDemoData({
-  //   dataSet: "Commodity",
-  //   rowLength: 100,
-  //   maxColumns: 6,
-  // });
-
-  // const [page, setPage] = React.useState(0);
-  // const [rows, setRows] = React.useState([]);
-  // const [loading, setLoading] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   let active = true;
-
-  //   (async () => {
-  //     setLoading(true);
-  //     const newRows = await loadServerRows(page, data);
-
-  //     if (!active) {
-  //       return;
-  //     }
-
-  //     setRows(newRows);
-  //     setLoading(false);
-  //   })();
-
-  //   return () => {
-  //     active = false;
-  //   };
-  // }, [page, data]);
-  const rows = useSelector((state) => state.po.listPo);
-  const rowsCount = useSelector((state) => state.po.rowCount);
-  const [page, setPage] = useState(0);
-  const dispatch = useDispatch();
   useEffect(() => {
-    const fetchLogin = async () => {
-      try {
-        const action = listPo(page + 1);
-        const actionResult = await dispatch(action);
-        unwrapResult(actionResult);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchLogin();
-  }, [page]);
-  const handlePageChange = (page) => {
-    setPage(page);
-  };
-  const [openNewsForm, setNewsForm] = useState(false);
-  const handerClose = () => {
-    setNewsForm(false);
-  };
-  const renderConfirm = () => {
-    return (
-      <form className={classes.form}>
-        <Podetail poId={1}></Podetail>
-      </form>
-    );
+    const searchRegex = new RegExp(escapeRegExp(value), "i");
+    const filteredRows = rows.filter((row) => {
+      return Object.keys(row).some((field) => {
+        return searchRegex.test(row[field].toString());
+      });
+    });
+    setRowss(filteredRows);
+  }, [value]);
+  const deleteValue = () => {
+    setValue("");
+    setRowss([]);
   };
   return (
-    <div style={{ height: 580, width: "auto" }}>
-      {/* <TextField
+    <div style={{ height: "100%", width: "auto" }}>
+      <TextField
         value={value}
         onChange={handlerOnchange}
-        placeholder={language.sreach}
+        placeholder="Search…"
         className={classes.textField}
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
@@ -287,30 +231,31 @@ export default function ReceiptList() {
           ),
         }}
       />
- */}
-      <DataGridPro
-        rows={rows}
-        className={classes.root}
-        rowCount={rowsCount}
-        columns={columns}
-        pageSize={10}
-        pagination
-        paginationMode="server"
-        onPageChange={handlePageChange}
-        page={page}
-        editMode="none"
-        rowHeight={40}
-        components={{
-          Toolbar: CustomToolbar,
-          NoRowsOverlay: CustomNoRowsOverlay,
-        }}
-        loading={rows.length === 0}
-      />
-      {openNewsForm && (
-        <AlertNoti onClose={handerClose} open={true}>
-          {renderConfirm()}
-        </AlertNoti>
-      )}{" "}
+      <div style={{ width: "100%", height: "100%" }}>
+        <DataGridPro
+          rows={rowss}
+          columns={columns}
+          autoHeight
+          className={classes.girData}
+          rowHeight={40}
+          checkboxSelection
+          pagination
+          pageSize={8}
+          rowsPerPageOptions={[5]}
+          sortingOrder={["desc", "asc"]}
+          editMode="none"
+        />
+      </div>
+      {/* show 1 receipt */}
+      <CustomizedDialogs
+        open={open}
+        handleClose={handleClose}
+        children={
+          <Print>
+            <ReceiptItem id={idReceipt}></ReceiptItem>
+          </Print>
+        }
+      ></CustomizedDialogs>
     </div>
   );
 }

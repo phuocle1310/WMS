@@ -74,13 +74,13 @@ const CrudReceipt = (props) => {
           aria-label="scrollable force tabs example"
         >
           <Tab
-            label={language.addNewProduct}
+            label={language.addReceipt}
             className={classes.tab}
             icon={<AddIcon />}
             {...a11yProps(0)}
           />
           <Tab
-            label={language.titleRPo}
+            label={language.listReceipt}
             className={classes.tab}
             icon={<PostAddIcon />}
             {...a11yProps(1)}
@@ -89,12 +89,11 @@ const CrudReceipt = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
         <TabPanel value={value} index={0} component={"div"}>
-          <AddNewReceipt></AddNewReceipt>
+          <AddNewReceipt id={props.idPo}></AddNewReceipt>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <h3>{language.titleRPo}</h3>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <ReceiptList></ReceiptList>
+            <ReceiptList id={props.id}></ReceiptList>
           </Grid>
         </TabPanel>
       </Grid>

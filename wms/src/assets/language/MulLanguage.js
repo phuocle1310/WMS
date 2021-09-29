@@ -69,6 +69,13 @@ const MulLanguage = {
     Qty_total: " total quantity",
     Qty_order: "    total receipt",
     Qty_receipt: "    total receipt",
+    editDate: "Edit Date",
+    poID: "PO Id",
+    edit_who_id: "edit staff",
+    add_who: "staff create",
+    //receipt
+    addReceipt: "Create Receipt",
+    listReceipt: "List Receipt",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -139,6 +146,14 @@ const MulLanguage = {
     Qty_total: "Tồn kho",
     Qty_order: "Số lượng đặt hàng",
     Qty_receipt: "Số lượng nhập kho",
+    //hoa don
+    editDate: "Ngày chỉnh sửa",
+    poID: "Mã đơn nhập",
+    edit_who_id: "Nhân Viên sửa",
+    add_who: "Nhân viên tạo",
+    //receipt
+    addReceipt: "Thêm biên lai nhập hàng",
+    listReceipt: "Danh sách biên lai nhập hàng",
   },
 };
 export default MulLanguage;

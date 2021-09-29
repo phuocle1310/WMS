@@ -40,7 +40,6 @@ const PoDetailByID = (props) => {
       </p>
     );
   }
-  console.log({ ...item });
   return <PoItem items={{ ...item }}></PoItem>;
 };
 

@@ -24,6 +24,7 @@ import AddProductReceipt from "./AddProductReceipt";
 import soApi from "../../api/soApi";
 
 const AddNewReceipt = (props) => {
+  const { id } = props;
   const classes = FormStyles();
   //alert
   const [alert, setAlert] = useState({
@@ -31,12 +32,7 @@ const AddNewReceipt = (props) => {
     message: "",
     open: false,
   });
-  //xử lý lỗi
-  // useEffect(() => {
-  //   if (ValidatorForm.hasValidationRule("isquantity")) {
-  //     ValidatorForm.removeValidationRule("isquantity");
-  //   }
-  // }, []);
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -75,11 +71,12 @@ const AddNewReceipt = (props) => {
   // lấy sản phẩm từ api
   let [product, setProduct] = useState([]);
   let [product1, setProduct1] = useState([]);
+  const [loadData, setloadData] = useState(false);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         //thay page
-        const response = await receiptApi.getProduct(18);
+        const response = await receiptApi.getProduct(id);
 
         setProduct(response);
         setProduct1(response);
@@ -90,7 +87,7 @@ const AddNewReceipt = (props) => {
       }
     };
     fetchProduct();
-  }, []);
+  }, [loadData, id]);
   //cập nhật product
   useEffect(() => {
     let newa = [...product1];
@@ -108,6 +105,7 @@ const AddNewReceipt = (props) => {
     return listProduct.map((item, index) => {
       let err = `isquantity${index}`;
       if (!ValidatorForm.hasValidationRule(err)) {
+        console.log(Number(Number(item.Qty_order) - Number(item.Qty_receipt)));
         ValidatorForm.addValidationRule(err, (value) => {
           if (
             Number(value) <=
@@ -256,8 +254,9 @@ const AddNewReceipt = (props) => {
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
-          const response = await receiptApi.createReceipt(18, data);
+          const response = await receiptApi.createReceipt(id, data);
           onDelete();
+          setloadData(!loadData);
           setAlert({
             nameAlert: "success",
             message: language.success,

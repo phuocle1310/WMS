@@ -13,7 +13,7 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import AlertNoti from "../UI/AlertNoti";
+
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 
@@ -306,11 +306,7 @@ export default function ListSo() {
         }}
         loading={rows.length === 0}
       />
-      {openNewsForm && (
-        <AlertNoti onClose={handerClose} open={true}>
-          {renderConfirm()}
-        </AlertNoti>
-      )}{" "}
+
     </div>
   );
 }

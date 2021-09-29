@@ -396,7 +396,7 @@ class ReceiptSerializer(ModelSerializer):
     edit_who = UserSerializer(many=False)
     class Meta:
         model = Receipt
-        fields = ['id', 'receiptdetail', 'PO', 'add_who', 'edit_who', 'status']
+        fields = ['id', 'receiptdetail', 'PO', 'add_who', 'edit_who', 'status','add_date','edit_date']
         read_only_fields = ['add_who', 'edit_who', 'status']
 
 
