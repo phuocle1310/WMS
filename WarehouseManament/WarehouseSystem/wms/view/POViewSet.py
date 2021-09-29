@@ -124,7 +124,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
-        if po.status in [2, 3]:
+        if po.status in [0, 2, 3]:
             return Response({"Failed": "This PO can't create receipt"}, status=status.HTTP_403_FORBIDDEN)
         list_item_receipted = self.get_item_receipted()
         list_id = []
