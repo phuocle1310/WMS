@@ -76,6 +76,8 @@ const MulLanguage = {
     //receipt
     addReceipt: "Create Receipt",
     listReceipt: "List Receipt",
+    detailReceipt: "Detail Receipt",
+    action: "Action",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -154,6 +156,8 @@ const MulLanguage = {
     //receipt
     addReceipt: "Thêm biên lai nhập hàng",
     listReceipt: "Danh sách biên lai nhập hàng",
+    detailReceipt: "Chi tiết biên lai",
+    action: "Hành động",
   },
 };
 export default MulLanguage;

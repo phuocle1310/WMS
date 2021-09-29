@@ -44,8 +44,8 @@ const ReceiptPo = () => {
     return (
       <>
         {" "}
-        <PoDetailByID poId={poId1}></PoDetailByID>
         <CrudReceipt id={poId1} idPo={poId1}></CrudReceipt>
+        <PoDetailByID poId={poId1}></PoDetailByID>
       </>
     );
   };

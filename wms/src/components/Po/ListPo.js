@@ -251,8 +251,7 @@ export default function ListPo() {
   //     active = false;
   //   };
   // }, [page, data]);
-  const rowss = useSelector((state) => state.po.listPo);
-  const [rows, setRows] = useState([]);
+  const rows = useSelector((state) => state.po.listPo);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
   const dispatch = useDispatch();
@@ -267,15 +266,6 @@ export default function ListPo() {
       }
     };
     fetchLogin();
-    setRows(
-      rowss.map((item) => {
-        return {
-          ...item,
-          add_date: moment(item.add_date).startOf("day").fromNow(),
-          effective_date: moment(item.effective_date).format("L"),
-        };
-      }),
-    );
   }, [page]);
   const handlePageChange = (page) => {
     setPage(page);

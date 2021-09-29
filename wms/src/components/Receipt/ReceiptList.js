@@ -17,6 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ReceiptItem from "./ReceiptItem";
 import Print from "../../components/UI/Print";
+import moment from "moment";
 export default function DataGridProDemo(props) {
   const classes = ListPoStyles();
   //lang
@@ -29,10 +30,26 @@ export default function DataGridProDemo(props) {
     const fetchLogin = async () => {
       try {
         const action = await receiptApi.getAllReceipt(props.id);
-        console.log("id" + props.id);
+
         setTimeout(() => {
-          setrows(action);
-          setRowss(action);
+          setrows(
+            action.map((item) => {
+              return {
+                ...item,
+                add_date: moment(item.add_date).startOf("day").fromNow(),
+                edit_date: moment(item.edit_date).format("L"),
+              };
+            }),
+          );
+          setRowss(
+            action.map((item) => {
+              return {
+                ...item,
+                add_date: moment(item.add_date).startOf("day").fromNow(),
+                edit_date: moment(item.edit_date).format("L"),
+              };
+            }),
+          );
         }, 500);
       } catch (error) {
         console.log(error);
@@ -95,9 +112,9 @@ export default function DataGridProDemo(props) {
     },
     {
       field: "detail",
-      headerName: "action",
+      headerName: language.action,
       sortable: false,
-      width: 100,
+      width: 180,
       disableClickEventBubbling: true,
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
