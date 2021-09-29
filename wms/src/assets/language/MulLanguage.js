@@ -151,7 +151,7 @@ const MulLanguage = {
     //hoa don
     editDate: "Ngày chỉnh sửa",
     poID: "Mã đơn nhập",
-    edit_who_id: "Nhân Viên sửa",
+    edit_who_id: "Nhân viên sửa",
     add_who: "Nhân viên tạo",
     //receipt
     addReceipt: "Thêm biên lai nhập hàng",

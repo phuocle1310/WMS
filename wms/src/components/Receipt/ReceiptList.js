@@ -18,6 +18,8 @@ import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ReceiptItem from "./ReceiptItem";
 import Print from "../../components/UI/Print";
 import moment from "moment";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 export default function DataGridProDemo(props) {
   const classes = ListPoStyles();
   //lang
@@ -119,21 +121,52 @@ export default function DataGridProDemo(props) {
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
         return (
-          <IconButton
-            onClick={() => {
-              hanlerViewReceipt(id);
-            }}
-            color="primary"
-            aria-label="upload picture"
-            component="span"
-            // disabled={listProduct.length < product1.length ? false : true}
-            classes={{
-              root: classes.button, // class name, e.g. `classes-nesting-root-x`
-              label: classes.label, // class name, e.g. `classes-nesting-label-x`
-            }}
-          >
-            <VisibilityIcon />
-          </IconButton>
+          <>
+            <IconButton
+              onClick={() => {
+                hanlerViewReceipt(id);
+              }}
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              // disabled={listProduct.length < product1.length ? false : true}
+              classes={{
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+            >
+              <VisibilityIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                hanlerViewReceipt(id);
+              }}
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              // disabled={listProduct.length < product1.length ? false : true}
+              classes={{
+                root: classes.button1, // class name, e.g. `classes-nesting-root-x`
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                hanlerViewReceipt(id);
+              }}
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              // disabled={listProduct.length < product1.length ? false : true}
+              classes={{
+                root: classes.button, // class name, e.g. `classes-nesting-root-x`
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </>
         );
       },
     },

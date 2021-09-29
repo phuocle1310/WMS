@@ -57,5 +57,11 @@ const ListPoStyles = makeStyles((theme) => ({
   girData: {
     clear: "right",
   },
+  button: {
+    color: "#bf360c",
+  },
+  button1: {
+    color: "#1565c0",
+  },
 }));
 export default ListPoStyles;
