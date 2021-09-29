@@ -7,13 +7,14 @@ const MulLanguage = {
     listPo: "List Po",
     litsSo: "List So",
     nameMenuPO: "Purchase Order",
-    nameMenuSo: "Supplier Orders",
+    nameMenuSo: "Supplier Order",
     title: "manage",
     titleHome: "Home",
     setting: "Setting",
     logout: "Logout",
     //tạo yêu cầu po
     titleRPo: "Create the purchase order request",
+    titleRSo: "Create the Supplier Order request",
     supplier: "Supplier",
     dateCreated: "Date created",
     importDate: "Import date",
@@ -62,12 +63,25 @@ const MulLanguage = {
     //lang
     vietnamese: "Vietnamese",
     english: "English",
+    detailPo: "Purchase Order detail",
+    detailSo: "Supplier Order detail",
+    success: "Success",
+    Qty_total: " total quantity",
+    Qty_order: "    total receipt",
+    Qty_receipt: "    total receipt",
+    editDate: "Edit Date",
+    poID: "PO Id",
+    edit_who_id: "edit staff",
+    add_who: "staff create",
+    //receipt
+    addReceipt: "Create Receipt",
+    listReceipt: "List Receipt",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
     //itemmenu
-    inputPo: "tạo đơn đặt hàng",
-    inputSo: "tạo đơn nhập hàng",
+    inputSo: "tạo đơn đặt hàng",
+    inputPo: "tạo đơn nhập hàng",
     listPo: "Danh sách các đơn nhập hàng",
     listSo: "Danh sách các đơn xuất hàng",
     nameMenuPO: "nhập hàng",
@@ -78,6 +92,7 @@ const MulLanguage = {
     logout: "Đăng xuất",
     //tạo yêu cầu po
     titleRPo: "Tạo yêu cầu nhập hàng",
+    titleRSo: "Tạo yêu cầu xuất hàng",
     supplier: "Nhà cung cấp",
     dateCreated: "Ngày tạo",
     importDate: "Ngày nhập",
@@ -124,6 +139,21 @@ const MulLanguage = {
     print: "In",
     vietnamese: "Tiếng Việt",
     english: "Tiếng Anh",
+    detailPo: "Chi tiết đơn nhập kho",
+    detailSo: "Chi tiết đơn xuất kho",
+    success: "Thành công",
+    //so
+    Qty_total: "Tồn kho",
+    Qty_order: "Số lượng đặt hàng",
+    Qty_receipt: "Số lượng nhập kho",
+    //hoa don
+    editDate: "Ngày chỉnh sửa",
+    poID: "Mã đơn nhập",
+    edit_who_id: "Nhân Viên sửa",
+    add_who: "Nhân viên tạo",
+    //receipt
+    addReceipt: "Thêm biên lai nhập hàng",
+    listReceipt: "Danh sách biên lai nhập hàng",
   },
 };
 export default MulLanguage;

@@ -13,10 +13,9 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import AlertNoti from "../UI/AlertNoti";
+import moment from "moment";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-
 //print
 import ReactToPrint from "react-to-print";
 //css
@@ -60,7 +59,23 @@ export default function ListSo() {
       renderCell: (params) => {
         let staff = params.getValue(params.id, "add_who");
         if (staff === null) {
-          return <p>rỗng</p>;
+          return <p></p>;
+        } else {
+          return <p>{staff.username}</p>;
+        }
+      },
+    },
+    {
+      field: "edit_who",
+      headerName: language.edit_who_id,
+      sortable: false,
+      width: 130,
+      renderCell: (params) => {
+        let staff = params.getValue(params.id, "edit_who");
+        if (staff === null) {
+          return <p></p>;
+        } else {
+          return <p>{staff.username}</p>;
         }
       },
     },
@@ -103,25 +118,25 @@ export default function ListSo() {
       case "PENDING":
         return (
           <Alert severity="warning" variant="filled" className={classes.alert}>
-            {language.PENDING}
+            {status}
           </Alert>
         );
       case "ACCEPTED":
         return (
           <Alert severity="info" variant="filled" className={classes.alert}>
-            {language.ACCEPTED}
+            {status}
           </Alert>
         );
       case "FAILED":
         return (
           <Alert severity="error" variant="filled" className={classes.alert}>
-            {language.FAILED}
+            {status}
           </Alert>
         );
       case "DONE":
         return (
           <Alert severity="success" variant="filled" className={classes.alert}>
-            {language.DONE}
+            {status}
           </Alert>
         );
       default:
@@ -235,7 +250,8 @@ export default function ListSo() {
   //     active = false;
   //   };
   // }, [page, data]);
-  const rows = useSelector((state) => state.so.listSo);
+  const rowss = useSelector((state) => state.so.listSo);
+  const [rows, setRows] = useState([]);
   const rowsCount = useSelector((state) => state.so.rowCount);
   const [page, setPage] = useState(0);
   const dispatch = useDispatch();
@@ -250,6 +266,15 @@ export default function ListSo() {
       }
     };
     fetchLogin();
+    setRows(
+      rowss.map((item) => {
+        return {
+          ...item,
+          add_date: moment(item.add_date).startOf("day").fromNow(),
+          effective_date: moment(item.effective_date).format("L"),
+        };
+      }),
+    );
   }, [page]);
   const handlePageChange = (page) => {
     setPage(page);
@@ -306,11 +331,6 @@ export default function ListSo() {
         }}
         loading={rows.length === 0}
       />
-      {openNewsForm && (
-        <AlertNoti onClose={handerClose} open={true}>
-          {renderConfirm()}
-        </AlertNoti>
-      )}{" "}
     </div>
   );
 }

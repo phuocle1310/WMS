@@ -12,14 +12,13 @@ import Button from "@material-ui/core/Button";
 import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";
 //css
-import PoItemStyles from "./PoItemStyles";
+import PoItemStyles from "../Po/PoItemStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 //list product
 import ListProduct from "../Product/ListProduct";
-import moment from "moment";
-const AddPo = (props) => {
+const SoItem = (props) => {
   const classes = PoItemStyles();
   //lang
   const currentLanguage = useSelector(
@@ -41,7 +40,7 @@ const AddPo = (props) => {
     >
       <Grid container>
         <Grid item xs={12} className={classes.title}>
-          <h3>{language.detailPo}</h3>
+          <h3>{language.detailSo}</h3>
         </Grid>
         <Grid item xs={12} className={classes.box}>
           <Grid container>
@@ -55,11 +54,11 @@ const AddPo = (props) => {
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.dateCreated}:</p>
-                      <p>{moment(item.add_date).format("L, h:mm")}</p>
+                      <p>{item.add_date}</p>
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.importDate}:</p>
-                      <p>{moment(item.effective_date).format("L")}</p>
+                      <p>{item.effective_date}</p>
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.status}:</p>
@@ -91,7 +90,7 @@ const AddPo = (props) => {
             </Grid>
             <Grid item xs={12} lg={12} className={classes.list}>
               <p className={classes.left}>{language.listProducts}:</p>
-              <ListProduct rows={item.podetail}></ListProduct>
+              <ListProduct rows={item.sodetail}></ListProduct>
             </Grid>
           </Grid>
         </Grid>
@@ -100,4 +99,4 @@ const AddPo = (props) => {
   );
 };
 
-export default AddPo;
+export default SoItem;

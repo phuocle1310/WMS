@@ -12,16 +12,19 @@ import ListPoPage from "./pages/client/ListPoPage";
 import Podetail from "./pages/client/Podetail";
 import AddSoPage from "./pages/client/AddSoPage";
 import ListSoPage from "./pages/client/ListSoPage";
+import SoDetail from "./pages/client/SoDetail";
 //
 import { getMe } from "./store/userSlice";
 import { getProductBySupplier } from "./store/productSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { listSo } from "./store/soSlice";
+//staff page
+import ManagePoPage from "./pages/Staff/ManagePoPage";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  console.log(isLoggedIn);
+  const role = useSelector((state) => state.user.currentUser.role);
+  console.log(role);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
@@ -44,9 +47,9 @@ function App() {
           {isLoggedIn && (
             <>
               <DashboardLayoutRoute
-                path="/po/:poId"
+                path="/managepo"
                 exact
-                component={Podetail}
+                component={ManagePoPage}
               ></DashboardLayoutRoute>
               <DashboardLayoutRoute
                 path="/listpo"
@@ -62,6 +65,16 @@ function App() {
                 path="/so"
                 exact
                 component={AddSoPage}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/so/:soId"
+                exact
+                component={SoDetail}
+              ></DashboardLayoutRoute>
+                            <DashboardLayoutRoute
+                path="/po/:poId"
+                exact
+                component={Podetail}
               ></DashboardLayoutRoute>
               <DashboardLayoutRoute
                 path="/listso"

@@ -13,10 +13,10 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
-import AlertNoti from "../UI/AlertNoti";
+
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-
+import { useDispatch, useSelector } from "react-redux";
 //print
 import ReactToPrint from "react-to-print";
 //css
@@ -24,9 +24,9 @@ import ListPoStyles from "./ListPoStyles";
 //api
 import { listPo } from "../../store/poSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 import Podetail from "../../pages/client/Podetail";
-export default function DataGridProDemo() {
+export default function ListPo() {
   const classes = ListPoStyles();
   //lang
   const currentLanguage = useSelector(
@@ -60,7 +60,23 @@ export default function DataGridProDemo() {
       renderCell: (params) => {
         let staff = params.getValue(params.id, "add_who");
         if (staff === null) {
-          return <p>rỗng</p>;
+          return <p></p>;
+        } else {
+          return <p>{staff.username}</p>;
+        }
+      },
+    },
+    {
+      field: "edit_who",
+      headerName: language.edit_who_id,
+      sortable: false,
+      width: 130,
+      renderCell: (params) => {
+        let staff = params.getValue(params.id, "edit_who");
+        if (staff === null) {
+          return <p></p>;
+        } else {
+          return <p>{staff.username}</p>;
         }
       },
     },
@@ -235,7 +251,8 @@ export default function DataGridProDemo() {
   //     active = false;
   //   };
   // }, [page, data]);
-  const rows = useSelector((state) => state.po.listPo);
+  const rowss = useSelector((state) => state.po.listPo);
+  const [rows, setRows] = useState([]);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
   const dispatch = useDispatch();
@@ -250,6 +267,15 @@ export default function DataGridProDemo() {
       }
     };
     fetchLogin();
+    setRows(
+      rowss.map((item) => {
+        return {
+          ...item,
+          add_date: moment(item.add_date).startOf("day").fromNow(),
+          effective_date: moment(item.effective_date).format("L"),
+        };
+      }),
+    );
   }, [page]);
   const handlePageChange = (page) => {
     setPage(page);
@@ -306,11 +332,6 @@ export default function DataGridProDemo() {
         }}
         loading={rows.length === 0}
       />
-      {openNewsForm && (
-        <AlertNoti onClose={handerClose} open={true}>
-          {renderConfirm()}
-        </AlertNoti>
-      )}{" "}
     </div>
   );
 }

@@ -11,37 +11,28 @@ import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";
 import Grid from "@material-ui/core/Grid";
 //css
-import FormStyles from "./FormStyles";
+import FormStyles from "../Po/FormStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
 import productApi from "../../api/productApi";
+import receiptApi from "../../api/receiptApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
-//redux api
-import poApi from "../../api/poApi";
+import AddProductReceipt from "./AddProductReceipt";
+import soApi from "../../api/soApi";
 
-const AddPo = (props) => {
-const classes = FormStyles();
-  //lang
-  const currentLanguage = useSelector(
-    (state) => state.currentLanguage.currentLanguage,
-  );
-  const language = MulLanguage[`${currentLanguage}`];
-  //khai báo form ban đầu rỗng
-  let form = null;
-  var moment = require("moment");
-  //readonly
-  const TextFieldComponent = (props) => {
-    return <TextField fullWidth {...props} disabled={true} />;
-  };
+const AddNewReceipt = (props) => {
+  const { id } = props;
+  const classes = FormStyles();
   //alert
   const [alert, setAlert] = useState({
     nameAlert: "",
     message: "",
     open: false,
   });
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -49,64 +40,54 @@ const classes = FormStyles();
 
     setAlert({ nameAlert: "", message: "", open: false });
   };
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
+  //khai báo form ban đầu rỗng
+  let form = null;
+
+  var moment = require("moment");
+  //readonly
+  const TextFieldComponent = (props) => {
+    return <TextField fullWidth {...props} disabled={true} />;
+  };
   // lưu vào danh sách
   const [listProduct, setListProduct] = useState([
     {
       isNew: true,
       quantity: "",
+      Qty_receipt: "",
+      Qty_order: "",
       production_date: "",
       expire_date: "",
       product: {
-        Qty_total: 0,
-        expire_date: "",
-        id: 8,
-        mu_case: 13,
         name: "",
-        production_date: "",
-        status: true,
-        unit: "",
+        Qty_total: "",
       },
     },
   ]);
   // lấy sản phẩm từ api
   let [product, setProduct] = useState([]);
   let [product1, setProduct1] = useState([]);
+  const [loadData, setloadData] = useState(false);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await productApi.getProductBySupplier();
+        //thay page
+        const response = await receiptApi.getProduct(id);
+
         setProduct(response);
         setProduct1(response);
+        console.log(response);
       } catch (error) {
         console.log(error);
+        console.log("eeee");
       }
     };
     fetchProduct();
-  }, []);
-  //show
-  const listItems = () => {
-    return listProduct.map((item, index) => {
-      return (
-        <Addproduct
-          key={index}
-          isNew={item.isNew}
-          id={index + 1}
-          values={item}
-          onClear={removeItemHandler.bind(this, index)}
-          handleChange={handleChangeAll(index)}
-          handlesetValue={handleChangeSelect(index)}
-          product={product}
-        ></Addproduct>
-      );
-    });
-  };
-  //ham xoa
-  function removeElement(array, elem) {
-    var index = array.indexOf(elem);
-    if (index > -1) {
-      array.splice(index, 1);
-    }
-  }
+  }, [loadData, id]);
   //cập nhật product
   useEffect(() => {
     let newa = [...product1];
@@ -119,31 +100,59 @@ const classes = FormStyles();
     }
     setProduct(newa);
   }, [listProduct]);
-  //xử lý thêm mới / nhưng cũ
-  const addItemProductHandler = () => {
-    setListProduct((prevState) => {
-      return [
-        ...prevState,
-        {
-          isNew: true,
-          quantity: "",
-          production_date: "",
-          expire_date: "",
-          product: {
-            Qty_total: 0,
-            expire_date: "",
-            id: 8,
-            mu_case: 13,
-            name: "",
-            production_date: "",
-            status: true,
-            unit: "",
-          },
-        },
-      ];
+  //show
+  const listItems = () => {
+    return listProduct.map((item, index) => {
+      let err = `isquantity${index}`;
+      if (!ValidatorForm.hasValidationRule(err)) {
+        console.log(Number(Number(item.Qty_order) - Number(item.Qty_receipt)));
+        ValidatorForm.addValidationRule(err, (value) => {
+          if (
+            Number(value) <=
+            Number(Number(item.Qty_order) - Number(item.Qty_receipt))
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }
+      return (
+        <AddProductReceipt
+          key={index}
+          isNew={item.isNew}
+          id={index + 1}
+          values={item}
+          err={err}
+          onClear={removeItemHandler.bind(this, index)}
+          handleChange={handleChangeAll(index)}
+          handlesetValue={handleChangeSelect(index)}
+          product={product}
+        ></AddProductReceipt>
+      );
     });
   };
-  //lấy product chính
+  //xử lý thêm mới / nhưng cũ
+  const addItemProductHandler = () => {
+    if (listProduct.length < product1.length) {
+      setListProduct((prevState) => {
+        return [
+          ...prevState,
+          {
+            isNew: true,
+            quantity: "",
+            Qty_receipt: "",
+            Qty_order: "",
+            production_date: "",
+            expire_date: "",
+            product: {
+              name: "",
+              Qty_total: "",
+            },
+          },
+        ];
+      });
+    }
+  };
   const getItem = (e) => {
     const item = product1.find((item) => item === e);
     return item;
@@ -183,24 +192,29 @@ const classes = FormStyles();
     });
   };
   const handleChangeSelect = (id) => (e, a) => {
+    console.log(listProduct);
     setListProduct((prevState) => {
       let newlist = [...prevState];
       for (let i = 0; i < newlist.length; i++) {
         if (i === id) {
           newlist[i]["product"] = a;
           if (a !== null) {
-            newlist[i]["production_date"] = new Date(
-              a.production_date,
-            ).toLocaleDateString("en-CA");
-            newlist[i]["expire_date"] = new Date(
-              a.expire_date,
-            ).toLocaleDateString("en-CA");
+            //lấy số lượng item có trong xe'
+            newlist[i]["Qty_order"] = a.Qty_order;
+            newlist[i]["Qty_receipt"] = a.Qty_receipt;
           }
         }
       }
       return newlist;
     });
   };
+  //ham xoa
+  function removeElement(array, elem) {
+    var index = array.indexOf(elem);
+    if (index > -1) {
+      array.splice(index, 1);
+    }
+  }
   //xử lý PO
   const [timepoRequest, setTimePoRequest] = useState("");
   const onDelete = () => {
@@ -209,17 +223,13 @@ const classes = FormStyles();
       {
         isNew: true,
         quantity: "",
+        Qty_receipt: "",
+        Qty_order: "",
         production_date: "",
         expire_date: "",
         product: {
-          Qty_total: 0,
-          expire_date: "",
-          id: 8,
-          mu_case: 13,
           name: "",
-          production_date: "",
-          status: true,
-          unit: "",
+          Qty_total: "",
         },
       },
     ]);
@@ -230,31 +240,33 @@ const classes = FormStyles();
     if (listProduct.length > 0) {
       //lấy items về đúng định dạng
       let items = listProduct.map((item) => {
-        let rObj = { pk: item.product.id, Qty_order: Number(item.quantity) };
+        let rObj = {
+          pk: item.product.id,
+          Qty_receipt: Number(item.quantity),
+        };
         return rObj;
       });
       //xử lý dữ liệu đưa lên api
-      const dataPo = {
-        effective_date: timepoRequest.toLocaleDateString("en-CA"),
+      const data = {
         items: items,
       };
-      console.log(dataPo)
+      console.log(data);
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
-          const response = await poApi.createRequestPo(dataPo);
-          console.log(dataPo);
+          const response = await receiptApi.createReceipt(id, data);
           onDelete();
+          setloadData(!loadData);
           setAlert({
             nameAlert: "success",
             message: language.success,
             open: true,
           });
         } catch (error) {
-          console.log(error.response['data'])
+          console.log(error.response.data);
           setAlert({
             nameAlert: "Error",
-            message: error.response['data'].item,
+            message: JSON.stringify(error.response.data),
             open: true,
           });
         }
@@ -274,7 +286,7 @@ const classes = FormStyles();
       <div className={classes.root}>
         <Grid container>
           <Grid item lg={3}>
-            <p className={classes.labelId}>{language.supplier}:</p>{" "}
+            {/* <p className={classes.labelId}>{language.supplier}:</p>{" "}
             <TextValidator
               className={classes.textField}
               variant="outlined"
@@ -284,43 +296,9 @@ const classes = FormStyles();
               type="text"
               value="Tra dao"
               readOnly={true}
-            ></TextValidator>
-            <p className={classes.labelId}>{language.dateCreated}:</p>{" "}
-            <ValidatedDatePicker
-              autoOk
-              variant="inline"
-              className={classes.textFieldDate}
-              inputVariant="outlined"
-              format="dd/MM/yyyy"
-              size="small"
-              style={{ width: "100%" }}
-              InputAdornmentProps={{ position: "start" }}
-              TextFieldComponent={TextFieldComponent}
-              readOnly={true}
-            />
-            <p className={classes.labelId}>{language.importDate}:</p>{" "}
-            <ValidatedDatePicker
-              autoOk
-              variant="inline"
-              className={classes.textFieldDate}
-              inputVariant="outlined"
-              format="dd/MM/yyyy"
-              size="small"
-              validators={["required"]}
-              errorMessages={["không để trống dòng này"]}
-              minDate={new Date()}
-              style={{ width: "100%" }}
-              InputAdornmentProps={{ position: "start" }}
-              value={timepoRequest}
-              onChange={(date) => {
-                if (moment.isDate(date)) {
-                  date.setHours(0, 0, 0, 0);
-                  setTimePoRequest(date);
-                }
-              }}
-            />
+            ></TextValidator> */}
           </Grid>
-          <Grid item lg={9}>
+          <Grid item lg={12}>
             <div className={classes.box}>
               <nav>
                 <p className={classes.labelId}>{language.addProduct}</p>{" "}
@@ -329,9 +307,9 @@ const classes = FormStyles();
                 <IconButton
                   onClick={addItemProductHandler}
                   color="primary"
-                  disabled={listProduct.length < product1.length ? false : true}
                   aria-label="upload picture"
                   component="span"
+                  disabled={listProduct.length < product1.length ? false : true}
                   classes={{
                     root: classes.button, // class name, e.g. `classes-nesting-root-x`
                     label: classes.label, // class name, e.g. `classes-nesting-label-x`
@@ -384,4 +362,4 @@ const classes = FormStyles();
   );
 };
 
-export default AddPo;
+export default AddNewReceipt;

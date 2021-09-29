@@ -42,6 +42,7 @@ const ListPoStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
   textField: {
+    float: "right",
     [theme.breakpoints.down("xs")]: {
       width: "100%",
     },
@@ -52,6 +53,9 @@ const ListPoStyles = makeStyles((theme) => ({
     "& .MuiInput-underline:before": {
       borderBottom: `1px solid ${theme.palette.divider}`,
     },
+  },
+  girData: {
+    clear: "right",
   },
 }));
 export default ListPoStyles;

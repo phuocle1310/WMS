@@ -6,6 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import moment from "moment";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
@@ -71,12 +72,8 @@ export default function CustomizedTables(props) {
             <StyledTableCell align="right">
               {language.expirationDate}
             </StyledTableCell>
-            <StyledTableCell align="right">
-              {language.unit}
-            </StyledTableCell>
-            <StyledTableCell align="right">
-              {language.muCase}
-            </StyledTableCell>
+            <StyledTableCell align="right">{language.unit}</StyledTableCell>
+            <StyledTableCell align="right">{language.muCase}</StyledTableCell>
             <StyledTableCell align="right">
               {" "}
               {language.quantity}
@@ -90,10 +87,16 @@ export default function CustomizedTables(props) {
                 {row.item.id}
               </StyledTableCell>
               <StyledTableCell align="left">{row.item.name}</StyledTableCell>
-              <StyledTableCell align="right">{row.item.expire_date}</StyledTableCell>
-              <StyledTableCell align="right">{row.item.production_date}</StyledTableCell>
+              <StyledTableCell align="right">
+                {moment(row.item.expire_date).format("L")}
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                {moment(row.item.production_date).format("L")}
+              </StyledTableCell>
               <StyledTableCell align="right">{row.item.unit}</StyledTableCell>
-              <StyledTableCell align="right">{row.item.mu_case}</StyledTableCell>
+              <StyledTableCell align="right">
+                {row.item.mu_case}
+              </StyledTableCell>
               <StyledTableCell align="right">{row.Qty_order}</StyledTableCell>
             </StyledTableRow>
           ))}

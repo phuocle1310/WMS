@@ -7,9 +7,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import useHttp from "../../Hook/useHttp";
 //api
 import poApi from "../../api/poApi";
-const Podetail = (props) => {
-  const params = useParams();
-  const { poId } = params;
+const PoDetailByID = (props) => {
+  const poId = props.poId;
   // const poId = props.poId;
   const {
     sendRequest,
@@ -20,8 +19,7 @@ const Podetail = (props) => {
 
   useEffect(() => {
     sendRequest(poId);
-    console.log(item);
-  }, []);
+  }, [poId]);
 
   if (status === "pending") {
     return <CircularProgress />;
@@ -42,14 +40,7 @@ const Podetail = (props) => {
       </p>
     );
   }
-console.log({ ...item });
-return (
-  <div style={{ width: "100%" }}>
-    <Print>
-      <PoItem items={{ ...item }}></PoItem>
-    </Print>
-  </div>
-);
+  return <PoItem items={{ ...item }}></PoItem>;
 };
 
-export default Podetail;
+export default PoDetailByID;

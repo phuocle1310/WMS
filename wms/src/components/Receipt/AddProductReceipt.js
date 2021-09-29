@@ -11,7 +11,16 @@ import AddProductStyles from "../Product/AddProductStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-const AddProductSo = (props) => {
+const AddProductReceipt = (props) => {
+  //khai báo
+  const { values } = props;
+
+  //xử lý lỗi
+  // useEffect(() => {
+  //   if (ValidatorForm.hasValidationRule("isquantity")) {
+  //     ValidatorForm.removeValidationRule("isquantity");
+  //   }
+  // }, [values]);
 
   const classes = AddProductStyles();
   //lang
@@ -21,17 +30,12 @@ const AddProductSo = (props) => {
   const language = MulLanguage[`${currentLanguage}`];
 
   var moment = require("moment");
-  //khai báo
-  const { values } = props;
+
   // const selectedDate = new Date();
-  const [selectedDate, setselectedDate] = useState({ manufactureDate: "" });
-  useEffect(() => {
-    setselectedDate({ manufactureDate: values.manufactureDate });
-    console.log(
-      moment(new Date(selectedDate.manufactureDate)).format("YYYY/MM/DD"),
-    );
-  }, [values.manufactureDate]);
+
   let form = null;
+  // console.log(Number(values.Qty_order - values.Qty_receipt) + "hicc");
+  // console.log(values.quantity + "sl");
   const itemProduct = () => {
     return (
       <>
@@ -50,12 +54,24 @@ const AddProductSo = (props) => {
             className={classes.textField}
             variant="outlined"
             margin="normal"
-            style={{ width: 180 }}
+            style={{ width: 190 }}
             size="small"
             type="number"
-            label={language.Qty_total}
-            name="quantity"
-            value={values.Qty_total ? values.Qty_total : ""}
+            label={language.Qty_order}
+            value={values.Qty_order ? values.Qty_order : ""}
+            inputProps={{ readOnly: true }}
+          />
+        </div>
+        <div>
+          <TextValidator
+            className={classes.textField}
+            variant="outlined"
+            margin="normal"
+            style={{ width: 190 }}
+            size="small"
+            type="number"
+            label={language.Qty_receipt}
+            value={values.Qty_receipt}
             inputProps={{ readOnly: true }}
           />
         </div>
@@ -77,7 +93,7 @@ const AddProductSo = (props) => {
               `${language.soQuantityError}`,
             ]}
             inputProps={
-              language.Qty_total ? { readOnly: false } : { readOnly: true }
+              values.product ? { readOnly: false } : { readOnly: true }
             }
           />
         </div>
@@ -97,4 +113,4 @@ const AddProductSo = (props) => {
   return <div className={classes.product}>{props.isNew && itemProduct()}</div>;
 };
 
-export default AddProductSo;
+export default AddProductReceipt;

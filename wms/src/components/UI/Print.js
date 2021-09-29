@@ -16,14 +16,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 25,
     border: 0,
     color: "white",
-    height: 48,
-    // width: "100px",
+    height: 40,
+    marginLeft: 10,
     padding: "0 30px",
     "&:hover": {
       background: "#E4544B",
     },
-    float: "left",
-    marginRight: 15,
+    // float: "left",
     fontSize: 13,
     "&:first-child": {
       background: "#000",

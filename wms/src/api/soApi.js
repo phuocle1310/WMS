@@ -9,7 +9,7 @@ const soApi = {
     return axiosClient.get(url);
   },
   gePoDetail: (data) => {
-    const url = `/po/${data}/get_po/`;
+    const url = `/so/${data}/get_so/`;
     return axiosClient.get(url);
   },
 };

@@ -11,10 +11,10 @@ import AddIcon from "@material-ui/icons/Add";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import AddNewsProduct from "../../components/Product/AddNewsProduct";
 import React from "react";
-import PageStyles from "./PageStyles";
-
+import PageStyles from "../../pages/client/PageStyles";
 import { useSelector } from "react-redux";
-
+import AddNewReceipt from "./AddNewReceipt";
+import ReceiptList from "./ReceiptList";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -48,7 +48,7 @@ function a11yProps(index) {
   };
 }
 
-const AddPoPage = (props) => {
+const CrudReceipt = (props) => {
   const classes = PageStyles();
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -74,13 +74,13 @@ const AddPoPage = (props) => {
           aria-label="scrollable force tabs example"
         >
           <Tab
-            label={language.addNewProduct}
+            label={language.addReceipt}
             className={classes.tab}
             icon={<AddIcon />}
             {...a11yProps(0)}
           />
           <Tab
-            label={language.titleRPo}
+            label={language.listReceipt}
             className={classes.tab}
             icon={<PostAddIcon />}
             {...a11yProps(1)}
@@ -89,12 +89,11 @@ const AddPoPage = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
         <TabPanel value={value} index={0} component={"div"}>
-          <AddNewsProduct />
+          <AddNewReceipt id={props.idPo}></AddNewReceipt>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <h3>{language.titleRPo}</h3>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <AddPo></AddPo>
+            <ReceiptList id={props.id}></ReceiptList>
           </Grid>
         </TabPanel>
       </Grid>
@@ -102,4 +101,4 @@ const AddPoPage = (props) => {
   );
 };
 
-export default AddPoPage;
+export default CrudReceipt;
