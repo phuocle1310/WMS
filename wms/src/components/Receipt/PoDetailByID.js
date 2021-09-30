@@ -1,25 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ReactToPrint from "react-to-print";
 import PoItem from "../../components/Po/PoItem";
-import Print from "../../components/UI/Print";
-import { useParams, Route, Link, useRouteMatch } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import useHttp from "../../Hook/useHttp";
 //api
 import poApi from "../../api/poApi";
 const PoDetailByID = (props) => {
-  const poId = props.poId;
-  // const poId = props.poId;
-  const {
-    sendRequest,
-    status,
-    data: item,
-    error,
-  } = useHttp(poApi.gePoDetail, true);
-
-  useEffect(() => {
-    sendRequest(poId);
-  }, [poId]);
+  const { status, data: item, error } = props;
 
   if (status === "pending") {
     return <CircularProgress />;
@@ -27,16 +14,16 @@ const PoDetailByID = (props) => {
 
   if (error) {
     return (
-      <p className="centered" style={{ margin: 300 }}>
-        {error}
+      <p className="centered" style={{ margin: 200, textAlign: "center" }}>
+        Not Found
       </p>
     );
   }
 
   if (!item) {
     return (
-      <p className="centered" style={{ margin: 300 }}>
-        {item.id}
+      <p className="centered" style={{ margin: 200 }}>
+        Not Data
       </p>
     );
   }

@@ -23,8 +23,6 @@ import ManagePoPage from "./pages/Staff/ManagePoPage";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const role = useSelector((state) => state.user.currentUser.role);
-  console.log(role);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {

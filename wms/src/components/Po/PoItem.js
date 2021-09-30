@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ValidatedDatePicker from "../UI/ValidatedDatePicker";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
@@ -19,7 +19,10 @@ import { useSelector } from "react-redux";
 //list product
 import ListProduct from "../Product/ListProduct";
 import moment from "moment";
-const AddPo = (props) => {
+import useHttp from "../../Hook/useHttp";
+import poApi from "../../api/poApi";
+import { CircularProgress } from "@material-ui/core";
+const PoItem = (props) => {
   const classes = PoItemStyles();
   //lang
   const currentLanguage = useSelector(
@@ -29,8 +32,39 @@ const AddPo = (props) => {
   //khai báo form ban đầu rỗng
   let form = null;
   var moment = require("moment");
-  const item = props.items;
-  console.log("hello");
+  const { id } = props;
+
+  const {
+    sendRequest,
+    status,
+    data: item,
+    error,
+  } = useHttp(poApi.gePoDetail, true);
+
+  useEffect(() => {
+    sendRequest(id);
+    console.log(item);
+  }, []);
+
+  if (status === "pending") {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return (
+      <p className="centered" style={{ margin: 300 }}>
+        404
+      </p>
+    );
+  }
+
+  if (!item) {
+    return (
+      <p className="centered" style={{ margin: 300 }}>
+        {item.id}
+      </p>
+    );
+  }
   return (
     <Grid container>
       <Grid item xs={12} className={classes.title}>
@@ -92,4 +126,4 @@ const AddPo = (props) => {
   );
 };
 
-export default AddPo;
+export default PoItem;

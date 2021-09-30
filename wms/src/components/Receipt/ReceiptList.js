@@ -4,7 +4,6 @@ import receiptApi from "../../api/receiptApi";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { DataGridPro, GridOverlay } from "@mui/x-data-grid-pro";
-import { NavLink } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import ClearIcon from "@material-ui/icons/Clear";
 import SearchIcon from "@material-ui/icons/Search";
@@ -13,7 +12,6 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-import AddIcon from "@material-ui/icons/Add";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ReceiptItem from "./ReceiptItem";
 import Print from "../../components/UI/Print";
@@ -21,7 +19,7 @@ import moment from "moment";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ReceiptUpdate from "./ReceiptUpdate";
-import DeleteReceipt from "./DeleteReceipt";
+import ConfirmDelete from "../UI/ConfirmDelete";
 export default function DataGridProDemo(props) {
   const { id, status } = props;
   const classes = ListPoStyles();
@@ -31,9 +29,9 @@ export default function DataGridProDemo(props) {
   );
   const language = MulLanguage[`${currentLanguage}`];
   let [rows, setrows] = useState([]);
+  const [rowss, setRowss] = React.useState(rows);
   //lấy id idReceipt cần show
   const [idReceipt, setIdReceipt] = useState(0);
-  const [open, setOpen] = React.useState(false);
   const [isDelete, setIsDelete] = useState({ id: "", loading: false });
   useEffect(() => {
     const fetchGetAll = async () => {
@@ -179,56 +177,13 @@ export default function DataGridProDemo(props) {
       },
     },
   ];
+  //crud
+  const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
-  };
-  //view
-  function hanlerViewReceipt(params) {
-    setCrud(1);
-    //the thing  you wanna do
-    setIdReceipt(params);
-    handleClickOpen();
-  }
-  //edit
-  function handlerEditReceipt(params) {
-    //the thing  you wanna do
-    setCrud(2);
-    setIdReceipt(params);
-    handleClickOpen();
-  }
-  function handlerDelete(params) {
-    //the thing  you wanna do
-    setIsDelete({ id: params, loading: false });
-    setCrud(3);
-    setIdReceipt(params);
-    handleClickOpen();
-  }
-  //hàm xuất hiện thông báo
-  //xử ls data item
-
-  const [rowss, setRowss] = React.useState(rows);
-  function escapeRegExp(value) {
-    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-  }
-  const [value, setValue] = useState("");
-  const handlerOnchange = (e) => {
-    setValue(e.target.value);
-  };
-  useEffect(() => {
-    const searchRegex = new RegExp(escapeRegExp(value), "i");
-    const filteredRows = rows.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    setRowss(filteredRows);
-  }, [value]);
-  const deleteValue = () => {
-    setValue("");
-    setRowss([]);
   };
   const [crud, setCrud] = useState(0);
   const renderCrud = () => {
@@ -259,10 +214,10 @@ export default function DataGridProDemo(props) {
             open={open}
             handleClose={handleClose}
             children={
-              <DeleteReceipt
+              <ConfirmDelete
                 onDelete={handleClose}
                 onSubmitDelete={onSubmitDelete}
-              ></DeleteReceipt>
+              ></ConfirmDelete>
             }
           ></CustomizedDialogs>
         );
@@ -270,6 +225,28 @@ export default function DataGridProDemo(props) {
       // code block
     }
   };
+  //view
+  function hanlerViewReceipt(params) {
+    setCrud(1);
+    //the thing  you wanna do
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  //edit
+  function handlerEditReceipt(params) {
+    //the thing  you wanna do
+    setCrud(2);
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  function handlerDelete(params) {
+    //the thing  you wanna do
+    setIsDelete({ id: params, loading: false });
+    setCrud(3);
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  //hàm xuất hiện thông báo
   //xóa receipt
   const onSubmitDelete = () => {
     const fetchDelete = async () => {
@@ -283,6 +260,27 @@ export default function DataGridProDemo(props) {
       }
     };
     fetchDelete();
+  };
+  //xử lý tìm kiếm
+  function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+  const [value, setValue] = useState("");
+  const handlerOnchange = (e) => {
+    setValue(e.target.value);
+  };
+  useEffect(() => {
+    const searchRegex = new RegExp(escapeRegExp(value), "i");
+    const filteredRows = rows.filter((row) => {
+      return Object.keys(row).some((field) => {
+        return searchRegex.test(row[field].toString());
+      });
+    });
+    setRowss(filteredRows);
+  }, [value]);
+  const deleteValue = () => {
+    setValue("");
+    setRowss([]);
   };
   return (
     <div style={{ height: "100%", width: "auto" }}>
@@ -320,7 +318,6 @@ export default function DataGridProDemo(props) {
           editMode="none"
         />
       </div>
-      {/* show 1 receipt */}
       {renderCrud()}
     </div>
   );

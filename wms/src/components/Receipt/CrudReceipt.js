@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import AddNewReceipt from "./AddNewReceipt";
 import ReceiptList from "./ReceiptList";
 import poApi from "../../api/poApi";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import useHttp from "../../Hook/useHttp";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -60,20 +62,32 @@ const CrudReceipt = (props) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const [status, setStatus] = useState("");
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        //api sửa receipt
-        const response = await poApi.gePoDetail(props.idPo);
-        setStatus(response.status);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProduct();
-  }, [props.idPo]);
+  const [statuss, setStatuss] = useState("");
+  const { status, data: item, error } = props;
 
+  useEffect(() => {
+    if (item) setStatuss(item.status);
+  }, [item]);
+
+  if (status === "pending") {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return (
+      <p className="centered" style={{ margin: 200, textAlign: "center" }}>
+        Not Found
+      </p>
+    );
+  }
+
+  if (!item) {
+    return (
+      <p className="centered" style={{ margin: 200 }}>
+        Not Data
+      </p>
+    );
+  }
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.box}>
@@ -103,15 +117,15 @@ const CrudReceipt = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
         <TabPanel value={value} index={0} component={"div"}>
-          {status === "DONE" ? (
+          {item.status === "DONE" ? (
             language.poDone
           ) : (
-            <AddNewReceipt id={props.idPo}></AddNewReceipt>
+            <AddNewReceipt id={item.id}></AddNewReceipt>
           )}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <ReceiptList id={props.id} status={status}></ReceiptList>
+            <ReceiptList id={item.id} status={statuss}></ReceiptList>
           </Grid>
         </TabPanel>
       </Grid>

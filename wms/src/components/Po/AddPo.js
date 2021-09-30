@@ -23,7 +23,7 @@ import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import poApi from "../../api/poApi";
 
 const AddPo = (props) => {
-const classes = FormStyles();
+  const classes = FormStyles();
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -83,6 +83,7 @@ const classes = FormStyles();
     };
     fetchProduct();
   }, []);
+
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
@@ -238,7 +239,7 @@ const classes = FormStyles();
         effective_date: timepoRequest.toLocaleDateString("en-CA"),
         items: items,
       };
-      console.log(dataPo)
+      console.log(dataPo);
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
@@ -251,7 +252,7 @@ const classes = FormStyles();
             open: true,
           });
         } catch (error) {
-          console.log(error.response['data'])
+          console.log(error.response["data"]);
           setAlert({
             nameAlert: "Error",
             message: JSON.stringify(error.response.data),
@@ -307,7 +308,7 @@ const classes = FormStyles();
               format="dd/MM/yyyy"
               size="small"
               validators={["required"]}
-              errorMessages={["không để trống dòng này"]}
+              errorMessages={[`${language.requiredError}`]}
               minDate={new Date()}
               style={{ width: "100%" }}
               InputAdornmentProps={{ position: "start" }}

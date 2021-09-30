@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
       width: "90%",
     },
   },
+  title: {
+    textTransform: "uppercase",
+  },
 }));
 const ListPoPage = (props) => {
   const classes = useStyles();
@@ -33,7 +36,7 @@ const ListPoPage = (props) => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={12} md={12} lg={12}>
-        <h3>{language.listPo}</h3>
+        <h3 className={classes.title}>{language.listPo}</h3>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <div className={classes.content}>
