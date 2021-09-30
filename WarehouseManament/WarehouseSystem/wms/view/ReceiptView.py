@@ -7,7 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from .BaseView import BaseAPIView
-from ..models import Receipt, PODetail, ReceiptDetail, User, Item
+from ..models import Receipt, PODetail, ReceiptDetail, User, Item, PO
 from ..serializers import ReceiptSerializer, ReceiptCreateSerializer, ReceiptDetailSerializer, POSerializer
 
 
@@ -94,6 +94,11 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
 
                     detail.Qty_receipt = Qty_change
                     detail.save()
+        if self.update_status_done(receipt.PO, 0):
+            po = PO.objects.get(pk=receipt.PO.pk)
+            po.status = 0
+            po.edit_who = request.user
+            po.save()
         serializer = ReceiptSerializer(receipt)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

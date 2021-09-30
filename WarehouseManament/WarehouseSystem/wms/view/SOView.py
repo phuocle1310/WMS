@@ -61,14 +61,14 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
             stt = request.data.pop('status')
         except SO.DoesNotExist:
             return Response({"Falied": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-
+        if instance.status == 0:
+            return Response({"Falied": "SO have done already, can't edit!!"}, status=status.HTTP_400_BAD_REQUEST)
+        if stt in [2, 0]:
+            return Response({"Falied": "This SO can't update this status"}, status=status.HTTP_400_BAD_REQUEST)
         if stt in [3, 1]:
             instance.add_who = request.user
             instance.edit_who = request.user
-        if stt == 0:
-            instance.edit_who = request.user
-        if stt == 2:
-            return Response({"Falied": "SO is pending already"}, status=status.HTTP_400_BAD_REQUEST)
+
         instance.status = stt
         instance.save()
         serializer = SOSerializer(instance)

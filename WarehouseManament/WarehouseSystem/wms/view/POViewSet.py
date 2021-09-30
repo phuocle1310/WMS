@@ -73,8 +73,8 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             instance.edit_who = request.user
         else:
             instance.edit_who = request.user
-        if stt == 2:
-            return Response({"Falied": "PO is pending already"}, status=status.HTTP_400_BAD_REQUEST)
+        if stt in [2, 0]:
+            return Response({"Falied": "This PO can't update this status"}, status=status.HTTP_400_BAD_REQUEST)
         if instance.status == 0:
             return Response({"Falied": "PO have done already, can't edit!!"}, status=status.HTTP_400_BAD_REQUEST)
         instance.status = stt
