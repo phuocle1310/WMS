@@ -105,7 +105,7 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(methods=['delete'], detail=True, url_path="delete-order")
+    @action(methods=['patch'], detail=True, url_path="delete-order")
     def delete_order(self, request, *args, **kwargs):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)

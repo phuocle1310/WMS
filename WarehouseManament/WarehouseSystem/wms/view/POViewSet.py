@@ -186,7 +186,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
     def get_receipt(self, request, pk):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        receipts = Receipt.objects.filter(PO__id=pk)
+        receipts = Receipt.objects.filter(PO__id=pk, status=True)
         serializer = ReceiptSerializer(receipts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
