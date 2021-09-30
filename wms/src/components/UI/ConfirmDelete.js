@@ -14,50 +14,26 @@ import Grid from "@material-ui/core/Grid";
 import FormStyles from "../Po/FormStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useSelector, useDispatch } from "react-redux";
-//api
-import productApi from "../../api/productApi";
-import receiptApi from "../../api/receiptApi";
-//alert
-import CustomizedSnackbars from "../UI/CustomizedSnackbars";
-import AddProductReceipt from "./AddProductReceipt";
-import soApi from "../../api/soApi";
+import { useSelector } from "react-redux";
 
-const DeleteReceipt = (props) => {
+const ConfirmDelete = (props) => {
   const { id } = props;
   const classes = FormStyles();
-  //alert
-  const [alert, setAlert] = useState({
-    nameAlert: "",
-    message: "",
-    open: false,
-  });
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setAlert({ nameAlert: "", message: "", open: false });
-  };
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
   //khai báo form ban đầu rỗng
-  let form = null;
 
   return (
-    <ValidatorForm
-      className={classes.form}
-      ref={(r) => {
-        form = r;
-      }}
-      instantValidate
-    >
+    <>
+      <div className={classes.box}>
+        <p className={classes.labelId} style={{ padding: 20 }}>
+          {language.confirmDelete}
+        </p>
+      </div>
       <div className={classes.box2}>
-        Xóa nha
         <Button
           variant="contained"
           onClick={props.onDelete}
@@ -81,16 +57,8 @@ const DeleteReceipt = (props) => {
           {language.sendRequire}
         </Button>
       </div>
-      {alert.nameAlert && (
-        <CustomizedSnackbars
-          open={alert.open}
-          handleClose={handleClose}
-          nameAlert={alert.nameAlert}
-          message={alert.message}
-        ></CustomizedSnackbars>
-      )}
-    </ValidatorForm>
+    </>
   );
 };
 
-export default DeleteReceipt;
+export default ConfirmDelete;

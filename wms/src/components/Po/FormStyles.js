@@ -102,12 +102,11 @@ const FormStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-
     background: "#E4544B",
     borderRadius: 25,
     border: 0,
     color: "white",
-    height: 48,
+    height: 40,
     // width: "100px",
     padding: "0 30px",
     "&:hover": {

@@ -79,6 +79,8 @@ const MulLanguage = {
     detailReceipt: "Detail Receipt",
     action: "Action",
     poDone: "This kho enter unit was complete!!!",
+    confirmDelete:
+      "Do you really want to delete this? This process cannot be undone.",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -160,6 +162,8 @@ const MulLanguage = {
     detailReceipt: "Chi tiết biên lai",
     action: "Hành động",
     poDone: "Đơn hàng nhập kho này đã hoàn tất!!!",
+    confirmDelete:
+      "Bạn có thực sự muốn xóa cái này không? Không thể hoàn tác quá trình này?",
   },
 };
 export default MulLanguage;

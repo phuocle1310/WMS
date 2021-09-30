@@ -4,7 +4,6 @@ import receiptApi from "../../api/receiptApi";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { DataGridPro, GridOverlay } from "@mui/x-data-grid-pro";
-import { NavLink } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import ClearIcon from "@material-ui/icons/Clear";
 import SearchIcon from "@material-ui/icons/Search";
@@ -13,7 +12,6 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-import AddIcon from "@material-ui/icons/Add";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ReceiptItem from "./ReceiptItem";
 import Print from "../../components/UI/Print";
@@ -21,7 +19,7 @@ import moment from "moment";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ReceiptUpdate from "./ReceiptUpdate";
-import DeleteReceipt from "./DeleteReceipt";
+import ConfirmDelete from "../UI/ConfirmDelete";
 export default function DataGridProDemo(props) {
   const { id, status } = props;
   const classes = ListPoStyles();
@@ -259,10 +257,10 @@ export default function DataGridProDemo(props) {
             open={open}
             handleClose={handleClose}
             children={
-              <DeleteReceipt
+              <ConfirmDelete
                 onDelete={handleClose}
                 onSubmitDelete={onSubmitDelete}
-              ></DeleteReceipt>
+              ></ConfirmDelete>
             }
           ></CustomizedDialogs>
         );

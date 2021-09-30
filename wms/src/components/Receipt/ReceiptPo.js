@@ -7,22 +7,16 @@ import SearchIcon from "@material-ui/icons/Search";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import AddReceiptStyle from "./AddReceiptStyle";
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useDispatch, useSelector } from "react-redux";
-import PoItem from "../Po/PoItem";
 import React, { useEffect, useState } from "react";
-import ReactToPrint from "react-to-print";
-import Print from "../../components/UI/Print";
-import { useParams, Route, Link, useRouteMatch } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
-import SendIcon from "@material-ui/icons/Send";
-import ClearIcon from "@material-ui/icons/Clear";
 import CrudReceipt from "./CrudReceipt";
+import { useDispatch, useSelector } from "react-redux";
 //api
 import poApi from "../../api/poApi";
 import useHttp from "../../Hook/useHttp";
 import PoDetailByID from "./PoDetailByID";
+
+//get po
 
 const ReceiptPo = () => {
   //css
@@ -44,17 +38,28 @@ const ReceiptPo = () => {
     return (
       <>
         {" "}
-        <PoDetailByID poId={poId1}></PoDetailByID>
-        <CrudReceipt id={poId1} idPo={poId1}></CrudReceipt>
+        <PoDetailByID status={status} error={error} data={item}></PoDetailByID>
+        <CrudReceipt status={status} error={error} data={item}></CrudReceipt>
       </>
     );
   };
 
   function handleSubmit(e) {
-    e.preventDefault();
     setOpen(true);
     setId1(poId);
   }
+  //gọi api
+  const {
+    sendRequest,
+    status,
+    data: item,
+    error,
+  } = useHttp(poApi.gePoDetail, true);
+
+  useEffect(() => {
+    if (poId1 !== 0) sendRequest(poId1);
+  }, [poId1]);
+
   return (
     <>
       <Grid container>
@@ -69,12 +74,13 @@ const ReceiptPo = () => {
               type="number"
               fullWidth
               onChange={handleChange}
+              required
               inputProps={{ "aria-label": "search google maps" }}
             />
             <IconButton
               className={classes.iconButton}
               aria-label="search"
-              type="submit"
+              onClick={handleSubmit}
             >
               <SearchIcon style={{ fontSize: 30 }} />
             </IconButton>
@@ -85,7 +91,6 @@ const ReceiptPo = () => {
             <Grid item xs={12} sm={12} md={12} lg={12}>
               {isOpen && renderPoItem()}
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={12}></Grid>
           </Grid>
         </Grid>
       </Grid>
