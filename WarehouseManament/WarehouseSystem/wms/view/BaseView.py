@@ -49,3 +49,12 @@ class BaseAPIView:
                             item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
                             break
         return items
+
+    def update_status_done(self, instance=None, type=0):
+        items = self.get_item_receipted(instance, type)
+        flag = True
+        for item in items:
+            if item.get('Qty_receipt') != item.get('Qty_order'):
+                flag = False
+                break
+        return flag

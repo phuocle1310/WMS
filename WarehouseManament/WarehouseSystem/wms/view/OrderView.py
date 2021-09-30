@@ -7,7 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from .BaseView import BaseAPIView
-from ..models import Order, OrderDetail, Item
+from ..models import Order, OrderDetail, Item, SO
 from ..serializers import OrderCreateSerializer, OrderSerializer
 
 
@@ -96,6 +96,11 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
 
                     detail.Qty_receipt = Qty_change
                     detail.save()
+        if self.update_status_done(order.SO, 1):
+            so = SO.objects.get(pk=order.SO.pk)
+            so.status = 0
+            so.edit_who = request.user
+            so.save()
         serializer = OrderSerializer(order)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
