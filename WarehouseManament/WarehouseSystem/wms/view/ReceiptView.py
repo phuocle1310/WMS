@@ -11,11 +11,10 @@ from ..models import Receipt, PODetail, ReceiptDetail, User, Item, PO
 from ..serializers import ReceiptSerializer, ReceiptCreateSerializer, ReceiptDetailSerializer, POSerializer
 
 
-class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, generics.DestroyAPIView,
-                  BaseAPIView):
-    queryset = Receipt.objects.all()
+class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, BaseAPIView):
+    queryset = Receipt.objects.filter(status=True)
     action_required_auth = ['list', 'retrieve', 'create',
-                            'update']
+                            'update', 'delete_receipt']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -104,20 +103,22 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def destroy(self, request, *args, **kwargs):
+    @action(methods=['patch'], detail=True, url_path="delete-receipt")
+    def delete_receipt(self, request, *args, **kwargs):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         try:
             receipt = self.get_object()
+            receipt.status = False
+            receipt.save()
         except Receipt.DoesNotExist:
-            return Response({"Falied": "Receipt doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"Failed": "Receipt doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
         try:
             po = PO.objects.get(pk=receipt.PO.pk)
             po.status = 1
             po.edit_who = request.user
             po.save()
         except PO.DoesNotExist:
-            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"Failed": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-        return super(ReceiptView, self).destroy(request, *args, **kwargs) \
-               and Response({"Success": "Delete Receipt success"}, status=status.HTTP_200_OK)
+        return Response({"Success": "Delete Receipt success"}, status=status.HTTP_200_OK)

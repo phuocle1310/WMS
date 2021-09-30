@@ -53,7 +53,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
 
     @action(methods=['put'], detail=True, url_path='update')
     def update_so(self, request, pk):
-        if request.user.role == 2:
+        if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
 
         try:

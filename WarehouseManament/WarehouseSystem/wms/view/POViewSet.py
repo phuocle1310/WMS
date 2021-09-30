@@ -57,16 +57,14 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
     @action(methods=['put'], detail=True, url_path='update')
     def update_po(self, request, pk):
-        if request.user.is_anonymous:
-            return Response({"Failed": "You can't do that"}, status=status.HTTP_403_FORBIDDEN)
-        if request.user.role == 2:
+        if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             instance = PO.objects.get(pk=pk)
             stt = request.data.pop('status')
         except PO.DoesNotExist:
-            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "PO doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         if instance.add_who is None:
             instance.add_who = request.user

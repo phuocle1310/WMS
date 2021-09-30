@@ -11,10 +11,10 @@ from ..models import Order, OrderDetail, Item, SO
 from ..serializers import OrderCreateSerializer, OrderSerializer
 
 
-class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, generics.DestroyAPIView, BaseAPIView):
-    queryset = Order.objects.all()
+class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, BaseAPIView):
+    queryset = Order.objects.filter(status=True)
     action_required_auth = ['list', 'retrieve',
-                            'update']
+                            'update', 'delete_order']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -105,20 +105,21 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def destroy(self, request, *args, **kwargs):
+    @action(methods=['delete'], detail=True, url_path="delete-order")
+    def delete_order(self, request, *args, **kwargs):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         try:
             order = self.get_object()
+            order.status = False
+            order.save()
         except Order.DoesNotExist:
-            return Response({"Falied": "Order doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"Failed": "Order doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
         try:
             so = SO.objects.get(pk=order.SO.pk)
             so.status = 1
             so.edit_who = request.user
             so.save()
         except SO.DoesNotExist:
-            return Response({"Falied": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-
-        return super(OrderView, self).destroy(request, *args, **kwargs) and Response(
-            {"Success": "Delete Order success"}, status=status.HTTP_200_OK)
+            return Response({"Failed": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"Success": "Delete Order success"}, status=status.HTTP_200_OK)
