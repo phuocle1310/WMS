@@ -254,7 +254,7 @@ const classes = FormStyles();
           console.log(error.response['data'])
           setAlert({
             nameAlert: "Error",
-            message: error.response['data'].item,
+            message: JSON.stringify(error.response.data),
             open: true,
           });
         }

@@ -23,6 +23,7 @@ import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import AddProductReceipt from "./AddProductReceipt";
 import soApi from "../../api/soApi";
 
+
 const AddNewReceipt = (props) => {
   const { id } = props;
   const classes = FormStyles();
@@ -72,22 +73,37 @@ const AddNewReceipt = (props) => {
   let [product, setProduct] = useState([]);
   let [product1, setProduct1] = useState([]);
   const [loadData, setloadData] = useState(false);
+  const [isShow, setIsShow] = useState(true);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         //thay page
         const response = await receiptApi.getProduct(id);
-
         setProduct(response);
         setProduct1(response);
-        console.log(response);
+        setListProduct([
+          {
+            isNew: true,
+            quantity: "",
+            Qty_receipt: "",
+            Qty_order: "",
+            production_date: "",
+            expire_date: "",
+            product: {
+              name: "",
+              Qty_total: "",
+            },
+          },
+        ]);
       } catch (error) {
         console.log(error);
-        console.log("eeee");
       }
     };
     fetchProduct();
-  }, [loadData, id]);
+    return () => {
+      setIsShow(true);
+    };
+  }, [id]);
   //cập nhật product
   useEffect(() => {
     let newa = [...product1];
@@ -99,30 +115,16 @@ const AddNewReceipt = (props) => {
       }
     }
     setProduct(newa);
-  }, [listProduct]);
+  }, [listProduct, id]);
   //show
   const listItems = () => {
     return listProduct.map((item, index) => {
-      let err = `isquantity${index}`;
-      if (!ValidatorForm.hasValidationRule(err)) {
-        console.log(Number(Number(item.Qty_order) - Number(item.Qty_receipt)));
-        ValidatorForm.addValidationRule(err, (value) => {
-          if (
-            Number(value) <=
-            Number(Number(item.Qty_order) - Number(item.Qty_receipt))
-          ) {
-            return true;
-          }
-          return false;
-        });
-      }
       return (
         <AddProductReceipt
           key={index}
           isNew={item.isNew}
           id={index + 1}
           values={item}
-          err={err}
           onClear={removeItemHandler.bind(this, index)}
           handleChange={handleChangeAll(index)}
           handlesetValue={handleChangeSelect(index)}
@@ -192,7 +194,6 @@ const AddNewReceipt = (props) => {
     });
   };
   const handleChangeSelect = (id) => (e, a) => {
-    console.log(listProduct);
     setListProduct((prevState) => {
       let newlist = [...prevState];
       for (let i = 0; i < newlist.length; i++) {
@@ -216,9 +217,8 @@ const AddNewReceipt = (props) => {
     }
   }
   //xử lý PO
-  const [timepoRequest, setTimePoRequest] = useState("");
+
   const onDelete = () => {
-    setTimePoRequest(null);
     setListProduct([
       {
         isNew: true,
@@ -250,7 +250,6 @@ const AddNewReceipt = (props) => {
       const data = {
         items: items,
       };
-      console.log(data);
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
@@ -263,7 +262,6 @@ const AddNewReceipt = (props) => {
             open: true,
           });
         } catch (error) {
-          console.log(error.response.data);
           setAlert({
             nameAlert: "Error",
             message: JSON.stringify(error.response.data),
@@ -322,7 +320,7 @@ const AddNewReceipt = (props) => {
             <div className={classes.box}>
               <p className={classes.labelId}>{language.listProducts}</p>
             </div>
-            <div className={classes.box1}>{listItems()}</div>
+            <div className={classes.box1}>{isShow && listItems()}</div>
           </Grid>
         </Grid>
       </div>

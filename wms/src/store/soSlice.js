@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import soApi from "../api/soApi";
-
+import moment from "moment";
 //thêm
 export const addRequestSo = createAsyncThunk(
   "so/addRequestPo",
@@ -39,7 +39,13 @@ const soSlice = createSlice({
       state.listSo.push(action.payload);
     },
     [listSo.fulfilled]: (state, action) => {
-      state.listSo = action.payload.results;
+      state.listSo = action.payload.results.map((item) => {
+        return {
+          ...item,
+          add_date: moment(item.add_date).startOf("day").fromNow(),
+          effective_date: moment(item.effective_date).format("L"),
+        };
+      });
       state.rowCount = action.payload.count;
       state.pageSize = Math.ceil(state.rowCount / state.listSo.length);
     },

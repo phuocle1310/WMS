@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import poApi from "../api/poApi";
-
+import moment from "moment";
 //thêm
 export const addRequestPo = createAsyncThunk(
   "po/addRequestPo",
@@ -36,10 +36,17 @@ const poSlice = createSlice({
   reducers: {},
   extraReducers: {
     [addRequestPo.fulfilled]: (state, action) => {
-       state.listPo.push(action.payload);
+      state.listPo.push(action.payload);
     },
     [listPo.fulfilled]: (state, action) => {
-      state.listPo = action.payload.results;
+      //localhost:3000/listpo
+      state.listPo = action.payload.results.map((item) => {
+        return {
+          ...item,
+          add_date: moment(item.add_date).startOf("day").fromNow(),
+          effective_date: moment(item.effective_date).format("L"),
+        };
+      });
       state.rowCount = action.payload.count;
       state.pageSize = Math.ceil(state.rowCount / state.listPo.length);
     },

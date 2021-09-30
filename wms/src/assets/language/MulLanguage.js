@@ -47,7 +47,7 @@ const MulLanguage = {
     FAILED: " FAILED",
     DONE: "DONE",
     //tìm kiếm
-    sreach: "Sreach...",
+    sreachPo: "Search by id purchase order ...",
     //dang nhap
     errLogin: "The password or the username that you've entered is incorrect",
     //thêm sản phẩm mới
@@ -76,6 +76,9 @@ const MulLanguage = {
     //receipt
     addReceipt: "Create Receipt",
     listReceipt: "List Receipt",
+    detailReceipt: "Detail Receipt",
+    action: "Action",
+    poDone: "This kho enter unit was complete!!!",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -123,7 +126,7 @@ const MulLanguage = {
     FAILED: "thất bại",
     DONE: "Hoàn tất",
     //tìm kiếm
-    sreach: "Tìm kiếm...",
+    sreachPo: "Tìm kiếm theo mã đơn nhập hàng...",
     //dang nhap
     errLogin: "Tên đăng nhập hoặc mật khẩu không đúng!!",
     //addnewproduct
@@ -134,7 +137,7 @@ const MulLanguage = {
     //nhà cc
     address: "Địa chỉ",
     phone: "Số điện thoại",
-    email: "email",
+    email: "Email",
     //
     print: "In",
     vietnamese: "Tiếng Việt",
@@ -149,11 +152,14 @@ const MulLanguage = {
     //hoa don
     editDate: "Ngày chỉnh sửa",
     poID: "Mã đơn nhập",
-    edit_who_id: "Nhân Viên sửa",
+    edit_who_id: "Nhân viên sửa",
     add_who: "Nhân viên tạo",
     //receipt
     addReceipt: "Thêm biên lai nhập hàng",
     listReceipt: "Danh sách biên lai nhập hàng",
+    detailReceipt: "Chi tiết biên lai",
+    action: "Hành động",
+    poDone: "Đơn hàng nhập kho này đã hoàn tất!!!",
   },
 };
 export default MulLanguage;

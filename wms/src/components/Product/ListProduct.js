@@ -81,8 +81,8 @@ export default function CustomizedTables(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {props.rows.map((row, index) => (
+            <StyledTableRow key={index}>
               <StyledTableCell component="th" scope="row">
                 {row.item.id}
               </StyledTableCell>

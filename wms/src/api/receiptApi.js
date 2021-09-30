@@ -16,5 +16,13 @@ const receiptApi = {
     const url = `/receipt/${id}/`;
     return axiosClient.get(url);
   },
+  updateReceipt: (id, data) => {
+    const url = `/receipt/${id}/update-receipt/`;
+    return axiosClient.put(url, data);
+  },
+  deleteReceipt: (id) => {
+    const url = `/receipt/${id}/delete-receipt/`;
+    return axiosClient.patch(url);
+  },
 };
 export default receiptApi;

@@ -65,7 +65,7 @@ const ReceiptPo = () => {
             </IconButton>
             <InputBase
               className={classes.input}
-              placeholder={language.sreach}
+              placeholder={language.sreachPo}
               type="number"
               fullWidth
               onChange={handleChange}

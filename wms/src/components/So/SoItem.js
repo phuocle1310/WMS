@@ -45,6 +45,7 @@ const SoItem = (props) => {
         <Grid item xs={12} className={classes.box}>
           <Grid container>
             <Grid item xs={12} lg={12}>
+              {" "}
               <Grid container spacing={2}>
                 <Grid item xs={12} lg={3}>
                   <div className={classes.text}>
@@ -54,11 +55,11 @@ const SoItem = (props) => {
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.dateCreated}:</p>
-                      <p>{item.add_date}</p>
+                      <p>{moment(item.add_date).format("L, h:mm")}</p>
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.importDate}:</p>
-                      <p>{item.effective_date}</p>
+                      <p>{moment(item.effective_date).format("L")}</p>
                     </div>
                     <div className={classes.textChild}>
                       <p>{language.status}:</p>

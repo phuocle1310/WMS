@@ -68,7 +68,10 @@ const ReceiptItem = (props) => {
 
   return (
     <div style={{ padding: 20 }}>
-      <div className={classes.text} style={{ float: "left" }}>
+      <div className={classes.title}>
+        <h3>{language.detailReceipt}</h3>
+      </div>
+      <div className={classes.text} style={{ float: "left", marginBottom: 20 }}>
         <div className={classes.textChild}>
           <p>{language.id}:</p>
           <p>{item.id}</p>
@@ -79,11 +82,11 @@ const ReceiptItem = (props) => {
         </div>
         <div className={classes.textChild}>
           <p>{language.dateCreated}:</p>
-          <p>{item.add_date}</p>
+          <p>{moment(item.add_date).format("L, h:mm")}</p>
         </div>
         <div className={classes.textChild}>
           <p>{language.editDate}:</p>
-          <p>{item.edit_date}</p>
+          <p>{moment(item.edit_date).format("L, h:mm")}</p>
         </div>
       </div>
       <div className={classes.text} style={{ float: "left", marginBottom: 20 }}>

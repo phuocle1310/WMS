@@ -10,11 +10,12 @@ import Box from "@material-ui/core/Box";
 import AddIcon from "@material-ui/icons/Add";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import AddNewsProduct from "../../components/Product/AddNewsProduct";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageStyles from "../../pages/client/PageStyles";
 import { useSelector } from "react-redux";
 import AddNewReceipt from "./AddNewReceipt";
 import ReceiptList from "./ReceiptList";
+import poApi from "../../api/poApi";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -59,6 +60,19 @@ const CrudReceipt = (props) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [status, setStatus] = useState("");
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        //api sửa receipt
+        const response = await poApi.gePoDetail(props.idPo);
+        setStatus(response.status);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProduct();
+  }, [props.idPo]);
 
   return (
     <Grid container className={classes.root}>
@@ -89,11 +103,15 @@ const CrudReceipt = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12} className={classes.tabPanel}>
         <TabPanel value={value} index={0} component={"div"}>
-          <AddNewReceipt id={props.idPo}></AddNewReceipt>
+          {status === "DONE" ? (
+            language.poDone
+          ) : (
+            <AddNewReceipt id={props.idPo}></AddNewReceipt>
+          )}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <ReceiptList id={props.id}></ReceiptList>
+            <ReceiptList id={props.id} status={status}></ReceiptList>
           </Grid>
         </TabPanel>
       </Grid>

@@ -99,7 +99,7 @@ export default function ListSo() {
         let id = params.getValue(params.id, "id");
         return (
           <NavLink
-            to={`/po/${id}`}
+            to={`/so/${id}`}
             activeStyle={{
               fontWeight: "bold",
               color: "red",
@@ -250,8 +250,7 @@ export default function ListSo() {
   //     active = false;
   //   };
   // }, [page, data]);
-  const rowss = useSelector((state) => state.so.listSo);
-  const [rows, setRows] = useState([]);
+  const rows = useSelector((state) => state.so.listSo);
   const rowsCount = useSelector((state) => state.so.rowCount);
   const [page, setPage] = useState(0);
   const dispatch = useDispatch();
@@ -266,16 +265,8 @@ export default function ListSo() {
       }
     };
     fetchLogin();
-    setRows(
-      rowss.map((item) => {
-        return {
-          ...item,
-          add_date: moment(item.add_date).startOf("day").fromNow(),
-          effective_date: moment(item.effective_date).format("L"),
-        };
-      }),
-    );
   }, [page]);
+  
   const handlePageChange = (page) => {
     setPage(page);
   };
