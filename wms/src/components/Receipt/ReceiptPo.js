@@ -64,7 +64,7 @@ const ReceiptPo = () => {
     <>
       <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12} onSubmit={handleSubmit}>
-          <Paper component="form" className={classes.root}>
+          <Paper className={classes.root}>
             <IconButton className={classes.iconButton} aria-label="menu">
               <ReceiptIcon style={{ fontSize: 30 }} />
             </IconButton>

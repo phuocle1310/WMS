@@ -113,13 +113,14 @@ const FormStyles = makeStyles((theme) => ({
       background: "#E4544B",
     },
     float: "left",
-    marginRight: 15,
+    marginRight: 4,
     fontSize: 13,
     "&:first-child": {
       background: "#000",
     },
     [theme.breakpoints.up("lg")]: {
       fontSize: 15,
+      marginRight: 15,
     },
   },
   label: {
@@ -127,7 +128,6 @@ const FormStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(3, 0, 2),
-
     background: "#4345de",
     borderRadius: 25,
     border: 0,
@@ -183,6 +183,34 @@ const FormStyles = makeStyles((theme) => ({
     marginTop: 20,
     boxShadow:
       "rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px",
+  },
+  textField1: {
+    padding: 0,
+    margin: 0,
+    float: "left",
+    [`& fieldset`]: {
+      borderRadius: 25,
+      border: "1px solid #c5cae9",
+      minWidth: "230px",
+    },
+    "& .MuiOutlinedInput-inputMarginDense": {
+      margin: 0,
+      marginLeft: 0,
+    },
+    "& .MuiSelect-root": {
+      // background: "#000",
+      width: 180,
+      "& .MuiSelect-iconOutlined": {
+        background: "#000",
+      },
+    },
+  },
+  select: {
+    display: "flex",
+    justifyContent: "center",
+    margin: "20px 30px",
+    alignItems: "center",
+    flexDirection: "column",
   },
 }));
 export default FormStyles;

@@ -81,6 +81,7 @@ const MulLanguage = {
     poDone: "This kho enter unit was complete!!!",
     confirmDelete:
       "Do you really want to delete this? This process cannot be undone.",
+    confirmEdit: "Change status!!!",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -164,6 +165,7 @@ const MulLanguage = {
     poDone: "Đơn hàng nhập kho này đã hoàn tất!!!",
     confirmDelete:
       "Bạn có thực sự muốn xóa cái này không? Không thể hoàn tác quá trình này?",
+    confirmEdit: "Thay đổi trạng thái đơn hàng!!!",
   },
 };
 export default MulLanguage;

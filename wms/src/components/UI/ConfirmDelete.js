@@ -1,11 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ValidatedDatePicker from "../UI/ValidatedDatePicker";
-import { ValidatorForm } from "react-material-ui-form-validator";
-import { TextValidator } from "react-material-ui-form-validator";
-import TextField from "@material-ui/core/TextField";
-import Addproduct from "../Product/Addproduct";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from "@material-ui/icons/Clear";

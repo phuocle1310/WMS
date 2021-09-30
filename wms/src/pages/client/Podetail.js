@@ -10,46 +10,14 @@ import poApi from "../../api/poApi";
 const Podetail = (props) => {
   const params = useParams();
   const { poId } = params;
-  // const poId = props.poId;
-  const {
-    sendRequest,
-    status,
-    data: item,
-    error,
-  } = useHttp(poApi.gePoDetail, true);
 
-  useEffect(() => {
-    sendRequest(poId);
-    console.log(item);
-  }, []);
-
-  if (status === "pending") {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return (
-      <p className="centered" style={{ margin: 300 }}>
-        {error}
-      </p>
-    );
-  }
-
-  if (!item) {
-    return (
-      <p className="centered" style={{ margin: 300 }}>
-        {item.id}
-      </p>
-    );
-  }
-console.log({ ...item });
-return (
-  <div style={{ width: "100%" }}>
-    <Print>
-      <PoItem items={{ ...item }}></PoItem>
-    </Print>
-  </div>
-);
+  return (
+    <div style={{ width: "100%" }}>
+      <Print>
+        <PoItem id={poId}></PoItem>
+      </Print>
+    </div>
+  );
 };
 
 export default Podetail;

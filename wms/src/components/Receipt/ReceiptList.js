@@ -29,9 +29,9 @@ export default function DataGridProDemo(props) {
   );
   const language = MulLanguage[`${currentLanguage}`];
   let [rows, setrows] = useState([]);
+  const [rowss, setRowss] = React.useState(rows);
   //lấy id idReceipt cần show
   const [idReceipt, setIdReceipt] = useState(0);
-  const [open, setOpen] = React.useState(false);
   const [isDelete, setIsDelete] = useState({ id: "", loading: false });
   useEffect(() => {
     const fetchGetAll = async () => {
@@ -177,56 +177,13 @@ export default function DataGridProDemo(props) {
       },
     },
   ];
+  //crud
+  const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
-  };
-  //view
-  function hanlerViewReceipt(params) {
-    setCrud(1);
-    //the thing  you wanna do
-    setIdReceipt(params);
-    handleClickOpen();
-  }
-  //edit
-  function handlerEditReceipt(params) {
-    //the thing  you wanna do
-    setCrud(2);
-    setIdReceipt(params);
-    handleClickOpen();
-  }
-  function handlerDelete(params) {
-    //the thing  you wanna do
-    setIsDelete({ id: params, loading: false });
-    setCrud(3);
-    setIdReceipt(params);
-    handleClickOpen();
-  }
-  //hàm xuất hiện thông báo
-  //xử ls data item
-
-  const [rowss, setRowss] = React.useState(rows);
-  function escapeRegExp(value) {
-    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-  }
-  const [value, setValue] = useState("");
-  const handlerOnchange = (e) => {
-    setValue(e.target.value);
-  };
-  useEffect(() => {
-    const searchRegex = new RegExp(escapeRegExp(value), "i");
-    const filteredRows = rows.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    setRowss(filteredRows);
-  }, [value]);
-  const deleteValue = () => {
-    setValue("");
-    setRowss([]);
   };
   const [crud, setCrud] = useState(0);
   const renderCrud = () => {
@@ -268,6 +225,28 @@ export default function DataGridProDemo(props) {
       // code block
     }
   };
+  //view
+  function hanlerViewReceipt(params) {
+    setCrud(1);
+    //the thing  you wanna do
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  //edit
+  function handlerEditReceipt(params) {
+    //the thing  you wanna do
+    setCrud(2);
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  function handlerDelete(params) {
+    //the thing  you wanna do
+    setIsDelete({ id: params, loading: false });
+    setCrud(3);
+    setIdReceipt(params);
+    handleClickOpen();
+  }
+  //hàm xuất hiện thông báo
   //xóa receipt
   const onSubmitDelete = () => {
     const fetchDelete = async () => {
@@ -281,6 +260,27 @@ export default function DataGridProDemo(props) {
       }
     };
     fetchDelete();
+  };
+  //xử lý tìm kiếm
+  function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+  const [value, setValue] = useState("");
+  const handlerOnchange = (e) => {
+    setValue(e.target.value);
+  };
+  useEffect(() => {
+    const searchRegex = new RegExp(escapeRegExp(value), "i");
+    const filteredRows = rows.filter((row) => {
+      return Object.keys(row).some((field) => {
+        return searchRegex.test(row[field].toString());
+      });
+    });
+    setRowss(filteredRows);
+  }, [value]);
+  const deleteValue = () => {
+    setValue("");
+    setRowss([]);
   };
   return (
     <div style={{ height: "100%", width: "auto" }}>
@@ -318,7 +318,6 @@ export default function DataGridProDemo(props) {
           editMode="none"
         />
       </div>
-      {/* show 1 receipt */}
       {renderCrud()}
     </div>
   );
