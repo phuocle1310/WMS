@@ -9,33 +9,17 @@ import FormStyles from "./FormStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useMinimalSelectStyles } from "@mui-treasury/styles/select/minimal";
 import {
-  TextValidator,
   SelectValidator,
   ValidatorForm,
 } from "react-material-ui-form-validator";
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import poApi from "../../api/poApi";
 const EditPo = (props) => {
-  const { id } = props;
   const minimalSelectClasses = useMinimalSelectStyles();
   const classes = FormStyles();
-  //alert
-  const [alert, setAlert] = useState({
-    nameAlert: "",
-    message: "",
-    open: false,
-  });
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setAlert({ nameAlert: "", message: "", open: false });
-  };
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -73,25 +57,6 @@ const EditPo = (props) => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     props.handleOnSubmit(status);
-    // const fetchUpadte = async () => {
-    //   try {
-    //     const data = { status: status };
-    //     const response = await poApi.updateStatus(props.id, data);
-    //     setAlert({
-    //       nameAlert: "success",
-    //       message: language.success,
-    //       open: true,
-    //     });
-    //     return response;
-    //   } catch (error) {
-    //     setAlert({
-    //       nameAlert: "Error",
-    //       message: JSON.stringify(error.response.data),
-    //       open: true,
-    //     });
-    //   }
-    // };
-    // fetchUpadte();
   };
   return (
     <>
@@ -114,7 +79,7 @@ const EditPo = (props) => {
             value={status ? status : ""}
             select={status ? status : ""}
             validators={["required"]}
-            errorMessages={["không để trống dòng này"]}
+            errorMessages={[`${language.requiredError}`]}
           >
             <MenuItem value={3}>FAILED</MenuItem>
             <MenuItem value={1}>ACCEPTED</MenuItem>
@@ -144,14 +109,6 @@ const EditPo = (props) => {
             {language.sendRequire}
           </Button>
         </div>
-        {alert.nameAlert && (
-          <CustomizedSnackbars
-            open={alert.open}
-            handleClose={handleClose}
-            nameAlert={alert.nameAlert}
-            message={alert.message}
-          ></CustomizedSnackbars>
-        )}
       </ValidatorForm>
     </>
   );

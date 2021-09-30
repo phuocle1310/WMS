@@ -308,7 +308,7 @@ const AddPo = (props) => {
               format="dd/MM/yyyy"
               size="small"
               validators={["required"]}
-              errorMessages={["không để trống dòng này"]}
+              errorMessages={[`${language.requiredError}`]}
               minDate={new Date()}
               style={{ width: "100%" }}
               InputAdornmentProps={{ position: "start" }}

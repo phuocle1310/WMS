@@ -37,6 +37,8 @@ import Print from "../../components/UI/Print";
 import EditPo from "./EditPo";
 export default function ListPo() {
   const classes = ListPoStyles();
+  //phân quyền
+  const role = useSelector((state) => state.user.currentUser.role);
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -111,17 +113,6 @@ export default function ListPo() {
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
         return (
-          // <NavLink
-          //   to={`/po/${id}`}
-          //   activeStyle={{
-          //     fontWeight: "bold",
-          //     color: "red",
-          //   }}
-          //   target={"_blank"}
-          //   style={{ textDecoration: "none" }}
-          // >
-          //   {language.see}
-          // </NavLink>
           <>
             <IconButton
               onClick={() => {
@@ -130,7 +121,6 @@ export default function ListPo() {
               color="primary"
               aria-label="upload picture"
               component="span"
-              // disabled={listProduct.length < product1.length ? false : true}
               classes={{
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
@@ -144,12 +134,11 @@ export default function ListPo() {
               color="primary"
               aria-label="upload picture"
               component="span"
-              // disabled={listProduct.length < product1.length ? false : true}
+              disabled={role === "SUPPLIER" ? true : false}
               classes={{
                 root: classes.button1, // class name, e.g. `classes-nesting-root-x`
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
-              // disabled={status === "DONE" ? true : false}
             >
               <EditIcon />
             </IconButton>
@@ -160,7 +149,7 @@ export default function ListPo() {
               color="primary"
               aria-label="upload picture"
               component="span"
-              // disabled={status === "DONE" ? true : false}
+              disabled={role === "SUPPLIER" ? false : true}
               classes={{
                 root: classes.button, // class name, e.g. `classes-nesting-root-x`
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
@@ -183,7 +172,6 @@ export default function ListPo() {
     if (reason === "clickaway") {
       return;
     }
-
     setAlert({ nameAlert: "", message: "", open: false });
   };
   const showAlert = (status) => {
@@ -270,6 +258,7 @@ export default function ListPo() {
       </div>
     );
   };
+  //call api data
   const rows = useSelector((state) => state.po.listPo);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
@@ -285,7 +274,7 @@ export default function ListPo() {
       }
     };
     fetchLogin();
-  }, [page, isDelete.loading,idPo.id]);
+  }, [page, isDelete.loading, idPo.id]);
   const handlePageChange = (page) => {
     setPage(page);
   };
@@ -365,8 +354,8 @@ export default function ListPo() {
   const onSubmitDelete = () => {
     const fetchDelete = async () => {
       try {
-        const action = await poApi.deletePo(isDelete.id,);
-        setIsDelete({ id: isDelete.id, loading: true })
+        const action = await poApi.deletePo(isDelete.id);
+        setIsDelete({ id: isDelete.id, loading: true });
         setAlert({
           nameAlert: "success",
           message: language.success,
@@ -389,8 +378,8 @@ export default function ListPo() {
     console.log(status);
     const fetchUpadte = async () => {
       try {
-        const data={status:status}
-        const action = await poApi.updateStatus(idPo.id,data);
+        const data = { status: status };
+        const action = await poApi.updateStatus(idPo.id, data);
         setIdPo({ id: idPo, loading: true });
         setAlert({
           nameAlert: "success",
