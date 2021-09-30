@@ -91,11 +91,11 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
                     except OrderDetail.DoesNotExist:
                         return Response({"Failed": "Order Detail isn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-                if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt> list.get('Qty_order'):
-                    return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
+                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt> list.get('Qty_order'):
+                        return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
 
-                detail.Qty_receipt = Qty_change
-                detail.save()
+                    detail.Qty_receipt = Qty_change
+                    detail.save()
         serializer = OrderSerializer(order)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
