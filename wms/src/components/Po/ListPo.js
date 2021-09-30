@@ -24,15 +24,13 @@ import ListPoStyles from "./ListPoStyles";
 //api
 import { listPo } from "../../store/poSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import moment from "moment";
-import Podetail from "../../pages/client/Podetail";
 import IconButton from "@material-ui/core/IconButton";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ConfirmDelete from "../UI/ConfirmDelete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import PoItem from "./PoItem";
+import PoItemView from "./PoItemView";
 import Print from "../../components/UI/Print";
 import EditPo from "./EditPo";
 export default function ListPo() {
@@ -297,7 +295,7 @@ export default function ListPo() {
             handleClose={handleClose}
             children={
               <Print>
-                <PoItem id={idPo.id}></PoItem>
+                <PoItemView id={idPo.id}></PoItemView>
               </Print>
             }
           ></CustomizedDialogs>
