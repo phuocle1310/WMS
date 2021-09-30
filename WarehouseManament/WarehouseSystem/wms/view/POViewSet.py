@@ -57,16 +57,14 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
     @action(methods=['put'], detail=True, url_path='update')
     def update_po(self, request, pk):
-        if request.user.is_anonymous:
-            return Response({"Failed": "You can't do that"}, status=status.HTTP_403_FORBIDDEN)
-        if request.user.role == 2:
+        if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             instance = PO.objects.get(pk=pk)
             stt = request.data.pop('status')
         except PO.DoesNotExist:
-            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "PO doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
 
         if instance.add_who is None:
             instance.add_who = request.user
@@ -93,7 +91,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             return Response({"Falied": "You can't delete PO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
         else:
             if request.user.supplier == self.get_object().supplier:
-                return super().destroy(request, *args, **kwargs)
+                return super().destroy(request, *args, **kwargs) and Response({"Success": "Delete PO success"}, status=status.HTTP_200_OK)
             return Response({"Falied": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
 
     @action(methods=['get'], detail=True, url_path='get-item-for-receipt')
@@ -177,6 +175,11 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "PO": po, "items": qty_items})
+
+        if self.update_status_done(po, 0):
+            po.status = 0
+            po.edit_who = request.user
+            po.save()
         return Response(ReceiptSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=True, url_path='receipts')

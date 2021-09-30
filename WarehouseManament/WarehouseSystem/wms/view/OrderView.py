@@ -12,9 +12,9 @@ from ..serializers import OrderCreateSerializer, OrderSerializer
 
 
 class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, BaseAPIView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(status=True)
     action_required_auth = ['list', 'retrieve',
-                            'update']
+                            'update', 'delete_order']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -91,7 +91,7 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
                     except OrderDetail.DoesNotExist:
                         return Response({"Failed": "Order Detail isn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt> list.get('Qty_order'):
+                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt > list.get('Qty_order'):
                         return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
 
                     detail.Qty_receipt = Qty_change
@@ -104,3 +104,22 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
         serializer = OrderSerializer(order)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['delete'], detail=True, url_path="delete-order")
+    def delete_order(self, request, *args, **kwargs):
+        if request.user.is_anonymous or request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            order = self.get_object()
+            order.status = False
+            order.save()
+        except Order.DoesNotExist:
+            return Response({"Failed": "Order doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            so = SO.objects.get(pk=order.SO.pk)
+            so.status = 1
+            so.edit_who = request.user
+            so.save()
+        except SO.DoesNotExist:
+            return Response({"Failed": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"Success": "Delete Order success"}, status=status.HTTP_200_OK)

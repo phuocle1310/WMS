@@ -53,7 +53,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
 
     @action(methods=['put'], detail=True, url_path='update')
     def update_so(self, request, pk):
-        if request.user.role == 2:
+        if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
 
         try:
@@ -84,7 +84,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
             return Response({"Falied": "You can't delete SO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
         else:
             if request.user.supplier == self.get_object().supplier:
-                return super().destroy(request, *args, **kwargs)
+                return super().destroy(request, *args, **kwargs) and Response({"Success": "Delete SO success"}, status=status.HTTP_200_OK)
             return Response({"Falied": "You dont have permission to delete this SO"}, status=status.HTTP_403_FORBIDDEN)
 
     @action(methods=['get'], detail=True, url_path='get-item-for-order')
@@ -169,6 +169,11 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
 
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "SO": so, "items": qty_items})
+
+        if self.update_status_done(so, 0):
+            so.status = 0
+            so.edit_who = request.user
+            so.save()
         return Response(OrderSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=True, url_path='orders')
