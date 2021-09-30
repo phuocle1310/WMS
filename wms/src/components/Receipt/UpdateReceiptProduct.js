@@ -78,19 +78,6 @@ const UpdateReceiptProduct = (props) => {
             className={classes.textField}
             variant="outlined"
             margin="normal"
-            style={{ width: 190 }}
-            size="small"
-            type="number"
-            label={language.Qty_receipt}
-            value={values.Qty_receipt}
-            inputProps={{ readOnly: true }}
-          />
-        </div>
-        <div>
-          <TextValidator
-            className={classes.textField}
-            variant="outlined"
-            margin="normal"
             style={{ width: 180 }}
             size="small"
             type="number"
@@ -98,11 +85,8 @@ const UpdateReceiptProduct = (props) => {
             name="quantity"
             value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
-            validators={["required", `${props.err}`]}
-            errorMessages={[
-              `${language.requiredError}`,
-              `${language.soQuantityError}`,
-            ]}
+            validators={["required"]}
+            errorMessages={[`${language.requiredError}`]}
             inputProps={
               values.product ? { readOnly: false } : { readOnly: true }
             }

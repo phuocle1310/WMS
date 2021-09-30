@@ -246,7 +246,7 @@ const AddSo = (props) => {
         } catch (error) {
           setAlert({
             nameAlert: "Error",
-            message: error.response.data,
+            message: JSON.stringify(error.response.data),
             open: true,
           });
         }

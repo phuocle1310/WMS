@@ -18,26 +18,14 @@ import { useSelector, useDispatch } from "react-redux";
 //api
 import productApi from "../../api/productApi";
 import receiptApi from "../../api/receiptApi";
+import { CircularProgress } from "@material-ui/core";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import UpdateReceiptProduct from "./UpdateReceiptProduct";
+import useHttp from "../../Hook/useHttp";
 const ReceiptUpdate = (props) => {
   const { id } = props;
   const classes = FormStyles();
-  //alert
-  const [alert, setAlert] = useState({
-    nameAlert: "",
-    message: "",
-    open: false,
-  });
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setAlert({ nameAlert: "", message: "", open: false });
-  };
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -49,35 +37,89 @@ const ReceiptUpdate = (props) => {
   var moment = require("moment");
   // lưu vào danh sách
   const [listProduct, setListProduct] = useState([]);
-  const [receipt, setReceipt] = useState(null);
   let listReceipt = [];
+  const [receipt, setReceipt] = useState({});
+  //alert
+  const [alert, setAlert] = useState({
+    nameAlert: "",
+    message: "",
+    open: false,
+  });
+  //api
+  const {
+    sendRequest,
+    status,
+    data: response,
+    error,
+  } = useHttp(receiptApi.getReceiptItem, true);
+
+  useEffect(() => {
+    sendRequest(id);
+  }, [id]);
+  useEffect(() => {
+    console.log(response);
+    const fetchProduct = async () => {
+      try {
+        const pr = await receiptApi.getProduct(response.PO);
+        for (var i = 0; i < response.receiptdetail.length; i++) {
+          const items = pr.find(
+            ({ id }) => id === response.receiptdetail[i].item.id,
+          );
+          let item = {
+            isNew: true,
+            quantity: response.receiptdetail[i].Qty_receipt,
+            product: response.receiptdetail[i].item,
+            Qty_receipt: items.Qty_receipt,
+            Qty_order: items.Qty_order,
+          };
+          listReceipt.push(item);
+        }
+        console.log(response);
+        setListProduct(listReceipt);
+        setReceipt(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProduct();
+  }, [response]);
+  if (status === "pending") {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return (
+      <p className="centered" style={{ margin: 300 }}>
+        {error}
+      </p>
+    );
+  }
+
+  if (!response) {
+    return (
+      <p className="centered" style={{ margin: 300 }}>
+        not found
+      </p>
+    );
+  }
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert({ nameAlert: "", message: "", open: false });
+  };
 
   // const [loadData, setloadData] = useState(false);
   const listItems = () => {
     return listProduct.map((item, index) => {
-      let err = `isquantity${index}`;
-      if (!ValidatorForm.hasValidationRule(err)) {
-        console.log(Number(Number(item.Qty_order) - Number(item.Qty_receipt)));
-        ValidatorForm.addValidationRule(err, (value) => {
-          if (
-            Number(value) <=
-            Number(Number(item.Qty_order) - Number(item.Qty_receipt))
-          ) {
-            return true;
-          }
-          return false;
-        });
-      }
       return (
         <UpdateReceiptProduct
           key={index}
           isNew={item.isNew}
           id={index + 1}
           values={item}
-          err={err}
-          //onClear={removeItemHandler.bind(this, index)}
           handleChange={handleChangeAll(index)}
-          // handlesetValue={handleChangeSelect(index)}
           product={item.product}
         ></UpdateReceiptProduct>
       );
@@ -96,34 +138,16 @@ const ReceiptUpdate = (props) => {
       return newlist;
     });
   };
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        //thay page
-        const response = await receiptApi.getReceiptItem(id);
-        const pr = await receiptApi.getProduct(response.PO);
-        for (var i = 0; i < response.receiptdetail.length; i++) {
-          const items = pr.find(
-            ({ id }) => id === response.receiptdetail[i].item.id,
-          );
-          let item = {
-            isNew: true,
-            quantity: response.receiptdetail[i].Qty_receipt,
-            product: response.receiptdetail[i].item,
-            Qty_receipt: items.Qty_receipt,
-            Qty_order: items.Qty_order,
-          };
-          listReceipt.push(item);
-        }
-        console.log(receipt);
-        setListProduct(listReceipt);
-        setReceipt(response);
-      } catch (error) {
-        console.log(error);
+  const onDelete = () => {
+    setListProduct((pre) => {
+      let arr = [];
+      for (var i = 0; i < pre.length; i++) {
+        let prenew = { ...pre[i] };
+        arr.push(prenew);
       }
-    };
-    fetchProduct();
-  }, []);
+      return arr;
+    });
+  };
   //xử lý submit
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -140,11 +164,12 @@ const ReceiptUpdate = (props) => {
       const data = {
         items: items,
       };
+      console.log(data);
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
-          const response = await receiptApi.createReceipt(id, data);
-          // onDelete();
+          const response = await receiptApi.updateReceipt(id, data);
+          onDelete();
           // setloadData(!loadData);
           setAlert({
             nameAlert: "success",
@@ -170,7 +195,7 @@ const ReceiptUpdate = (props) => {
         form = r;
       }}
       instantValidate
-      // onSubmit={handleOnSubmit}
+      onSubmit={handleOnSubmit}
     >
       <div className={classes.root}>
         <Grid container>
@@ -199,14 +224,6 @@ const ReceiptUpdate = (props) => {
                   <p>{language.editDate}:</p>
                   <p>{moment(receipt.edit_date).format("L, h:mm")}</p>
                 </div>
-                <div className={classes.textChild}>
-                  <p>{language.add_who}:</p>
-                  <p>{receipt.add_who.username}</p>
-                </div>
-                <div className={classes.textChild}>
-                  <p>{language.edit_who_id}:</p>
-                  <p>{receipt.edit_who.username}</p>
-                </div>
               </div>
             </div>
             <div className={classes.box}>
@@ -221,7 +238,7 @@ const ReceiptUpdate = (props) => {
       <div className={classes.box2}>
         <Button
           variant="contained"
-          // onClick={onDelete}
+          onClick={onDelete}
           classes={{
             root: classes.submit, // class name, e.g. `classes-nesting-root-x`
             label: classes.label, // class name, e.g. `classes-nesting-label-x`

@@ -34,8 +34,6 @@ const AddProductReceipt = (props) => {
   // const selectedDate = new Date();
 
   let form = null;
-  // console.log(Number(values.Qty_order - values.Qty_receipt) + "hicc");
-  // console.log(values.quantity + "sl");
   const itemProduct = () => {
     return (
       <>
@@ -87,11 +85,8 @@ const AddProductReceipt = (props) => {
             name="quantity"
             value={values.quantity ? values.quantity : ""}
             onChange={props.handleChange}
-            validators={["required", `${props.err}`]}
-            errorMessages={[
-              `${language.requiredError}`,
-              `${language.soQuantityError}`,
-            ]}
+            validators={["required"]}
+            errorMessages={[`${language.requiredError}`]}
             inputProps={
               values.product ? { readOnly: false } : { readOnly: true }
             }

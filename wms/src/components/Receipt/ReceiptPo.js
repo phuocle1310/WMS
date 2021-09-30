@@ -44,8 +44,8 @@ const ReceiptPo = () => {
     return (
       <>
         {" "}
-        <CrudReceipt id={poId1} idPo={poId1}></CrudReceipt>
         <PoDetailByID poId={poId1}></PoDetailByID>
+        <CrudReceipt id={poId1} idPo={poId1}></CrudReceipt>
       </>
     );
   };
@@ -65,7 +65,7 @@ const ReceiptPo = () => {
             </IconButton>
             <InputBase
               className={classes.input}
-              placeholder={language.sreach}
+              placeholder={language.sreachPo}
               type="number"
               fullWidth
               onChange={handleChange}

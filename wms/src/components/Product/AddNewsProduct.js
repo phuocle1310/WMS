@@ -95,7 +95,7 @@ const AddNewsProduct = (props) => {
       } catch (error) {
         setAlert({
           nameAlert: "Error",
-          message: error.response.data.non_field_errors,
+          message: JSON.stringify(error.response.data),
           open: true,
         });
       }
