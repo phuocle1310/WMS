@@ -177,6 +177,11 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "PO": po, "items": qty_items})
+
+        if self.update_status_done(po, 0):
+            po.status = 0
+            po.edit_who = request.user
+            po.save()
         return Response(ReceiptSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=True, url_path='receipts')

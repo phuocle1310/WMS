@@ -169,6 +169,11 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
 
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "SO": so, "items": qty_items})
+
+        if self.update_status_done(so, 0):
+            so.status = 0
+            so.edit_who = request.user
+            so.save()
         return Response(OrderSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=True, url_path='orders')
