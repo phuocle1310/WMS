@@ -180,7 +180,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
     def get_order(self, request, pk):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        receipts = Order.objects.filter(SO__id=pk)
+        receipts = Order.objects.filter(SO__id=pk, status=True)
         serializer = OrderSerializer(receipts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
