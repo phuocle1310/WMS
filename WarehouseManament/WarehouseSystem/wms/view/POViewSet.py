@@ -93,7 +93,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             return Response({"Falied": "You can't delete PO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
         else:
             if request.user.supplier == self.get_object().supplier:
-                return super().destroy(request, *args, **kwargs)
+                return super().destroy(request, *args, **kwargs) and Response({"Success": "Delete PO success"}, status=status.HTTP_200_OK)
             return Response({"Falied": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
 
     @action(methods=['get'], detail=True, url_path='get-item-for-receipt')

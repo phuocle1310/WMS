@@ -84,7 +84,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
             return Response({"Falied": "You can't delete SO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
         else:
             if request.user.supplier == self.get_object().supplier:
-                return super().destroy(request, *args, **kwargs)
+                return super().destroy(request, *args, **kwargs) and Response({"Success": "Delete SO success"}, status=status.HTTP_200_OK)
             return Response({"Falied": "You dont have permission to delete this SO"}, status=status.HTTP_403_FORBIDDEN)
 
     @action(methods=['get'], detail=True, url_path='get-item-for-order')

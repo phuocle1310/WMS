@@ -11,7 +11,8 @@ from ..models import Receipt, PODetail, ReceiptDetail, User, Item, PO
 from ..serializers import ReceiptSerializer, ReceiptCreateSerializer, ReceiptDetailSerializer, POSerializer
 
 
-class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, BaseAPIView):
+class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, generics.DestroyAPIView,
+                  BaseAPIView):
     queryset = Receipt.objects.all()
     action_required_auth = ['list', 'retrieve', 'create',
                             'update']
@@ -89,7 +90,7 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
                     except ReceiptDetail.DoesNotExist:
                         return Response({"Failed": "Receipt Detail isn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt> list.get('Qty_order'):
+                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt > list.get('Qty_order'):
                         return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
 
                     detail.Qty_receipt = Qty_change
@@ -103,5 +104,20 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def destroy(self, request, *args, **kwargs):
+        if request.user.is_anonymous or request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            receipt = self.get_object()
+        except Receipt.DoesNotExist:
+            return Response({"Falied": "Receipt doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            po = PO.objects.get(pk=receipt.PO.pk)
+            po.status = 1
+            po.edit_who = request.user
+            po.save()
+        except PO.DoesNotExist:
+            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-
+        return super(ReceiptView, self).destroy(request, *args, **kwargs) \
+               and Response({"Success": "Delete Receipt success"}, status=status.HTTP_200_OK)

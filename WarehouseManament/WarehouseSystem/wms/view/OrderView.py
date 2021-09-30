@@ -11,7 +11,7 @@ from ..models import Order, OrderDetail, Item, SO
 from ..serializers import OrderCreateSerializer, OrderSerializer
 
 
-class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, BaseAPIView):
+class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView, generics.DestroyAPIView, BaseAPIView):
     queryset = Order.objects.all()
     action_required_auth = ['list', 'retrieve',
                             'update']
@@ -91,7 +91,7 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
                     except OrderDetail.DoesNotExist:
                         return Response({"Failed": "Order Detail isn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
-                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt> list.get('Qty_order'):
+                    if Qty_change + list.get('Qty_receipt') - detail.Qty_receipt > list.get('Qty_order'):
                         return Response({"Failed": "Over quantity permitted"}, status=status.HTTP_400_BAD_REQUEST)
 
                     detail.Qty_receipt = Qty_change
@@ -104,3 +104,21 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
         serializer = OrderSerializer(order)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        if request.user.is_anonymous or request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            order = self.get_object()
+        except Order.DoesNotExist:
+            return Response({"Falied": "Order doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            so = SO.objects.get(pk=order.SO.pk)
+            so.status = 1
+            so.edit_who = request.user
+            so.save()
+        except SO.DoesNotExist:
+            return Response({"Falied": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+        return super(OrderView, self).destroy(request, *args, **kwargs) and Response(
+            {"Success": "Delete Order success"}, status=status.HTTP_200_OK)
