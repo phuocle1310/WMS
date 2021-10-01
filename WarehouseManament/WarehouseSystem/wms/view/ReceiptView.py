@@ -102,7 +102,7 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
             po.save()
             po_details = PODetail.objects.filter(PO=po, status=True)
             for po_detail in po_details:
-                item = Item.objects.filter(pk=po_detail.item.pk)
+                item = Item.objects.get(pk=po_detail.item.pk)
                 item.Qty_total = F('Qty_total') + po_detail.Qty_order
                 item.save()
         serializer = ReceiptSerializer(receipt)

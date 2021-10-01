@@ -104,7 +104,7 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
             so.save()
             so_details = SODetail.objects.filter(SO=so, status=True)
             for so_detail in so_details:
-                item = Item.objects.filter(pk=so_detail.item.pk)
+                item = Item.objects.get(pk=so_detail.item.pk)
                 item.Qty_total = F('Qty_total') - so_detail.Qty_order
                 item.save()
         serializer = OrderSerializer(order)
