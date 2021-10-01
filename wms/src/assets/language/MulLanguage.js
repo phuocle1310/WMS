@@ -18,6 +18,7 @@ const MulLanguage = {
     supplier: "Supplier",
     dateCreated: "Date created",
     importDate: "Import date",
+    importDateSo: "Date of inventory",
     addProduct: "Add product",
     listProducts: "List products",
     close: "cancel",
@@ -82,6 +83,9 @@ const MulLanguage = {
     confirmDelete:
       "Do you really want to delete this? This process cannot be undone.",
     confirmEdit: "Change status!!!",
+    soId: "So Id",
+    addOrder: "Create Order",
+    listOrder: "List Order",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -102,6 +106,7 @@ const MulLanguage = {
     supplier: "Nhà cung cấp",
     dateCreated: "Ngày tạo",
     importDate: "Ngày nhập",
+    importDateSo: "Ngày Xuất",
     addProduct: "Thêm sản phẩm",
     listProducts: "Danh sách sản phẩm",
     close: "Hủy",
@@ -130,6 +135,7 @@ const MulLanguage = {
     DONE: "Hoàn tất",
     //tìm kiếm
     sreachPo: "Tìm kiếm theo mã đơn nhập hàng...",
+    sreachSo: "Tìm kiếm theo mã đơn xuất hàng...",
     //dang nhap
     errLogin: "Tên đăng nhập hoặc mật khẩu không đúng!!",
     //addnewproduct
@@ -166,6 +172,10 @@ const MulLanguage = {
     confirmDelete:
       "Bạn có thực sự muốn xóa cái này không? Không thể hoàn tác quá trình này?",
     confirmEdit: "Thay đổi trạng thái đơn hàng!!!",
+    //so
+    soId: "Mã đơn xuất",
+    addOrder: "Thêm biên lai xuất hàng",
+    listOrder: "Danh sách biên lai xuất hàng",
   },
 };
 export default MulLanguage;

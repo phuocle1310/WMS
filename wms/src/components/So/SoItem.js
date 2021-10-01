@@ -58,7 +58,7 @@ const SoItem = (props) => {
                       <p>{moment(item.add_date).format("L, h:mm")}</p>
                     </div>
                     <div className={classes.textChild}>
-                      <p>{language.importDate}:</p>
+                      <p>{language.importDateSo}:</p>
                       <p>{moment(item.effective_date).format("L")}</p>
                     </div>
                     <div className={classes.textChild}>

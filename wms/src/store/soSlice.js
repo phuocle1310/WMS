@@ -42,7 +42,7 @@ const soSlice = createSlice({
       state.listSo = action.payload.results.map((item) => {
         return {
           ...item,
-          add_date: moment(item.add_date).startOf("day").fromNow(),
+          add_date: moment(item.add_date).format("L, h:mm"),
           effective_date: moment(item.effective_date).format("L"),
         };
       });

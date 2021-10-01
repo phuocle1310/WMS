@@ -63,7 +63,7 @@ export default function ListSo() {
     },
     {
       field: "effective_date",
-      headerName: language.importDate,
+      headerName: language.importDateSo,
       sortable: false,
       width: 130,
     },
