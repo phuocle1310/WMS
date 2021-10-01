@@ -173,13 +173,13 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "SO": so, "items": qty_items})
 
-        if self.update_status_done(so, 0):
+        if self.update_status_done(so, 1):
             so.status = 0
             so.edit_who = request.user
             so.save()
             so_details = SODetail.objects.filter(SO=so, status=True)
             for so_detail in so_details:
-                item = Item.objects.filter(pk=so_detail.item.pk)
+                item = Item.objects.get(pk=so_detail.item.pk)
                 item.Qty_total = F('Qty_total') - so_detail.Qty_order
                 item.save()
         return Response(OrderSerializer(instance).data, status=status.HTTP_201_CREATED)
