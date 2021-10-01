@@ -1,3 +1,4 @@
+from django.db.models import Q, F
 from django.http import Http404
 from drf_yasg.openapi import Parameter, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
@@ -81,6 +82,9 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
+        if request.user.role == 1:
+            return Response({"Falied": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+
         try:
             instance = self.get_object()
 
@@ -180,6 +184,11 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             po.status = 0
             po.edit_who = request.user
             po.save()
+            po_details = PODetail.objects.filter(PO=po, status=True)
+            for po_detail in po_details:
+                item = Item.objects.get(pk=po_detail.item.pk)
+                item.Qty_total = F('Qty_total') + po_detail.Qty_order
+                item.save()
         return Response(ReceiptSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=True, url_path='receipts')
@@ -189,6 +198,12 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         receipts = Receipt.objects.filter(PO__id=pk, status=True)
         serializer = ReceiptSerializer(receipts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    def import_good(self):
+        pass
+
+
 
     '''
         + Hàm lấy item cùng với số lượng item đã receipt
