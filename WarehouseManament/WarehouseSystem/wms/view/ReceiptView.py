@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models import F
 from drf_yasg.openapi import IN_QUERY, Parameter
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, generics, viewsets, status
@@ -99,6 +100,11 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
             po.status = 0
             po.edit_who = request.user
             po.save()
+            po_details = PODetail.objects.filter(PO=po, status=True)
+            for po_detail in po_details:
+                item = Item.objects.get(pk=po_detail.item.pk)
+                item.Qty_total = F('Qty_total') + po_detail.Qty_order
+                item.save()
         serializer = ReceiptSerializer(receipt)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -107,17 +113,14 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
     def delete_receipt(self, request, *args, **kwargs):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        try:
-            receipt = self.get_object()
-            receipt.status = False
-            receipt.save()
-        except Receipt.DoesNotExist:
-            return Response({"Failed": "Receipt doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        receipt = self.get_object()
         try:
             po = PO.objects.get(pk=receipt.PO.pk)
-            po.status = 1
-            po.edit_who = request.user
-            po.save()
+            if po.status == 0:
+                return Response({"Failed": "Can't delete receipt"}, status=status.HTTP_403_FORBIDDEN)
+            else:
+                receipt.status = False
+                receipt.save()
         except PO.DoesNotExist:
             return Response({"Failed": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 

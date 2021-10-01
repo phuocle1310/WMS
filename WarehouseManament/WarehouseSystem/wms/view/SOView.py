@@ -1,3 +1,4 @@
+from django.db.models import F
 from drf_yasg.openapi import IN_QUERY, Parameter
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, generics, viewsets, status
@@ -6,7 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from .BaseView import BaseAPIView
-from ..models import SO, Item, Order
+from ..models import SO, Item, Order, SODetail
 from ..serializers import SOSerializer, SOCreateSerializer, OrderCreateSerializer, OrderSerializer, \
     ItemForReceiptOrderSerializer
 
@@ -75,6 +76,8 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
+        if request.user.role == 1:
+            return Response({"Falied": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         try:
             instance = self.get_object()
         except SO.DoesNotExist:
@@ -170,10 +173,15 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         instance = serializer.save(
             **{"add_who": self.request.user, "edit_who": self.request.user, "SO": so, "items": qty_items})
 
-        if self.update_status_done(so, 0):
+        if self.update_status_done(so, 1):
             so.status = 0
             so.edit_who = request.user
             so.save()
+            so_details = SODetail.objects.filter(SO=so, status=True)
+            for so_detail in so_details:
+                item = Item.objects.get(pk=so_detail.item.pk)
+                item.Qty_total = F('Qty_total') - so_detail.Qty_order
+                item.save()
         return Response(OrderSerializer(instance).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], detail=True, url_path='orders')

@@ -59,7 +59,7 @@ class Item(models.Model):
     mu_case = models.IntegerField(default=1, null=False,
                                   validators=[MinValueValidator(1, 'Quantity MU/CASE must greater than or equal')])  # MU/Case
     Qty_total = models.IntegerField(default=0, null=True,
-                                    validators=[MinValueValidator(0, 'Quantity total must greater than 0')])
+                                    validators=[MinValueValidator(0, 'Quantity total must greater or equal than 0')])
     status = models.BooleanField(default=True)
 
     class Meta:
@@ -75,7 +75,7 @@ class Item(models.Model):
 
 
 class RowLocation(models.Model):
-    name = models.CharField(max_length=3, null=False, blank=False)
+    name = models.CharField(max_length=3, null=False, blank=False, unique=True)
     status = models.BooleanField(default=True)
 
     def __str__(self):
@@ -85,25 +85,25 @@ class RowLocation(models.Model):
 class ShelfColumn(models.Model):
     column = models.IntegerField(default=1, null=False, blank=False, validators=[MinValueValidator(1, 'MIN is 1'),
                                                                                  MaxValueValidator(10, 'MAX is 10')])
-    row_location = models.ForeignKey(RowLocation, on_delete=models.CASCADE)
+    row_location = models.ForeignKey(RowLocation, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return '%s-%d' % (self.row_location.name, self.column)
 
-    def clean(self):
-        column = ShelfColumn.objects.filter(column=self.column, row_location__name=self.row_location.name)
-        err_msg = 'Column %s-%d is exist' % (self.row_location, self.column)
-        if column is not None:
-            raise ValidationError({'column': err_msg})
+    class Meta:
+        unique_together = ['column', 'row_location']
 
 
 class ShelfFloor(models.Model):
     floor = models.IntegerField(default=1, null=False, blank=False, validators=[MinValueValidator(1, 'MIN is 1'),
                                                                                 MaxValueValidator(5, 'MAX is 5')])
-    row_location = models.ForeignKey(RowLocation, on_delete=models.CASCADE)
+    row_location = models.ForeignKey(RowLocation, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return '%s-%d' % (self.row_location.name, self.floor)
+
+    class Meta:
+        unique_together = ['floor', 'row_location']
 
 
 class Location(models.Model):
@@ -122,12 +122,15 @@ class Location(models.Model):
     status = models.BooleanField(default=True)
 
     def __str__(self):
-        loc = '%s-%s-%s' % (Location.row_location, Location.shelf_floor, Location.shelf_column)
+        loc = '%s-%s-%s' % (self.row_location, self.shelf_floor, self.shelf_column)
         return loc.strip()
+
+    class Meta:
+        unique_together = ['shelf_column', 'shelf_floor', 'row_location']
 
 
 class ItemLocation(models.Model):
-    location = models.OneToOneField(Location, on_delete=models.CASCADE, null=False)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False)
     qty = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity at least 1 CASE')])
     status = models.BooleanField(default=True)
@@ -138,6 +141,12 @@ class ItemLocation(models.Model):
     def __str__(self):
         return self.item.name
 
+    def clean(self):
+        if self.qty > self.location.limited_qty:
+            raise ValidationError({"qty": "Quantity can't be greater than limited quantity total of this location"})
+        if self.qty > self.item.Qty_total:
+            raise ValidationError({"qty": "Quantity can't be greater than item's quantity total in stock"})
+
 
 # Phan tao cac PO, SO, Receipt, Order
 
@@ -145,7 +154,6 @@ class ItemLocation(models.Model):
 class BasePOSO(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=False)
     effective_date = models.DateField()
-    # closed_date = models.DateField(blank=True, null=True)
     add_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
     description = models.TextField(null=True, blank=True)
@@ -166,14 +174,6 @@ class BasePOSO(models.Model):
     class Meta:
         abstract = True
         ordering = ['-id']
-
-    # def clean(self):
-    #     if self.closed_date is not None and self.effective_date is not None:
-    #         if self.closed_date.date() <= self.effective_date.date():
-    #             raise ValidationError({'closed_date': 'Close date can be < Effective date'})
-        # if self.status == 0:
-        #     if self.closed_date is None:
-        #         raise ValidationError({'closed_date': 'SO\'s status was done, so close date can be null'})
 
     def __str__(self):
         return '%d -- %s' % (self.id, self.supplier.user.first_name)

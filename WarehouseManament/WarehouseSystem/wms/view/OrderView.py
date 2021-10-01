@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models import F
 from drf_yasg.openapi import IN_QUERY, Parameter
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, generics, viewsets, status
@@ -7,7 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from .BaseView import BaseAPIView
-from ..models import Order, OrderDetail, Item, SO
+from ..models import Order, OrderDetail, Item, SO, SODetail
 from ..serializers import OrderCreateSerializer, OrderSerializer
 
 
@@ -101,6 +102,11 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
             so.status = 0
             so.edit_who = request.user
             so.save()
+            so_details = SODetail.objects.filter(SO=so, status=True)
+            for so_detail in so_details:
+                item = Item.objects.get(pk=so_detail.item.pk)
+                item.Qty_total = F('Qty_total') - so_detail.Qty_order
+                item.save()
         serializer = OrderSerializer(order)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -109,17 +115,14 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
     def delete_order(self, request, *args, **kwargs):
         if request.user.is_anonymous or request.user.role == 2:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        try:
-            order = self.get_object()
-            order.status = False
-            order.save()
-        except Order.DoesNotExist:
-            return Response({"Failed": "Order doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+        order = self.get_object()
         try:
             so = SO.objects.get(pk=order.SO.pk)
-            so.status = 1
-            so.edit_who = request.user
-            so.save()
+            if so.status == 0:
+                return Response({"Failed": "Can't delete order"}, status=status.HTTP_403_FORBIDDEN)
+            else:
+                order.status = False
+                order.save()
         except SO.DoesNotExist:
             return Response({"Failed": "SO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
         return Response({"Success": "Delete Order success"}, status=status.HTTP_200_OK)

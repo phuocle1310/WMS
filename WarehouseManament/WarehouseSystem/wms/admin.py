@@ -68,11 +68,13 @@ class ShelfFloorAdmin(admin.ModelAdmin):
 
 
 class LocationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'row_location', 'shelf_column', 'shelf_floor', 'limited_qty', 'status']
+    list_filter = ['row_location', 'limited_qty', 'status']
 
 
 class ItemLocationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'location', 'item', 'qty', 'status']
+    list_filter = ['location', 'item', 'status']
 
 
 class ReceiptAdmin(admin.ModelAdmin):
