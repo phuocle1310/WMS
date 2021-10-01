@@ -21,7 +21,6 @@ import receiptApi from "../../api/receiptApi";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
 import AddProductReceipt from "./AddProductReceipt";
-import soApi from "../../api/soApi";
 
 
 const AddNewReceipt = (props) => {

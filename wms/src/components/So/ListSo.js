@@ -1,5 +1,3 @@
-// import * as React from "react";
-// import { XGrid } from "@material-ui/x-grid";
 import { useDemoData } from "@material-ui/x-grid-data-generator";
 import Alert from "@material-ui/lab/Alert";
 import * as React from "react";
@@ -25,12 +23,30 @@ import { listSo } from "../../store/soSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import Podetail from "../../pages/client/Podetail";
+import CustomizedSnackbars from "../UI/CustomizedSnackbars";
+//api
+import { listPo } from "../../store/poSlice";
+import IconButton from "@material-ui/core/IconButton";
+import CustomizedDialogs from "../UI/CustomizedDialogs";
+import ConfirmDelete from "../UI/ConfirmDelete";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import SoItemView from "./SoItemView";
+import Print from "../../components/UI/Print";
+import EditPo from "../Po/EditPo";
+import soApi from "../../api/soApi";
 export default function ListSo() {
   const classes = ListPoStyles();
+  //phân quyền
+  const role = useSelector((state) => state.user.currentUser.role);
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
   );
+  //lấy id idReceipt cần show
+  const [idPo, setIdPo] = useState({ id: "", loading: false });
+  const [isDelete, setIsDelete] = useState({ id: "", loading: false });
   const language = MulLanguage[`${currentLanguage}`];
   const columns = [
     {
@@ -91,28 +107,74 @@ export default function ListSo() {
     },
     {
       field: "detail",
-      headerName: language.detail,
+      headerName: language.action,
       sortable: false,
-      width: 100,
+      width: 180,
       disableClickEventBubbling: true,
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
         return (
-          <NavLink
-            to={`/so/${id}`}
-            activeStyle={{
-              fontWeight: "bold",
-              color: "red",
-            }}
-            target={"_blank"}
-            style={{ textDecoration: "none" }}
-          >
-            {language.see}
-          </NavLink>
+          <>
+            <IconButton
+              onClick={() => {
+                hanlerView(id);
+              }}
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              classes={{
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+            >
+              <VisibilityIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                handlerEdit(id);
+              }}
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              disabled={role === "SUPPLIER" ? true : false}
+              classes={{
+                root: classes.button1, // class name, e.g. `classes-nesting-root-x`
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                handlerDelete(id);
+              }}
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              disabled={role === "SUPPLIER" ? false : true}
+              classes={{
+                root: classes.button, // class name, e.g. `classes-nesting-root-x`
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </>
         );
       },
     },
   ];
+  //alert
+  const [alert, setAlert] = useState({
+    nameAlert: "",
+    message: "",
+    open: false,
+  });
+  const handleClose1 = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ nameAlert: "", message: "", open: false });
+  };
   const showAlert = (status) => {
     switch (status) {
       case "PENDING":
@@ -189,12 +251,6 @@ export default function ListSo() {
       </GridOverlay>
     );
   }
-
-  // const [rowss, setRowss] = React.useState(rows);
-  // function escapeRegExp(value) {
-  //   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-  // }
-
   const CustomToolbar = () => {
     return (
       <div className={classes.root1}>
@@ -203,53 +259,7 @@ export default function ListSo() {
       </div>
     );
   };
-  // const [value, setValue] = useState("");
-  // const handlerOnchange = (e) => {
-  //   setValue(e.target.value);
-  // };
-  // useEffect(() => {
-  //   const searchRegex = new RegExp(escapeRegExp(value), "i");
-  //   const filteredRows = rows.filter((row) => {
-  //     return Object.keys(row).some((field) => {
-  //       return searchRegex.test(row[field].toString());
-  //     });
-  //   });
-  //   setRowss(filteredRows);
-  // }, [value]);
-  // const deleteValue = () => {
-  //   setValue("");
-  //   setRowss([]);
-  // };
-  //test
-  // const { data } = useDemoData({
-  //   dataSet: "Commodity",
-  //   rowLength: 100,
-  //   maxColumns: 6,
-  // });
-
-  // const [page, setPage] = React.useState(0);
-  // const [rows, setRows] = React.useState([]);
-  // const [loading, setLoading] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   let active = true;
-
-  //   (async () => {
-  //     setLoading(true);
-  //     const newRows = await loadServerRows(page, data);
-
-  //     if (!active) {
-  //       return;
-  //     }
-
-  //     setRows(newRows);
-  //     setLoading(false);
-  //   })();
-
-  //   return () => {
-  //     active = false;
-  //   };
-  // }, [page, data]);
+  //call api data
   const rows = useSelector((state) => state.so.listSo);
   const rowsCount = useSelector((state) => state.so.rowCount);
   const [page, setPage] = useState(0);
@@ -265,45 +275,131 @@ export default function ListSo() {
       }
     };
     fetchLogin();
-  }, [page]);
-  
+  }, [page, isDelete.loading, idPo.id]);
   const handlePageChange = (page) => {
     setPage(page);
   };
-  const [openNewsForm, setNewsForm] = useState(false);
-  const handerClose = () => {
-    setNewsForm(false);
+  //xu ly cac crub
+  //crud
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
   };
-  const renderConfirm = () => {
-    return (
-      <form className={classes.form}>
-        <Podetail poId={1}></Podetail>
-      </form>
-    );
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const [crud, setCrud] = useState(0);
+  const renderCrud = () => {
+    switch (crud) {
+      case 1:
+        return (
+          <CustomizedDialogs
+            open={open}
+            handleClose={handleClose}
+            children={
+              <Print>
+                <SoItemView id={idPo.id}></SoItemView>
+              </Print>
+            }
+          ></CustomizedDialogs>
+        );
+      case 2:
+        return (
+          <CustomizedDialogs
+            open={open}
+            handleClose={handleClose}
+            children={
+              <EditPo id={idPo.id} handleOnSubmit={handleOnSubmit}></EditPo>
+            }
+          ></CustomizedDialogs>
+        );
+      case 3:
+        return (
+          <CustomizedDialogs
+            open={open}
+            handleClose={handleClose}
+            children={
+              <ConfirmDelete
+                onDelete={handleClose}
+                onSubmitDelete={onSubmitDelete}
+              ></ConfirmDelete>
+            }
+          ></CustomizedDialogs>
+        );
+      default:
+      // code block
+    }
+  };
+  //view
+  //view
+  function hanlerView(params) {
+    setCrud(1);
+    //the thing  you wanna do
+    setIdPo({ id: params, loading: false });
+    handleClickOpen();
+  }
+  //edit
+  function handlerEdit(params) {
+    //the thing  you wanna do
+    setCrud(2);
+    setIdPo({ id: params, loading: false });
+    handleClickOpen();
+  }
+  function handlerDelete(params) {
+    //the thing  you wanna do
+    setIsDelete({ id: params, loading: false });
+    setCrud(3);
+    handleClickOpen();
+  }
+  //xóa
+  const onSubmitDelete = () => {
+    const fetchDelete = async () => {
+      try {
+        const action = await soApi.deleteSo(isDelete.id);
+        setIsDelete({ id: isDelete.id, loading: true });
+        setAlert({
+          nameAlert: "success",
+          message: language.success,
+          open: true,
+        });
+        handleClose();
+        return action;
+      } catch (error) {
+        setAlert({
+          nameAlert: "Error",
+          message: JSON.stringify(error.response.data),
+          open: true,
+        });
+      }
+    };
+    fetchDelete();
+  };
+  //edit
+  const handleOnSubmit = (status) => {
+    const fetchUpadte = async () => {
+      try {
+        const data = { status: status };
+        const action = await soApi.updateStatus(idPo.id, data);
+        setIdPo({ id: idPo, loading: true });
+        setAlert({
+          nameAlert: "success",
+          message: language.success,
+          open: true,
+        });
+        handleClose();
+        return action;
+      } catch (error) {
+        setAlert({
+          nameAlert: "Error",
+          message: JSON.stringify(error.response.data),
+          open: true,
+        });
+      }
+    };
+    fetchUpadte();
   };
   return (
     <div style={{ height: 580, width: "auto" }}>
-      {/* <TextField
-        value={value}
-        onChange={handlerOnchange}
-        placeholder={language.sreach}
-        className={classes.textField}
-        InputProps={{
-          startAdornment: <SearchIcon fontSize="small" />,
-          endAdornment: (
-            <IconButton
-              title="Clear"
-              aria-label="Clear"
-              size="small"
-              style={{ visibility: value ? "visible" : "hidden" }}
-              onClick={deleteValue}
-            >
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ),
-        }}
-      />
- */}
       <DataGridPro
         rows={rows}
         className={classes.root}
@@ -322,6 +418,15 @@ export default function ListSo() {
         }}
         loading={rows.length === 0}
       />
+      {renderCrud()}
+      {alert.nameAlert && (
+        <CustomizedSnackbars
+          open={alert.open}
+          handleClose={handleClose1}
+          nameAlert={alert.nameAlert}
+          message={alert.message}
+        ></CustomizedSnackbars>
+      )}
     </div>
   );
 }
