@@ -100,13 +100,13 @@ const CrudOrder = (props) => {
           aria-label="scrollable force tabs example"
         >
           <Tab
-            label={language.addReceipt}
+            label={language.addOrder}
             className={classes.tab}
             icon={<AddIcon />}
             {...a11yProps(0)}
           />
           <Tab
-            label={language.listReceipt}
+            label={language.listOrder}
             className={classes.tab}
             icon={<PostAddIcon />}
             {...a11yProps(1)}

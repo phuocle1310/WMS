@@ -11,8 +11,7 @@ import FormStyles from "../Po/FormStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector, useDispatch } from "react-redux";
 //api
-import productApi from "../../api/productApi";
-import receiptApi from "../../api/receiptApi";
+import orderApi from "../../api/orderApi";
 import { CircularProgress } from "@material-ui/core";
 //alert
 import CustomizedSnackbars from "../UI/CustomizedSnackbars";
@@ -46,7 +45,7 @@ const OrderUpdate = (props) => {
     status,
     data: response,
     error,
-  } = useHttp(receiptApi.getReceiptItem, true);
+  } = useHttp(orderApi.getOrderItem, true);
 
   useEffect(() => {
     sendRequest(id);
@@ -55,15 +54,15 @@ const OrderUpdate = (props) => {
     console.log(response);
     const fetchProduct = async () => {
       try {
-        const pr = await receiptApi.getProduct(response.PO);
-        for (var i = 0; i < response.receiptdetail.length; i++) {
+        const pr = await orderApi.getProduct(response.SO);
+        for (var i = 0; i < response.orderdetail.length; i++) {
           const items = pr.find(
-            ({ id }) => id === response.receiptdetail[i].item.id,
+            ({ id }) => id === response.orderdetail[i].item.id,
           );
           let item = {
             isNew: true,
-            quantity: response.receiptdetail[i].Qty_receipt,
-            product: response.receiptdetail[i].item,
+            quantity: response.orderdetail[i].Qty_receipt,
+            product: response.orderdetail[i].item,
             Qty_receipt: items.Qty_receipt,
             Qty_order: items.Qty_order,
           };
@@ -163,7 +162,7 @@ const OrderUpdate = (props) => {
       // xử lý api thêm sản phẩm
       const fetchLogin = async () => {
         try {
-          const response = await receiptApi.updateReceipt(id, data);
+          const response = await orderApi.updateOrder(id, data);
           onDelete();
           // setloadData(!loadData);
           setAlert({
@@ -171,8 +170,8 @@ const OrderUpdate = (props) => {
             message: language.success,
             open: true,
           });
+          return response;
         } catch (error) {
-          console.log(error.response.data);
           setAlert({
             nameAlert: "Error",
             message: JSON.stringify(error.response.data),

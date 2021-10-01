@@ -4,7 +4,6 @@ import SoItem from "../So/SoItem";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import useHttp from "../../Hook/useHttp";
 //api
-import poApi from "../../api/poApi";
 const SoDetailByID = (props) => {
   const { status, data: item, error } = props;
 

@@ -13,7 +13,7 @@ import useHttp from "../../Hook/useHttp";
 //list product
 import ListProduct from "../Product/ListProduct";
 //api
-import receiptApi from "../../api/receiptApi";
+import orderApi from "../../api/orderApi";
 
 const OrderItem = (props) => {
   const classes = PoItemStyles();
@@ -33,7 +33,7 @@ const OrderItem = (props) => {
     status,
     data: item,
     error,
-  } = useHttp(receiptApi.getReceiptItem, true);
+  } = useHttp(orderApi.getOrderItem, true);
 
   useEffect(() => {
     sendRequest(id);
@@ -60,7 +60,7 @@ const OrderItem = (props) => {
   }
 
   const filterItem = () => {
-    let items = item.receiptdetail;
+    let items = item.orderdetail;
     return items.map((item) => {
       return { ...item, Qty_order: item.Qty_receipt };
     });
@@ -77,8 +77,8 @@ const OrderItem = (props) => {
           <p>{item.id}</p>
         </div>
         <div className={classes.textChild}>
-          <p>{language.poID}:</p>
-          <p>{item.PO}</p>
+          <p>{language.soId}:</p>
+          <p>{item.SO}</p>
         </div>
         <div className={classes.textChild}>
           <p>{language.dateCreated}:</p>

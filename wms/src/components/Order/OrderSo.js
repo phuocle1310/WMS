@@ -66,7 +66,7 @@ const OrderSo = () => {
             </IconButton>
             <InputBase
               className={classes.input}
-              placeholder={language.sreachPo}
+              placeholder={language.sreachSo}
               type="number"
               fullWidth
               onChange={handleChange}
