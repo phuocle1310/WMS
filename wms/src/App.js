@@ -13,6 +13,7 @@ import Podetail from "./pages/client/Podetail";
 import AddSoPage from "./pages/client/AddSoPage";
 import ListSoPage from "./pages/client/ListSoPage";
 import SoDetail from "./pages/client/SoDetail";
+import OrderPage from "./pages/Staff/OrderPage";
 //
 import { getMe } from "./store/userSlice";
 import { getProductBySupplier } from "./store/productSlice";
@@ -23,6 +24,8 @@ import ManagePoPage from "./pages/Staff/ManagePoPage";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const role = useSelector((state) => state.user.currentUser.role);
+  console.log(role);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
@@ -50,6 +53,11 @@ function App() {
                 component={ManagePoPage}
               ></DashboardLayoutRoute>
               <DashboardLayoutRoute
+                path="/orders"
+                exact
+                component={OrderPage}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
                 path="/listpo"
                 exact
                 component={ListPoPage}
@@ -69,7 +77,7 @@ function App() {
                 exact
                 component={SoDetail}
               ></DashboardLayoutRoute>
-                            <DashboardLayoutRoute
+              <DashboardLayoutRoute
                 path="/po/:poId"
                 exact
                 component={Podetail}

@@ -1,7 +1,7 @@
 import Grid from "@material-ui/core/Grid";
-import ReceiptPo from "../../components/Receipt/ReceiptPo";
+import OrderSo from "../../components/Order/OrderSo";
 
-const ManagePoPage = () => {
+const OrderPage = () => {
   return (
     <>
       <Grid container spacing={3}>
@@ -9,10 +9,10 @@ const ManagePoPage = () => {
           {/* <ListPo></ListPo> */}
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12}>
-          <ReceiptPo></ReceiptPo>
+          <OrderSo></OrderSo>
         </Grid>
       </Grid>
     </>
   );
 };
-export default ManagePoPage;
+export default OrderPage;
