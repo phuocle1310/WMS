@@ -32,7 +32,7 @@ const PoItemView = (props) => {
     status,
     data: item,
     error,
-  } = useHttp(poApi.gePoDetail, true);
+  } = useHttp(poApi.getPoDetail, true);
 
   useEffect(() => {
     sendRequest(id);

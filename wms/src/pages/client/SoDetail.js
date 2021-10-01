@@ -16,7 +16,7 @@ const SoDetail = (props) => {
     status,
     data: item,
     error,
-  } = useHttp(soApi.gePoDetail, true);
+  } = useHttp(soApi.getSoDetail, true);
 
   useEffect(() => {
     sendRequest(soId);
