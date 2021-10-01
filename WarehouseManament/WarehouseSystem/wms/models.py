@@ -130,7 +130,7 @@ class Location(models.Model):
 
 
 class ItemLocation(models.Model):
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=False)
+    location = models.ForeignKey(Location, related_name='item_location', on_delete=models.CASCADE, null=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False)
     qty = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity at least 1 CASE')])
     status = models.BooleanField(default=True)

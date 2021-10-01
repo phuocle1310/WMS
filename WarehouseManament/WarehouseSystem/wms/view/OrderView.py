@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.core.exceptions import ValidationError
 from django.db.models import F
 from drf_yasg.openapi import IN_QUERY, Parameter
@@ -107,6 +109,8 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
                 item = Item.objects.get(pk=so_detail.item.pk)
                 item.Qty_total = F('Qty_total') - so_detail.Qty_order
                 item.save()
+        order.edit_date = datetime.datetime.now()
+        order.save()
         serializer = OrderSerializer(order)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

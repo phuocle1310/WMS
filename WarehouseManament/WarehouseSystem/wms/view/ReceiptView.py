@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.exceptions import ValidationError
 from django.db.models import F
 from drf_yasg.openapi import IN_QUERY, Parameter
@@ -105,6 +107,8 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
                 item = Item.objects.get(pk=po_detail.item.pk)
                 item.Qty_total = F('Qty_total') + po_detail.Qty_order
                 item.save()
+        receipt.edit_date = datetime.datetime.now()
+        receipt.save()
         serializer = ReceiptSerializer(receipt)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
