@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#f8fafb",
     padding: "1px 18px",
     color: "#4251b5",
+    fontWeight: 700,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     boxShadow:
@@ -63,7 +64,7 @@ const StackedBar = () => {
     <>
       <div className={classes.root}>
         <div className={classes.title}>
-          <h4>Biểu đồ</h4>
+          <p>Biểu đồ</p>
         </div>
         <div className={classes.chart}>
           <Bar data={data} options={options} />

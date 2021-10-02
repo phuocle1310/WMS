@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 import EarningCard from "../../components/Home/EarningCard";
 import { makeStyles } from "@material-ui/core/styles";
 import VerticalBar from "../../components/Home/VerticalBar";
-
+import CardWelcome from "../../components/Home/CardWelcome";
+import AcccessibleTable from "../../components/Home/AcccessibleTable";
 const HomePage = (props) => {
   // const classes = useStyles();
   const currentLanguage = useSelector(
@@ -21,8 +22,14 @@ const HomePage = (props) => {
         <VerticalBar></VerticalBar>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={4}>
-        <VerticalBar></VerticalBar>
-        <VerticalBar></VerticalBar>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <CardWelcome></CardWelcome>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <AcccessibleTable></AcccessibleTable>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
