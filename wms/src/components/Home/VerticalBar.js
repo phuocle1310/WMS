@@ -1,39 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { makeStyles } from "@material-ui/core/styles";
-const data = {
-  labels: ["1", "2", "3", "4", "5", "6"],
-  datasets: [
-    {
-      label: "# of Red Votes",
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: "#1565c0",
-    },
-    {
-      label: "# of Blue Votes",
-      data: [2, 3, 20, 5, 1, 4],
-      backgroundColor: "#4527a0",
-    },
-  ],
-};
-
-const options = {
-  scales: {
-    yAxes: [
-      {
-        stacked: true,
-        ticks: {
-          beginAtZero: true,
-        },
-      },
-    ],
-    xAxes: [
-      {
-        stacked: true,
-      },
-    ],
-  },
-};
+import statisticalApi from "../../api/statisticalApi";
+import { CircularProgress } from "@material-ui/core";
+import EarningCardStyles from "./EarningCardStyles";
+import useHttp from "../../Hook/useHttp";
 const useStyles = makeStyles((theme) => ({
   root: {
     // background: ` transparent url(${welcome}) no-repeat`,
@@ -60,6 +31,70 @@ const useStyles = makeStyles((theme) => ({
 }));
 const StackedBar = () => {
   const classes = useStyles();
+
+  const {
+    sendRequest,
+    status,
+    data: item,
+    error,
+  } = useHttp(statisticalApi.getChartPoSo, true);
+
+  useEffect(() => {
+    sendRequest();
+  }, []);
+  if (status === "pending") {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return (
+      <p className="centered" style={{ margin: 300 }}>
+        404
+      </p>
+    );
+  }
+  if (!item) {
+    return (
+      <p className="centered" style={{ margin: 300 }}>
+        {item.id}
+      </p>
+    );
+  }
+
+  const data = {
+    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    datasets: [
+      {
+        label: "# of Red Votes",
+        data: Object.values(item.po.months),
+        backgroundColor: "#1565c0",
+      },
+      {
+        label: "# of Blue Votes",
+        data: Object.values(item.so.months),
+        backgroundColor: "#4527a0",
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      yAxes: [
+        {
+          stacked: true,
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+      xAxes: [
+        {
+          stacked: true,
+        },
+      ],
+    },
+  };
+
   return (
     <>
       <div className={classes.root}>
