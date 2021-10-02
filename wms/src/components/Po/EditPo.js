@@ -15,8 +15,6 @@ import {
   SelectValidator,
   ValidatorForm,
 } from "react-material-ui-form-validator";
-import CustomizedSnackbars from "../UI/CustomizedSnackbars";
-import poApi from "../../api/poApi";
 const EditPo = (props) => {
   const minimalSelectClasses = useMinimalSelectStyles();
   const classes = FormStyles();
@@ -60,13 +58,9 @@ const EditPo = (props) => {
   };
   return (
     <>
-      <ValidatorForm
-        className={classes.form}
-        instantValidate
-        onSubmit={handleOnSubmit}
-      >
+      <ValidatorForm instantValidate onSubmit={handleOnSubmit}>
         <div className={classes.select}>
-          <h3 style={{ padding: 20 }}>{language.confirmEdit}</h3>
+          <h3>{language.confirmEdit}</h3>
           <SelectValidator
             className={classes.textField1}
             variant="outlined"
