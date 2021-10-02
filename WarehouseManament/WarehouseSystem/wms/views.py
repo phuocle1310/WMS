@@ -14,63 +14,84 @@ from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import viewsets, generics, status, permissions
 from rest_framework import viewsets, generics, permissions, status
-from .models import PO, Receipt, ReceiptDetail, PODetail, SODetail, Order, OrderDetail
+from .models import PO, Receipt, ReceiptDetail, PODetail, SODetail, Order, OrderDetail,SO,Item
 from .serializers import POSerializer
+from rest_framework.decorators import action
+import datetime
 # lấy thông tin cl, id
-
 class AuthInfo(APIView):
     def get(self, request):
         return Response(settings.OAUTH2_INFO, status=status.HTTP_200_OK)
 
 
-# class BaseAPIView:
-#     def get_item_receipted(self, instance=None, type=0):
-#         instance = instance or self.get_object()
-#         if type == 0:
-#             po_details = PODetail.objects.filter(PO=instance)
-#         else:
-#             po_details = SODetail.objects.filter(SO=instance)
-#         '''
-#             + Tạo 1 mảng các item trong PO Detail
-#             + Mặc định số lượng đã nhập bằng 0
-#         '''
-#
-#         items = []
-#         for po_detail in po_details:
-#             item = {}
-#             item["id"] = po_detail.item.pk
-#             item['name'] = po_detail.item.name
-#             item["unit"] = po_detail.item.unit
-#             item["mu_case"] = po_detail.item.mu_case
-#             item["expire_date"] = po_detail.item.expire_date
-#             item["production_date"] = po_detail.item.production_date
-#             item["Qty_order"] = po_detail.Qty_order
-#             item["Qty_receipt"] = 0
-#             items.append(item)
-#
-#         '''
-#             + Tính tổng số lượng đã nhập của từng items
-#         '''
-#
-#         list_items_id = []
-#         for item in items: list_items_id.append(item.get('id'))
-#         if type == 0:
-#             receipts = Receipt.objects.filter(PO=instance, status=True)
-#         else:
-#             receipts = Order.objects.filter(SO=instance, status=True)
-#
-#         if receipts is not None:
-#             for receipt in receipts:
-#                 if type == 0:
-#                     rc_details = ReceiptDetail.objects.filter(receipt=receipt, status=True)
-#                 else:
-#                     rc_details = OrderDetail.objects.filter(order=receipt, status=True)
-#                 for rc_detail in rc_details:
-#                     for item in items:
-#                         if item.get('id') == rc_detail.item.id:
-#                             item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
-#                             break
-#         return items
+#thống kê
+
+class StatisticalViewSet(viewsets.ViewSet,generics.RetrieveAPIView):
+    action_required_auth = ['get_statistical_all','total_Po_So_By_Year']
+
+    def get_permissions(self, list_action=action_required_auth):
+        if self.action in list_action:
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
+    @action(methods=['get'], detail=False, url_path="statistical")
+    def get_statistical_all(self, request):
+        totalPo = 0 #tổng po,so, product, các đơn hàng thành công
+        totalSo = 0
+        totalProduct = 0
+        totalDone = 0
+        if request.user.role == 2:
+            totalPo = PO.objects.filter(supplier=request.user.supplier).count()
+            totalSo = SO.objects.filter(supplier=request.user.supplier).count()
+            totalProduct = Item.objects.filter(supplier=request.user.supplier, Qty_total__gt=0, status=True).values("name").distinct().count()
+            totalDonePo = PO.objects.filter(supplier=request.user.supplier, status=0).count() #tổng các đơn hàng po done
+            totalDoneSo = SO.objects.filter(supplier=request.user.supplier, status=0).count()#tổng các đơn hàng so done
+            totalDone = totalDonePo+totalDoneSo;
+        else:
+            totalPo = PO.objects.all().count()
+            totalSo = SO.objects.all().count()
+            totalProduct = Item.objects.filter(Qty_total__gt=0, status=True).count()
+            totalDonePo = PO.objects.filter(status=0).count() #tổng các đơn hàng po done
+            totalDoneSo = SO.objects.filter(status=0).count()#tổng các đơn hàng so done
+            totalDone = totalDonePo+totalDoneSo;
+        data= {"totalPo":totalPo,"totalSo":totalSo, "totalProduct":totalProduct,"totalDone":totalDone}
+        return Response(data=data, status=status.HTTP_200_OK)
+    @action(methods=['get'], detail=False, url_path="totalPoSoByYear")
+    def total_Po_So_By_Year(self, request):
+        year = self.request.query_params.get('year', datetime.datetime.now().year)
+        dataPo = {"months": {}}
+        dataSo = {"months": {}}
+        if request.user.role == 2:
+            dataPo = self.get_statisticalPo_month_by_year(int(year),2,request.user.supplier)
+            dataSo = self.get_statisticalSo_month_by_year(int(year),2,request.user.supplier)
+        else:
+            dataPo = self.get_statisticalPo_month_by_year(int(year))
+            dataSo = self.get_statisticalSo_month_by_year(int(year))
+        data = {"po":dataPo,"so":dataSo}
+        return Response(data=data, status=status.HTTP_200_OK)
+    def get_statisticalPo_month_by_year(self, year=datetime.datetime.now().year,role=None,pagram=None):
+        if type(year) is int:
+            data = {"months": {}}
+            month = 11
+            for m in range(month):
+                if role == 2:
+                    data["months"][str(m + 1)] = PO.objects.filter(add_date__year=year, add_date__month=m,
+                                                                   supplier=pagram).count()
+                else:
+                    data["months"][str(m + 1)] = PO.objects.filter(add_date__year=year, add_date__month=m, ).count()
+            return data
+        return {"data": []}
+    def get_statisticalSo_month_by_year(self, year=datetime.datetime.now().year,role=None,pagram=None):
+        if type(year) is int:
+            data = {"months": {}}
+            month = 11
+            for m in range(month):
+                if role==2:
+                    data["months"][str(m+1)] =SO.objects.filter(add_date__year=year,add_date__month=m,supplier=pagram).count()
+                else:
+                    data["months"][str(m + 1)] = SO.objects.filter(add_date__year=year, add_date__month=m,).count()
+
+            return data
+        return {"data": []}
 
 
 

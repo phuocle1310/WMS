@@ -14,9 +14,9 @@ import AddSoPage from "./pages/client/AddSoPage";
 import ListSoPage from "./pages/client/ListSoPage";
 import SoDetail from "./pages/client/SoDetail";
 import OrderPage from "./pages/Staff/OrderPage";
+import HomePage from "./pages/client/HomePage";
 //
 import { getMe } from "./store/userSlice";
-import { getProductBySupplier } from "./store/productSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 //staff page
@@ -51,6 +51,11 @@ function App() {
                 path="/managepo"
                 exact
                 component={ManagePoPage}
+              ></DashboardLayoutRoute>
+              <DashboardLayoutRoute
+                path="/"
+                exact
+                component={HomePage}
               ></DashboardLayoutRoute>
               <DashboardLayoutRoute
                 path="/orders"

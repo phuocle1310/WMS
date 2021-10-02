@@ -155,13 +155,6 @@ const FormStyles = makeStyles((theme) => ({
     fontWeight: 600,
   },
 
-  // box: {
-  //   width: "100%",
-  //   padding: 10,
-  //   [theme.breakpoints.up("lg")]: {
-  //     width: "100%",
-  //   },
-  // },
   textChild: {
     display: "flex",
     "& p:first-child": {
@@ -191,7 +184,7 @@ const FormStyles = makeStyles((theme) => ({
     [`& fieldset`]: {
       borderRadius: 25,
       border: "1px solid #c5cae9",
-      minWidth: "230px",
+      minWidth: "200px",
     },
     "& .MuiOutlinedInput-inputMarginDense": {
       margin: 0,
@@ -199,7 +192,7 @@ const FormStyles = makeStyles((theme) => ({
     },
     "& .MuiSelect-root": {
       // background: "#000",
-      width: 180,
+      width: 160,
       "& .MuiSelect-iconOutlined": {
         background: "#000",
       },
@@ -208,7 +201,7 @@ const FormStyles = makeStyles((theme) => ({
   select: {
     display: "flex",
     justifyContent: "center",
-    margin: "20px 30px",
+    margin: "0px 30px",
     alignItems: "center",
     flexDirection: "column",
   },

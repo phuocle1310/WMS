@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from . import views
+from . import views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -27,7 +28,7 @@ router.register('item', views.ItemViewSet)
 router.register('order', views.OrderView)
 router.register('receipt', views.ReceiptView)
 router.register('supplier', views.SupplierView)
-
+router.register('statistical', views.StatisticalViewSet,basename='MyModel')
 urlpatterns = [
     path('', include(router.urls)),
 
@@ -36,6 +37,5 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('oauth2-info/', views.AuthInfo.as_view()),
-
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
