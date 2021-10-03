@@ -3,7 +3,8 @@ import { Bar } from "react-chartjs-2";
 import { makeStyles } from "@material-ui/core/styles";
 import statisticalApi from "../../api/statisticalApi";
 import { CircularProgress } from "@material-ui/core";
-import EarningCardStyles from "./EarningCardStyles";
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector } from "react-redux";
 import useHttp from "../../Hook/useHttp";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,48 +30,24 @@ const useStyles = makeStyles((theme) => ({
     padding: 20,
   },
 }));
-const StackedBar = () => {
+const StackedBar = (props) => {
   const classes = useStyles();
-
-  const {
-    sendRequest,
-    status,
-    data: item,
-    error,
-  } = useHttp(statisticalApi.getChartPoSo, true);
-
-  useEffect(() => {
-    sendRequest();
-  }, []);
-  if (status === "pending") {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return (
-      <p className="centered" style={{ margin: 300 }}>
-        404
-      </p>
-    );
-  }
-  if (!item) {
-    return (
-      <p className="centered" style={{ margin: 300 }}>
-        {item.id}
-      </p>
-    );
-  }
-
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
+  const { item } = props;
   const data = {
     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
     datasets: [
       {
-        label: "# of Red Votes",
+        label: `${language.orderPo}`,
         data: Object.values(item.po.months),
         backgroundColor: "#1565c0",
       },
       {
-        label: "# of Blue Votes",
+        label: `${language.orderSo}`,
         data: Object.values(item.so.months),
         backgroundColor: "#4527a0",
       },
@@ -99,7 +76,7 @@ const StackedBar = () => {
     <>
       <div className={classes.root}>
         <div className={classes.title}>
-          <p>Biểu đồ</p>
+          <p>{language.chart}</p>
         </div>
         <div className={classes.chart}>
           <Bar data={data} options={options} />

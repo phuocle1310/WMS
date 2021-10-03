@@ -86,6 +86,11 @@ const MulLanguage = {
     soId: "So Id",
     addOrder: "Create Order",
     listOrder: "List Order",
+    //home
+    orderPo: "Purchase Order",
+    orderSo: "Supplier Order",
+    orderDone: "Order done",
+    chart: "Chart",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -176,6 +181,11 @@ const MulLanguage = {
     soId: "Mã đơn xuất",
     addOrder: "Thêm biên lai xuất hàng",
     listOrder: "Danh sách biên lai xuất hàng",
+    //home
+    orderPo: "Đơn hàng nhập",
+    orderSo: "Đơn hàng xuất",
+    orderDone: "Đơn hàng thành công",
+    chart: "Biểu đồ",
   },
 };
 export default MulLanguage;

@@ -13,6 +13,9 @@ import useHttp from "../../Hook/useHttp";
 import statisticalApi from "../../api/statisticalApi";
 import { CircularProgress } from "@material-ui/core";
 import EarningCardStyles from "./EarningCardStyles";
+//lang
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector, } from "react-redux";
 function Number(props) {
   const [flip, set] = useState(false);
   const { number } = useSpring({
@@ -28,42 +31,17 @@ function Number(props) {
   return <animated.h3>{number.to((n) => n.toFixed())}</animated.h3>;
 }
 
-const Card = () => {
+const Card = (props) => {
   const classes = EarningCardStyles();
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
-
-  const {
-    sendRequest,
-    status,
-    data: item,
-    error,
-  } = useHttp(statisticalApi.statisticalAll, true);
-
-  useEffect(() => {
-    sendRequest();
-  }, []);
-
-  if (status === "pending") {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return (
-      <p className="centered" style={{ margin: 300 }}>
-        404
-      </p>
-    );
-  }
-
-  if (!item) {
-    return (
-      <p className="centered" style={{ margin: 300 }}>
-        {item.id}
-      </p>
-    );
-  }
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
+  const {item}= props
   return (
     <Box component="div" className={classes.container}>
       <div className={classes.root}>
@@ -75,7 +53,7 @@ const Card = () => {
         </nav>
         <nav data-aos="fade-down">
           <Number num={item.totalPo}></Number>
-          <h5>Đơn hàng</h5>
+          <h5>{language.orderPo}</h5>
         </nav>
       </div>
       <div className={classes.root}>
@@ -87,7 +65,7 @@ const Card = () => {
         </nav>
         <nav data-aos="fade-down">
           <Number num={item.totalSo}></Number>
-          <h5>Đơn hàng</h5>
+          <h5>{language.orderSo}</h5>
         </nav>
       </div>
       <div className={classes.root}>
@@ -99,7 +77,7 @@ const Card = () => {
         </nav>
         <nav data-aos="fade-down">
           <Number num={item.totalDone}></Number>
-          <h5>Đơn hàng</h5>
+          <h5>{language.orderDone}</h5>
         </nav>
       </div>
       <div className={classes.root}>
@@ -111,7 +89,7 @@ const Card = () => {
         </nav>
         <nav data-aos="fade-down">
           <Number num={item.totalProduct}></Number>
-          <h5>Sản phẩm</h5>
+          <h5>{language.product}</h5>
         </nav>
       </div>
     </Box>
