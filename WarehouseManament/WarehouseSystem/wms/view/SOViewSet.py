@@ -192,5 +192,13 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         serializer = OrderSerializer(receipts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['get'], detail=True, url_path='export-good')
+    def export_good(self, request, pk):
+        s = self.delete_export_view()
+        if request.user.role == 2 or request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        if self.get_object().status != 0:
+            return Response({"Failed": "SO can't export from stock"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 

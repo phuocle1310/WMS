@@ -5,7 +5,6 @@ from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from . import views
-from . import views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -28,7 +27,9 @@ router.register('item', views.ItemViewSet)
 router.register('order', views.OrderView)
 router.register('receipt', views.ReceiptView)
 router.register('supplier', views.SupplierView)
-router.register('statistical', views.StatisticalViewSet,basename='MyModel')
+router.register('statistical', views.StatisticalViewSet, basename='MyModel')
+router.register(r'import', views.ImportViewSet)
+
 urlpatterns = [
     path('', include(router.urls)),
 

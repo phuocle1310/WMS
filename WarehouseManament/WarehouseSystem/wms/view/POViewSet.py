@@ -199,53 +199,24 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         serializer = ReceiptSerializer(receipts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['get'], detail=True, url_path='import-good')
+    def import_good(self, request, pk):
+        s = self.delete_import_view()
+        if request.user.role == 2 or request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        if self.get_object().status != 0:
+            return Response({"Failed": "PO can't import to stock"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def import_good(self):
-        pass
+        is_imported = ImportView.objects.filter(PO=self.get_object())
+        empty_location = self.is_empty_storage_locations(self.get_object())
+        if is_imported.count() > 0:
+            return Response(ImportViewSerializer(is_imported, many=True).data, status=status.HTTP_200_OK)
+        if not empty_location:
+            return Response(empty_location, status=status.HTTP_400_BAD_REQUEST)
+        import_view = self.import_good_to_loc(self.get_object())
+        data_import = ImportView.objects.filter(PO=self.get_object(), status=True)
+        serializer = ImportViewSerializer(data_import, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
-    '''
-        + Hàm lấy item cùng với số lượng item đã receipt
-    '''
-
-    # def get_item_receipted(self, instance=None):
-    #     po = instance or self.get_object()
-    #     po_details = PODetail.objects.filter(PO=po)
-    #
-    #     '''
-    #         + Tạo 1 mảng các item trong PO Detail
-    #         + Mặc định số lượng đã nhập bằng 0
-    #     '''
-    #
-    #     items = []
-    #     for po_detail in po_details:
-    #         item = {}
-    #         item["id"] = po_detail.item.pk
-    #         item['name'] = po_detail.item.name
-    #         item["unit"] = po_detail.item.unit
-    #         item["mu_case"] = po_detail.item.mu_case
-    #         item["expire_date"] = po_detail.item.expire_date
-    #         item["production_date"] = po_detail.item.production_date
-    #         item["Qty_order"] = po_detail.Qty_order
-    #         item["Qty_receipt"] = 0
-    #         items.append(item)
-    #
-    #     '''
-    #         + Tính tổng số lượng đã nhập của từng items
-    #     '''
-    #
-    #     list_items_id = []
-    #     for item in items: list_items_id.append(item.get('id'))
-    #
-    #     receipts = Receipt.objects.filter(PO=po, status=True)
-    #
-    #     if receipts is not None:
-    #         for receipt in receipts:
-    #             rc_details = ReceiptDetail.objects.filter(receipt=receipt, status=True)
-    #             for rc_detail in rc_details:
-    #                 for item in items:
-    #                     if item.get('id') == rc_detail.item.id:
-    #                         item["Qty_receipt"] = rc_detail.Qty_receipt + item.get('Qty_receipt')
-    #                         break
-    #     return items
