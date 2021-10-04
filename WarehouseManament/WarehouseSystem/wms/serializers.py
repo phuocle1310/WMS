@@ -364,6 +364,7 @@ class OrderSerializer(ModelSerializer):
     orderdetail = OrderDetailSerializer(many=True)
     add_who = UserSerializer(many=False)
     edit_who = UserSerializer(many=False)
+
     class Meta:
         model = Order
         fields = ['id', 'orderdetail', 'SO', 'add_who', 'edit_who', 'status']
@@ -407,9 +408,10 @@ class ReceiptSerializer(ModelSerializer):
     receiptdetail = ReceiptDetailSerializer(many=True)
     add_who = UserSerializer(many=False)
     edit_who = UserSerializer(many=False)
+
     class Meta:
         model = Receipt
-        fields = ['id', 'receiptdetail', 'PO', 'add_who', 'edit_who', 'status','add_date','edit_date']
+        fields = ['id', 'receiptdetail', 'PO', 'add_who', 'edit_who', 'status', 'add_date', 'edit_date']
         read_only_fields = ['add_who', 'edit_who', 'status']
 
 
@@ -432,3 +434,33 @@ class ReceiptCreateSerializer(ModelSerializer):
             it = Item.objects.get(pk=item.get('pk'))
             detail = ReceiptDetail.objects.create(receipt=instance, item=it, Qty_receipt=Qty_receipt)
         return instance
+
+
+class LocationSerializer(ModelSerializer):
+    limited_qty = serializers.CharField(source='get_limited_qty_display')
+    row_location = serializers.CharField(source='row_location.name')
+    shelf_column = serializers.CharField(source='shelf_column.column')
+    shelf_floor = serializers.CharField(source='shelf_floor.floor')
+
+    class Meta:
+        model = Location
+        fields = ['id', 'row_location', 'shelf_column', 'shelf_floor', 'limited_qty', 'status']
+
+
+class ImportViewSerializer(ModelSerializer):
+    item = ItemSerializer(many=False)
+    location = LocationSerializer(many=False)
+
+    class Meta:
+        model = ImportView
+        fields = ['id', 'item', 'location', 'qty', 'add_date', 'status']
+
+
+class ExportViewSerializer(ModelSerializer):
+    item = ItemSerializer(many=False)
+    location = LocationSerializer(many=False)
+
+    class Meta:
+        model = ExportView
+        fields = ['id', 'item', 'location', 'qty', 'add_date', 'status']
+

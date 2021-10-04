@@ -66,7 +66,7 @@ class Item(models.Model):
         unique_together = ['name', 'production_date']
 
     def __str__(self):
-        return self.name +"      " +str(self.production_date)
+        return self.name +"-----" +str(self.production_date)
 
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
@@ -122,7 +122,7 @@ class Location(models.Model):
     status = models.BooleanField(default=True)
 
     def __str__(self):
-        loc = '%s-%s-%s' % (self.row_location, self.shelf_floor, self.shelf_column)
+        loc = '%s-%s-%s' % (self.row_location, self.shelf_column.column, self.shelf_floor.floor)
         return loc.strip()
 
     class Meta:
@@ -130,7 +130,7 @@ class Location(models.Model):
 
 
 class ItemLocation(models.Model):
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=False)
+    location = models.ForeignKey(Location, related_name='item_location', on_delete=models.CASCADE, null=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False)
     qty = models.IntegerField(default=1, validators=[MinValueValidator(1, 'Quantity at least 1 CASE')])
     status = models.BooleanField(default=True)
@@ -139,7 +139,7 @@ class ItemLocation(models.Model):
         unique_together = ['location', 'item']
 
     def __str__(self):
-        return self.item.name
+        return '%s -- %d' % (self.item.name, self.qty)
 
     def clean(self):
         if self.qty > self.location.limited_qty:
@@ -276,3 +276,21 @@ class OrderDetail(BaseReceiptOrderDetail):
 
     class Meta:
         unique_together = ['order', 'item']
+
+
+class ImportView(models.Model):
+    PO = models.ForeignKey(PO, on_delete=models.CASCADE, related_name='import_view', null=False)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='import_view', null=False)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='import_view', null=False)
+    qty = models.IntegerField(null=False, default=0, validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
+    add_date = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
+
+
+class ExportView(models.Model):
+    SO = models.ForeignKey(SO, on_delete=models.CASCADE, related_name='export_view', null=False)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='export_view', null=False)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='export_view', null=False)
+    qty = models.IntegerField(null=False, default=0, validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
+    add_date = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
