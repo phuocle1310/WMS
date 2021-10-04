@@ -1,13 +1,13 @@
-from django_filters import FilterSet
+from django_filters import FilterSet, ChoiceFilter
 from django_filters.rest_framework import filters
+from rest_framework.filters import SearchFilter
 
 from ..models import PO
 
 
-class POFilter(FilterSet):
+class POFilter(SearchFilter):
+    status = ChoiceFilter(choices=PO.STATUS_CHOICES)
+
     class Meta:
         model = PO
-        fields = ['supplier']
-
-    def filter_queryset(seft, request, queryset, view):
-        return queryset.filter(pk=request.query_params.get('pk'))
+        fields = ['status']

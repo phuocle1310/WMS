@@ -1,13 +1,16 @@
 from django.db.models import Q, F
 from django.http import Http404
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.openapi import Parameter, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from .BaseView import BaseAPIView
+from ..filters.PO import POFilter
 from ..models import PO, Item
 from ..serializers import *
 
@@ -16,6 +19,9 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
     queryset = PO.objects.all()
     action_required_auth = ['list', 'create',
                             'update_po', 'destroy', 'get_po']
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['effective_date', 'status',]
+    search_fields = ['effective_date', 'supplier__company_name', 'status']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -38,6 +44,14 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         if po is not None:
             return Response(data=POSerializer(po).data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['get'], detail=False)
+    def get_po_done(self, request):
+        if request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        po = PO.objects.filter(status=PO.DONE, add_date__gte=datetime.datetime.now() - datetime.timedelta(days=7),
+                               import_view__isnull=True)
+        return Response(POSerializer(po, many=True).data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = POCreateSerializer(data=request.data)

@@ -27,7 +27,7 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
         return Response(ImportViewSerializer(inprocess, many=True).data, status=status.HTTP_200_OK)
 
     @action(methods=['patch'], detail=True)
-    def update_status(self, request,pk):
+    def update_status(self, request, pk):
         if request.user.role == 2 or request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         stt = request.data.get('status')
