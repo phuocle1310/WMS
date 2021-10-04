@@ -1,4 +1,4 @@
-const NotFound = () => {
+const NotPermission = () => {
   return (
     <div className="centered">
       <p>you haven't permission to access</p>
@@ -6,4 +6,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default NotPermission;
