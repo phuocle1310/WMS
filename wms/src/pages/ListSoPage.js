@@ -1,7 +1,7 @@
-import ListSo from "../../components/So/ListSo";
+import ListSo from "../components/So/ListSo";
 import Grid from "@material-ui/core/Grid";
 //lang
-import MulLanguage from "../../assets/language/MulLanguage";
+import MulLanguage from "../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({

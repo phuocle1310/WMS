@@ -1,15 +1,14 @@
 import Grid from "@material-ui/core/Grid";
 //lang
-import MulLanguage from "../../assets/language/MulLanguage";
+import MulLanguage from "../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-import EarningCard from "../../components/Home/EarningCard";
-import { makeStyles } from "@material-ui/core/styles";
-import VerticalBar from "../../components/Home/VerticalBar";
+import EarningCard from "../components/Home/EarningCard";
+import VerticalBar from "../components/Home/VerticalBar";
 import { useEffect, useState } from "react";
-import CardWelcome from "../../components/Home/CardWelcome";
-import AcccessibleTable from "../../components/Home/AcccessibleTable";
-import useHttp from "../../Hook/useHttp";
-import statisticalApi from "../../api/statisticalApi";
+import CardWelcome from "../components/Home/CardWelcome";
+import AcccessibleTable from "../components/Home/AcccessibleTable";
+import useHttp from "../Hook/useHttp";
+import statisticalApi from "../api/statisticalApi";
 import { CircularProgress } from "@material-ui/core";
 const HomePage = (props) => {
   // const classes = useStyles();
