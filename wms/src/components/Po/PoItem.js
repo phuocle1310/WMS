@@ -18,7 +18,7 @@ import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 //list product
 import ListProduct from "../Product/ListProduct";
-import moment from "moment";
+
 const AddPo = (props) => {
   const classes = PoItemStyles();
   //lang

@@ -24,7 +24,10 @@ export default function MenuMain(props) {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(uiActions.actions.logout());
-    history.replace("/login");
+    history.replace("/");
+  };
+  const homeHandler = () => {
+    history.replace("/");
   };
   return (
     <div className={classes.secondMenu}>
@@ -32,7 +35,7 @@ export default function MenuMain(props) {
         <MenuItem className={classes.menuItem}>
           <p>WMS.PY</p>
         </MenuItem>
-        <MenuItem className={classes.menuItem}>
+        <MenuItem className={classes.menuItem} onClick={homeHandler}>
           <IconButton
             className={classes.subButton}
             aria-label="account of current user"

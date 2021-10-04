@@ -1,10 +1,9 @@
 import React from "react";
-import { Bar } from "react-chartjs-2";
-import { makeStyles } from "@material-ui/core/styles";
 import welcome from "../../assets/imghome/undraw_Work_time_re_hdyv.svg";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",

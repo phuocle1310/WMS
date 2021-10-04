@@ -20,11 +20,14 @@ const SoDetail = (props) => {
 
   useEffect(() => {
     sendRequest(soId);
-    console.log(item);
   }, []);
 
   if (status === "pending") {
-    return <CircularProgress />;
+    return (
+      <div className="centered" style={{ textAlign: "center" }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {

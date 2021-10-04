@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 // export const MenuListItem = () => {};
 
-export default function MenuClient(props) {
+export default function MenuAdmin(props) {
   const classes = SecondNavigationStyles();
   const [toggled, setToggled] = React.useState(false);
   const [toggled1, setToggled1] = React.useState(false);
@@ -21,12 +21,12 @@ export default function MenuClient(props) {
   );
   const language = MulLanguage[`${currentLanguage}`];
   const listMenu1 = [
-    { content: `${language.inputSo}`, id: 2, link: "/so" },
-    { content: `${language.listSo}`, id: 3, link: "/listso" },
+    { content: `${language.listSo}`, id: 1, link: "/listso" },
+    { content: `${language.orders}`, id: 2, link: "/orders" },
   ];
   const listMenu2 = [
-    { content: `${language.inputPo}`, id: 1, link: "/po" },
-    { content: `${language.listPo}`, id: 4, link: "/listpo" },
+    { content: `${language.listPo}`, id: 2, link: "/listpo" },
+    { content: `${language.receipt}`, id: 2, link: "/receipts" },
   ];
   return (
     <div>

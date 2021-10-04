@@ -22,7 +22,7 @@ const userSlice = createSlice({
     currentUser: {},
     error: false,
     loading: true,
-    isLoggedIn: !!token,
+    isLoggedIn: token === "" ? false : true,
   },
   reducers: {
     logout(state) {
@@ -32,22 +32,24 @@ const userSlice = createSlice({
       state.loading = true;
       state.error = false;
       const token = cookies.load("access-token");
-      token ? (state.isLoggedIn = true) : (state.isLoggedIn = false);
+      token === "" ? (state.isLoggedIn = false) : (state.isLoggedIn = true);
     },
   },
   extraReducers: {
     [getMe.pending]: (state) => {
       state.loading = true;
+      state.isLoggedIn = false;
     },
     [getMe.rejected]: (state) => {
       state.loading = true;
       state.error = true;
+      state.isLoggedIn = false;
     },
     [getMe.fulfilled]: (state, action) => {
       state.loading = false;
       state.currentUser = action.payload;
       const token = cookies.load("access-token");
-      token ? (state.isLoggedIn = true) : (state.isLoggedIn = false);
+      token === "" ? (state.isLoggedIn = false) : (state.isLoggedIn = true);
     },
   },
 });

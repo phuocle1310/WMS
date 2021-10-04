@@ -6,6 +6,8 @@ import React from "react";
 import { Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuClient from "./MenuClient";
+import MenuAdmin from "./MenuAdmin";
+import { useDispatch, useSelector } from "react-redux";
 const styles = makeStyles((theme) => ({
   root: {
     height: "auto",
@@ -35,12 +37,17 @@ const styles = makeStyles((theme) => ({
 
 const DashboardLayout = ({ children, ...rest }) => {
   const classes = styles();
+  const role = useSelector((state) => state.user.currentUser.role);
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={12} lg={2}>
         <div className={classes.root}>
           <MenuMain>
-            <MenuClient></MenuClient>
+            {role !== "USER" ? (
+              <MenuClient></MenuClient>
+            ) : (
+              <MenuAdmin></MenuAdmin>
+            )}
           </MenuMain>
         </div>
       </Grid>

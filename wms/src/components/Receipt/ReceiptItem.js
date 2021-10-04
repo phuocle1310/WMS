@@ -40,7 +40,11 @@ const ReceiptItem = (props) => {
   }, [id]);
 
   if (status === "pending") {
-    return <CircularProgress />;
+    return (
+      <div className="centered" style={{ textAlign: "center" }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {
