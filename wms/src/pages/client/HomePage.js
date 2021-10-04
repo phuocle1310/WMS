@@ -44,7 +44,6 @@ const HomePage = (props) => {
   if (status === "pending") {
     return (
       <div className="centered" style={{ textAlign: "center" }}>
-        {" "}
         <CircularProgress />
       </div>
     );

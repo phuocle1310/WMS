@@ -9,7 +9,11 @@ const PoDetailByID = (props) => {
   const { status, data: item, error } = props;
 
   if (status === "pending") {
-    return <CircularProgress />;
+    return (
+      <div className="centered" style={{ textAlign: "center" }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {

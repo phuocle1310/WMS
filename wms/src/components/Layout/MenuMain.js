@@ -24,7 +24,7 @@ export default function MenuMain(props) {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(uiActions.actions.logout());
-    history.replace("/login");
+    history.replace("/");
   };
   return (
     <div className={classes.secondMenu}>

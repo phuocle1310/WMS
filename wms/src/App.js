@@ -25,7 +25,7 @@ import ManagePoPage from "./pages/Staff/ManagePoPage";
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const role = useSelector((state) => state.user.currentUser.role);
-  console.log(role);
+  console.log(isLoggedIn);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
@@ -43,19 +43,21 @@ function App() {
     <>
       <Router>
         <Switch>
-          <LoginLayoutRoute path="/login" component={Login} />
-          {!isLoggedIn && <Redirect to="/login" />}
+          {!isLoggedIn ? (
+            <LoginLayoutRoute path="/" exact component={Login} />
+          ) : (
+            <DashboardLayoutRoute
+              path="/"
+              exact
+              component={HomePage}
+            ></DashboardLayoutRoute>
+          )}
           {isLoggedIn && (
             <>
               <DashboardLayoutRoute
-                path="/managepo"
+                path="/receipts"
                 exact
                 component={ManagePoPage}
-              ></DashboardLayoutRoute>
-              <DashboardLayoutRoute
-                path="/"
-                exact
-                component={HomePage}
               ></DashboardLayoutRoute>
               <DashboardLayoutRoute
                 path="/orders"
@@ -92,6 +94,7 @@ function App() {
                 exact
                 component={ListSoPage}
               ></DashboardLayoutRoute>
+              {!isLoggedIn && <Redirect to="/login" />}
             </>
           )}
         </Switch>

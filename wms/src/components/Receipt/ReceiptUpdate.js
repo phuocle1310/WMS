@@ -84,7 +84,11 @@ const ReceiptUpdate = (props) => {
     fetchProduct();
   }, [response]);
   if (status === "pending") {
-    return <CircularProgress />;
+    return (
+      <div className="centered" style={{ textAlign: "center" }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {

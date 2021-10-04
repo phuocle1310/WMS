@@ -9,9 +9,6 @@ import { useSpring, animated } from "react-spring";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import useHttp from "../../Hook/useHttp";
-import statisticalApi from "../../api/statisticalApi";
-import { CircularProgress } from "@material-ui/core";
 import EarningCardStyles from "./EarningCardStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
