@@ -22,11 +22,11 @@ export default function MenuAdmin(props) {
   const language = MulLanguage[`${currentLanguage}`];
   const listMenu1 = [
     { content: `${language.listSo}`, id: 1, link: "/listso" },
-    { content: `${language.orders}`, id: 2, link: "/receipts" },
+    { content: `${language.orders}`, id: 2, link: "/orders" },
   ];
   const listMenu2 = [
     { content: `${language.listPo}`, id: 2, link: "/listpo" },
-    { content: `${language.receipt}`, id: 2, link: "/orders" },
+    { content: `${language.receipt}`, id: 2, link: "/receipts" },
   ];
   return (
     <div>
@@ -35,7 +35,7 @@ export default function MenuAdmin(props) {
       </div>
       <MenuItem className={classes.menuItem} onClick={onToggle1}>
         <RowToggle useStyles={useJupiterRowToggleStyles}>
-          {language.nameMenuSo}
+          {language.nameMenuPO}
           <RowToggle.Action
             button
             toggled={toggled1}

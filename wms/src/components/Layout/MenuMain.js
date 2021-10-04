@@ -26,13 +26,16 @@ export default function MenuMain(props) {
     dispatch(uiActions.actions.logout());
     history.replace("/");
   };
+  const homeHandler = () => {
+    history.replace("/");
+  };
   return (
     <div className={classes.secondMenu}>
       <MenuList className={classes.menuList}>
         <MenuItem className={classes.menuItem}>
           <p>WMS.PY</p>
         </MenuItem>
-        <MenuItem className={classes.menuItem}>
+        <MenuItem className={classes.menuItem} onClick={homeHandler}>
           <IconButton
             className={classes.subButton}
             aria-label="account of current user"
