@@ -232,7 +232,7 @@ class BaseAPIView:
 
     def delete_import_view(self):
         print(datetime.datetime.now() - datetime.timedelta(days=0))
-        imports_delete = ImportView.objects.filter(status=False, add_date__lt=datetime.datetime.now() - datetime.timedelta(days=7))
+        imports_delete = ImportView.objects.filter(status=False, add_date__lte=datetime.datetime.now() - datetime.timedelta(days=7))
         for import_delete in imports_delete:
             import_delete.delete()
         return True
@@ -242,6 +242,13 @@ class BaseAPIView:
     '''
         + Check is enough good in stock to export
     '''
+
+    def is_empty_pickface_locations(self, instance=None):
+        instance = instance or self.get_objects()
+        so_details = SODetail.objects.filter(SO=instance, status=True)
+
+        # for
+
 
     def is_can_export(self, instance=None):
         instance = instance or self.get_objects()
@@ -267,6 +274,5 @@ class BaseAPIView:
                         continue
                 else:
                     break
-
 
 
