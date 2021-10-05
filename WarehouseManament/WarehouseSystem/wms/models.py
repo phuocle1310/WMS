@@ -282,15 +282,24 @@ class ImportView(models.Model):
     PO = models.ForeignKey(PO, on_delete=models.CASCADE, related_name='import_view', null=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='import_view', null=False)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='import_view', null=False)
-    qty = models.IntegerField(null=False, default=0, validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
+    qty = models.IntegerField(null=False, default=0,
+                              validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
     add_date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ['PO', 'item', 'location']
 
 
 class ExportView(models.Model):
     SO = models.ForeignKey(SO, on_delete=models.CASCADE, related_name='export_view', null=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='export_view', null=False)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='export_view', null=False)
-    qty = models.IntegerField(null=False, default=0, validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
+    from_location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='from_loc_export_view', null=False)
+    to_location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='to_loc_export_view', null=True)
+    qty = models.IntegerField(null=False, default=0,
+                              validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
     add_date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ['SO', 'item', 'from_location', 'to_location']
