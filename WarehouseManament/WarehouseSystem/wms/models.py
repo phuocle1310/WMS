@@ -299,7 +299,20 @@ class ExportView(models.Model):
     qty = models.IntegerField(null=False, default=0,
                               validators=[MinValueValidator(0, 'Quantity just must greater than or equal 0')])
     add_date = models.DateTimeField(auto_now_add=True)
-    status = models.BooleanField(default=True)
+
+    ALLOCATED = 0
+    PICKED = 1
+    SORTED = 2
+    STATUS_CHOICES = (
+        (ALLOCATED, 'ALLOCATED'),
+        (PICKED, 'PICKED'),
+        (SORTED, 'SORTED')
+    )
+
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=ALLOCATED)
 
     class Meta:
         unique_together = ['SO', 'item', 'from_location', 'to_location']
+
+    def __str__(self):
+        return '%s: %d CASE in %s' % (self.item.name, self.qty, self.to_location)

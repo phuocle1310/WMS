@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..models import OrderDetail, PODetail, SODetail, Receipt, Order, ReceiptDetail, Location, ItemLocation, Item, \
-    ImportView, ExportView
+    ImportView, ExportView, PO, SO
 
 
 class BaseAPIView:
@@ -256,20 +256,15 @@ class BaseAPIView:
             return False
         return True
 
-    def get_even_item_qty_so(self, instance=None):
-        pass
-
-    def get_blank(self, instance):
-        blank_pick_face_locations = Location.objects.filter(to_loc_export_view__isnull=True, status=True)
-
     def allocated_good(self, instance=None):
         instance = instance or self.get_objects()
 
-        for sodetail in instance:
+        so_details = SODetail.objects.filter(SO=instance)
+        if so_details.count() <= 0:
+            return False
+        for sodetail in so_details:
             item_locations_storage = ItemLocation.objects.filter(item=sodetail.item,
                                                                  location__limited_qty=Location.STORAGE).order_by("qty")
-            # item_locations_pick_face_can_fill = ItemLocation.objects.filter(location__limited_qty=Location.PICK_FACE,
-            #                                                                 qty__lt=Location.PICK_FACE).order_by("qty")
 
             '''
                 + Các vị trí pick face có thể thêm sản phẩm
@@ -279,6 +274,8 @@ class BaseAPIView:
             pick_face_can_fill = []
             for loc in pick_locs:
                 pick_loc = ExportView.objects.filter(to_location=loc).aggregate(total=Sum('qty'))
+                if pick_loc.get('total') is None:
+                    break
                 if pick_loc.get('total') < Location.PICK_FACE:
                     l = {}
                     l['pk'] = loc.pk
@@ -318,15 +315,19 @@ class BaseAPIView:
                 for pick_face in pick_face_can_fill:
                     if location.get('qty') > 0:
                         if location.get('qty') <= pick_face.get('qty'):
-                            # pick_face['qty'] += location.get('qty')
+                            from_loc = Location.objects.get(pk=location.get('pk'))
+                            to_loc = Location.objects.get(pk=pick_face.get('pk'))
+                            export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
+                                                                    to_location=to_loc,
+                                                                    qty=location.get('qty'), item=sodetail.item)
                             location['qty'] = 0
                         else:
-                            # pick_face['qty'] = Location.PICK_FACE
+                            from_loc = Location.objects.get(pk=location.get('pk'))
+                            to_loc = Location.objects.get(pk=pick_face.get('pk'))
+                            export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
+                                                                    to_location=to_loc,
+                                                                    qty=pick_face.get('qty'), item=sodetail.item)
                             location['qty'] -= pick_face.get('qty')
-                        from_loc = Location.objects.get(pk=location.get('pk'))
-                        to_loc = Location.objects.get(pk=pick_face.get('pk'))
-                        export_view = ExportView.objects.create(SO=instance, from_location=from_loc, to_location=to_loc,
-                                                                qty=pick_face.get('qty'))
                     else:
                         break
 
@@ -339,7 +340,7 @@ class BaseAPIView:
                             to_loc = loc
                             export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
                                                                     to_location=to_loc,
-                                                                    qty=location.get('qty'))
+                                                                    qty=location.get('qty'), item=sodetail.item)
                             location['qty'] = 0
                             break
                         else:
@@ -347,5 +348,13 @@ class BaseAPIView:
                             to_loc = loc
                             export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
                                                                     to_location=to_loc,
-                                                                    qty=location.get('qty'))
+                                                                    qty=location.get('qty'), item=sodetail.item)
                             location['qty'] -= Location.PICK_FACE
+        return True
+
+    def delete_export_view(self):
+        exports_delete = ExportView.objects.filter(status=False,
+                                                   add_date__lte=datetime.datetime.now() - datetime.timedelta(days=7))
+        for export_delete in exports_delete:
+            export_delete.delete()
+        return True
