@@ -458,9 +458,11 @@ class ImportViewSerializer(ModelSerializer):
 
 class ExportViewSerializer(ModelSerializer):
     item = ItemSerializer(many=False)
-    location = LocationSerializer(many=False)
+    to_location = LocationSerializer(many=False)
+    from_location = LocationSerializer(many=False)
+    status = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = ExportView
-        fields = ['id', 'item', 'location', 'qty', 'add_date', 'status']
+        fields = ['id', 'item', 'to_location', 'from_location', 'qty', 'add_date', 'status']
 
