@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..models import OrderDetail, PODetail, SODetail, Receipt, Order, ReceiptDetail, Location, ItemLocation, Item, \
-    ImportView
+    ImportView, ExportView, PO, SO
 
 
 class BaseAPIView:
@@ -67,7 +67,7 @@ class BaseAPIView:
                 break
         return flag
 
-# CAC FUNCTION CHECK AND IMPORT GOOD
+    # CAC FUNCTION CHECK AND IMPORT GOOD
 
     '''
         + Check is enough loc to allocate
@@ -80,7 +80,7 @@ class BaseAPIView:
                                                          qty__lt=Location.STORAGE)
         Qty_total_po = PODetail.objects.filter(PO=instance, status=True).aggregate(total=Sum('Qty_order'))
         po_details = PODetail.objects.filter(PO=instance, status=True)
-        loc_need = Qty_total_po.get('total')/Location.STORAGE
+        loc_need = Qty_total_po.get('total') / Location.STORAGE
 
         '''
             + Nếu ko còn chỗ trống, kiểm tra xem:
@@ -119,32 +119,24 @@ class BaseAPIView:
                 return False
         return True
 
-
     '''
         + Lấy số lượng quantity chẵn lẻ location ở PO
     '''
 
-    def get_even_item_qty(self, instance=None):
+    def get_even_item_qty_po(self, instance=None):
         instance = instance or self.get_object()
         po_details = PODetail.objects.filter(PO=instance, status=True)
         even_items = []
-        odd_items = []
 
         for po_detail in po_details:
             even_item = {}
-            odd_item = {}
             even_item['pk'] = po_detail.item.pk
             odd_qty = po_detail.Qty_order % Location.STORAGE
             even_item['Qty_order'] = po_detail.Qty_order - odd_qty
             even_items.append(even_item)
-
-            if odd_qty > 0:
-                odd_item['pk'] = po_detail.item.pk
-                odd_item['Qty_order'] = odd_qty
-                odd_items.append(odd_item)
         return even_items
 
-    def get_odd_item_qty(self, instance=None):
+    def get_odd_item_qty_po(self, instance=None):
         instance = instance or self.get_object()
         po_details = PODetail.objects.filter(PO=instance, status=True)
         odd_items = []
@@ -161,7 +153,7 @@ class BaseAPIView:
 
     def import_good_to_loc(self, instance=None):
         instance = instance or self.get_object()
-        even = self.get_even_item_qty(instance)
+        even = self.get_even_item_qty_po(instance)
 
         '''
             1) Đổ vào location trống với even quantity
@@ -185,7 +177,7 @@ class BaseAPIView:
         '''
             2) Đổ vào location có id item trùng
         '''
-        odd = self.get_odd_item_qty(instance)
+        odd = self.get_odd_item_qty_po(instance)
         for item in odd:
             it = Item.objects.get(pk=item.get('pk'))
             Qty_total = item.get('Qty_order')
@@ -197,7 +189,8 @@ class BaseAPIView:
 
                 if loc_empty.count() > 0:
                     item_loc = ItemLocation.objects.create(location=loc_empty[0], item=it, qty=Qty_total)
-                    import_view = ImportView.objects.create(PO=instance, item=it, location=item_loc.location, qty=Qty_total)
+                    import_view = ImportView.objects.create(PO=instance, item=it, location=item_loc.location,
+                                                            qty=Qty_total)
                     views_even_item.append(import_view)
             else:
                 for loc in can_fill_locs:
@@ -232,47 +225,136 @@ class BaseAPIView:
 
     def delete_import_view(self):
         print(datetime.datetime.now() - datetime.timedelta(days=0))
-        imports_delete = ImportView.objects.filter(status=False, add_date__lte=datetime.datetime.now() - datetime.timedelta(days=7))
+        imports_delete = ImportView.objects.filter(status=False,
+                                                   add_date__lte=datetime.datetime.now() - datetime.timedelta(days=7))
         for import_delete in imports_delete:
             import_delete.delete()
         return True
 
-# CAC FUNCTION CHECK AND IMPORT GOOD
+    # CAC FUNCTION CHECK AND IMPORT GOOD
 
     '''
         + Check is enough good in stock to export
     '''
 
     def is_empty_pickface_locations(self, instance=None):
-        instance = instance or self.get_objects()
+        instance = instance or self.get_object()
+        loc_empty = Location.objects.filter(item_location__isnull=True, limited_qty=Location.PICK_FACE, status=True)
+        item_loc_available = ItemLocation.objects.filter(status=True, location__limited_qty=Location.PICK_FACE,
+                                                         qty__lt=Location.PICK_FACE)
+
         so_details = SODetail.objects.filter(SO=instance, status=True)
+        if so_details.count() == 0:
+            return False
 
-        # for
+        Qty_total_so = SODetail.objects.filter(SO=instance, status=True).aggregate(total=Sum('Qty_order'))
+        qty_can_fill = 0
+        for loc in item_loc_available:
+            qty_can_fill += Location.PICK_FACE - loc.qty
+        qty_can_fill += loc_empty.count() * 10
+        if Qty_total_so.get('total') > qty_can_fill:
+            return False
+        return True
 
-
-    def is_can_export(self, instance=None):
+    def allocated_good(self, instance=None):
         instance = instance or self.get_objects()
-        so_details = SODetail.objects.filter(SO=instance, status=True)
 
-        for so_detail in so_details:
-            items_loc = ItemLocation.objects.filter(item=so_detail.item, location=Location.STORAGE,
-                                                    status=True).order_by('qty')
-            Qty_order = so_detail.Qty_order
-            for item_loc in items_loc:
-                if Qty_order > 0:
-                    if Qty_order <= item_loc.qty:
-                        item_loc.qty = item_loc.qty - Qty_order
-                        Qty_order = 0
-                        if item_loc.qty == 0:
-                            item_loc.delete()
-                        # save here
-                        break
-                    else:
-                        # save here vs qty = Location.Storage
-                        item_loc.delete()
-                        Qty_order = Qty_order - item_loc.qty
-                        continue
-                else:
+        so_details = SODetail.objects.filter(SO=instance)
+        if so_details.count() <= 0:
+            return False
+        for sodetail in so_details:
+            item_locations_storage = ItemLocation.objects.filter(item=sodetail.item,
+                                                                 location__limited_qty=Location.STORAGE).order_by("qty")
+
+            '''
+                + Các vị trí pick face có thể thêm sản phẩm
+            '''
+
+            pick_locs = Location.objects.filter(limited_qty=Location.PICK_FACE)
+            pick_face_can_fill = []
+            for loc in pick_locs:
+                pick_loc = ExportView.objects.filter(to_location=loc).aggregate(total=Sum('qty'))
+                if pick_loc.get('total') is None:
                     break
+                if pick_loc.get('total') < Location.PICK_FACE:
+                    l = {}
+                    l['pk'] = loc.pk
+                    l['qty'] = Location.PICK_FACE - pick_loc.get('total')
+                    pick_face_can_fill.append(l)
 
+            locations = []
+            Qty_total = sodetail.Qty_order
+            for loc in item_locations_storage:
+                location = {}
+                if sodetail.item != loc.item:
+                    continue
+                else:
+                    location['pk'] = loc.location.pk
+                    if Qty_total > 0:
+                        if Qty_total <= loc.qty:
+                            location['qty'] = Qty_total
+                            loc.qty -= Qty_total
+                            Qty_total = 0
+                            if loc.qty == 0:
+                                loc.delete()
+                            else:
+                                loc.save()
+                        else:
+                            location['qty'] = loc.qty
+                            loc.delete()
+                            Qty_total -= loc.qty
+                        locations.append(location)
+                    else:
+                        break
 
+            '''
+                + Phần gán giá trị vào export view table
+            '''
+
+            for location in locations:
+                for pick_face in pick_face_can_fill:
+                    if location.get('qty') > 0:
+                        if location.get('qty') <= pick_face.get('qty'):
+                            from_loc = Location.objects.get(pk=location.get('pk'))
+                            to_loc = Location.objects.get(pk=pick_face.get('pk'))
+                            export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
+                                                                    to_location=to_loc,
+                                                                    qty=location.get('qty'), item=sodetail.item)
+                            location['qty'] = 0
+                        else:
+                            from_loc = Location.objects.get(pk=location.get('pk'))
+                            to_loc = Location.objects.get(pk=pick_face.get('pk'))
+                            export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
+                                                                    to_location=to_loc,
+                                                                    qty=pick_face.get('qty'), item=sodetail.item)
+                            location['qty'] -= pick_face.get('qty')
+                    else:
+                        break
+
+                if location.get('qty') > 0:
+                    blank_pick_face_locations = Location.objects.filter(limited_qty=Location.PICK_FACE,
+                                                                        to_loc_export_view__isnull=True, status=True)
+                    for loc in blank_pick_face_locations:
+                        if location.get('qty') <= Location.PICK_FACE:
+                            from_loc = Location.objects.get(pk=location.get('pk'))
+                            to_loc = loc
+                            export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
+                                                                    to_location=to_loc,
+                                                                    qty=location.get('qty'), item=sodetail.item)
+                            location['qty'] = 0
+                            break
+                        else:
+                            from_loc = Location.objects.get(pk=location.get('pk'))
+                            to_loc = loc
+                            export_view = ExportView.objects.create(SO=instance, from_location=from_loc,
+                                                                    to_location=to_loc,
+                                                                    qty=location.get('qty'), item=sodetail.item)
+                            location['qty'] -= Location.PICK_FACE
+        return True
+
+    def delete_export_view(self):
+        exports_delete = ExportView.objects.filter(status=False,
+                                                   add_date__lte=datetime.datetime.now() - datetime.timedelta(days=7))
+        for export_delete in exports_delete:
+            export_delete.delete()
+        return True

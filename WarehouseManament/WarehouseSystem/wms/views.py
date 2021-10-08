@@ -55,20 +55,22 @@ class StatisticalViewSet(viewsets.ViewSet,generics.RetrieveAPIView):
             totalDone = totalDonePo+totalDoneSo;
         data= {"totalPo":totalPo,"totalSo":totalSo, "totalProduct":totalProduct,"totalDone":totalDone}
         return Response(data=data, status=status.HTTP_200_OK)
+
     @action(methods=['get'], detail=False, url_path="totalPoSoByYear")
     def total_Po_So_By_Year(self, request):
         year = self.request.query_params.get('year', datetime.datetime.now().year)
         dataPo = {"months": {}}
         dataSo = {"months": {}}
         if request.user.role == 2:
-            dataPo = self.get_statisticalPo_month_by_year(int(year),2,request.user.supplier)
-            dataSo = self.get_statisticalSo_month_by_year(int(year),2,request.user.supplier)
+            dataPo = self.get_statisticalPo_month_by_year(int(year), 2, request.user.supplier)
+            dataSo = self.get_statisticalSo_month_by_year(int(year), 2, request.user.supplier)
         else:
             dataPo = self.get_statisticalPo_month_by_year(int(year))
             dataSo = self.get_statisticalSo_month_by_year(int(year))
         data = {"po":dataPo,"so":dataSo}
         return Response(data=data, status=status.HTTP_200_OK)
-    def get_statisticalPo_month_by_year(self, year=datetime.datetime.now().year,role=None,pagram=None):
+
+    def get_statisticalPo_month_by_year(self, year=datetime.datetime.now().year, role=None, pagram=None):
         if type(year) is int:
             data = {"months": {}}
             month = 11
@@ -80,7 +82,8 @@ class StatisticalViewSet(viewsets.ViewSet,generics.RetrieveAPIView):
                     data["months"][str(m + 1)] = PO.objects.filter(add_date__year=year, add_date__month=m, ).count()
             return data
         return {"data": []}
-    def get_statisticalSo_month_by_year(self, year=datetime.datetime.now().year,role=None,pagram=None):
+
+    def get_statisticalSo_month_by_year(self, year=datetime.datetime.now().year, role=None, pagram=None):
         if type(year) is int:
             data = {"months": {}}
             month = 11
