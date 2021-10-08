@@ -6,11 +6,9 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import {
   DataGridPro,
-  GridToolbarContainer,
   GridToolbarExport,
   GridOverlay,
   GridToolbarDensitySelector,
-  GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
 import poApi from "../../api/poApi";
@@ -20,20 +18,19 @@ import { useDispatch, useSelector } from "react-redux";
 //print
 import ReactToPrint from "react-to-print";
 //css
-import ListPoStyles from "./ListPoStyles";
+import ListPoStyles from "../Po/ListPoStyles";
 //api
-import { listPo } from "../../store/poSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
 import IconButton from "@material-ui/core/IconButton";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ConfirmDelete from "../UI/ConfirmDelete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import PoItemView from "./PoItemView";
+import PoItemView from "../Po/PoItemView";
 import Print from "../../components/UI/Print";
-import EditPo from "./EditPo";
-export default function ListPo() {
+import EditPo from "../Po/EditPo";
+import importApi from "../../api/importApi";
+export default function ImportList() {
   const classes = ListPoStyles();
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
@@ -257,16 +254,14 @@ export default function ListPo() {
     );
   };
   //call api data
-  const rows = useSelector((state) => state.po.listPo);
+  const [rows, setRows] = useState([]);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
-  const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const action = listPo(page + 1);
-        const actionResult = await dispatch(action);
-        unwrapResult(actionResult);
+        const response = await importApi.getPoDone();
+        setRows(response);
       } catch (error) {
         console.log(error);
       }
@@ -343,7 +338,6 @@ export default function ListPo() {
     handleClickOpen();
   }
   function handlerDelete(params) {
-    //the thing  you wanna do
     setIsDelete({ id: params, loading: false });
     setCrud(3);
     handleClickOpen();
@@ -403,9 +397,9 @@ export default function ListPo() {
         className={classes.root}
         rowCount={rowsCount}
         columns={columns}
-        pageSize={10}
         pagination
-        paginationMode="server"
+        pageSize={8}
+        rowsPerPageOptions={[5]}
         onPageChange={handlePageChange}
         page={page}
         editMode="none"
