@@ -453,7 +453,7 @@ class ImportViewSerializer(ModelSerializer):
 
     class Meta:
         model = ImportView
-        fields = ['id', 'item', 'location', 'qty', 'add_date', 'status']
+        fields = ['id','PO', 'item', 'location', 'qty', 'add_date', 'status']
 
 
 class ExportViewSerializer(ModelSerializer):
@@ -464,5 +464,5 @@ class ExportViewSerializer(ModelSerializer):
 
     class Meta:
         model = ExportView
-        fields = ['id', 'item', 'to_location', 'from_location', 'qty', 'add_date', 'status']
+        fields = ['id','SO', 'item', 'to_location', 'from_location', 'qty', 'add_date', 'status']
 
