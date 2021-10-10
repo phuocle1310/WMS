@@ -60,7 +60,7 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
     def update_status(self, request):
         if request.user.role == 2 or request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        stt = request.data.get('status')
+        # stt = request.data.get('status')
         # if stt == True:
         #     return Response({"Failed": "Change status unsucessfully"}, status=status.HTTP_400_BAD_REQUEST)
         # else:
@@ -68,13 +68,16 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
         #     import_view.status = stt
         #     import_view.save()
         pk_list = []
-        import_view_update = request.data('import')
+        import_view_update = request.data.get('import')
         for import_view in import_view_update:
             try:
-                data_update = ImportView.objects.get(pk=import_view.get('pk'))
+                datas_update = ImportView.objects.get(pk=import_view.get('pk'))
             except ImportView.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             pk_list.append(import_view.get('pk'))
+
+        for pk in pk_list:
+            data_update = ImportView.objects.get(pk=pk)
             data_update.status = False
             data_update.save()
         data_return = ImportView.objects.filter(pk__in=pk_list)
