@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 //css
-import PoItemStyles from "./PoItemStyles";
+import PoItemStyles from "../Po/PoItemStyles";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
-//list product
-import ListProduct from "../Product/ListProduct";
+//list item
+import ListItemImport from "./ListItemImport";
 
 const ImportItem = (props) => {
   const classes = PoItemStyles();
@@ -18,7 +18,27 @@ const ImportItem = (props) => {
   //khai báo form ban đầu rỗng
   let form = null;
   var moment = require("moment");
-  const item = props.items;
+  const { items } = props;
+  const [data, setData] = useState(items);
+  let newList = [];
+  for (let items in data) {
+    let dataItem = {
+      idIP: data[items].id,
+      id: data[items].item.id,
+      name: data[items].item.name,
+      unit: data[items].item.unit,
+      expire_date: data[items].item.expire_date,
+      production_date: data[items].item.production_date,
+      mu_case: data[items].item.mu_case,
+      row_location: data[items].location.row_location,
+      shelf_column: data[items].location.shelf_column,
+      shelf_floor: data[items].location.shelf_floor,
+      qty: data[items].qty,
+      add_date: data[items].add_date,
+    };
+    newList.push(dataItem);
+  }
+  console.log(newList);
   return (
     <Grid container>
       <Grid item xs={12} className={classes.title}>
@@ -71,7 +91,8 @@ const ImportItem = (props) => {
             </Grid>
           </Grid>
           <Grid item xs={12} lg={12} className={classes.list}>
-            <p className={classes.left}>{language.listProducts}:</p>
+            <p className={classes.left}>{language.listProductsImport}:</p>
+            <ListItemImport rows={newList}></ListItemImport>
           </Grid>
         </Grid>
       </Grid>

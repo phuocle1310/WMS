@@ -30,6 +30,10 @@ import PoItemView from "../Po/PoItemView";
 import Print from "../../components/UI/Print";
 import EditPo from "../Po/EditPo";
 import importApi from "../../api/importApi";
+import ConfirmImport from "./ConfirmImport";
+import InputIcon from "@material-ui/icons/Input";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import ImportItemView from "./ImportItemView";
 export default function ImportList() {
   const classes = ListPoStyles();
   //phân quyền
@@ -135,7 +139,7 @@ export default function ImportList() {
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             >
-              <EditIcon />
+              <InputIcon />
             </IconButton>
             <IconButton
               onClick={() => {
@@ -144,13 +148,13 @@ export default function ImportList() {
               color="primary"
               aria-label="upload picture"
               component="span"
-              disabled={role === "SUPPLIER" ? false : true}
+              // disabled={role === "SUPPLIER" ? false : true}
               classes={{
                 root: classes.button, // class name, e.g. `classes-nesting-root-x`
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             >
-              <DeleteForeverIcon />
+              <ListAltIcon />
             </IconButton>
           </>
         );
@@ -262,6 +266,7 @@ export default function ImportList() {
       try {
         const response = await importApi.getPoDone();
         setRows(response);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -271,6 +276,7 @@ export default function ImportList() {
   const handlePageChange = (page) => {
     setPage(page);
   };
+  console.log(rows);
   //xu ly cac crub
   //crud
   const [open, setOpen] = React.useState(false);
@@ -301,7 +307,10 @@ export default function ImportList() {
             open={open}
             handleClose={handleClose}
             children={
-              <EditPo id={idPo.id} handleOnSubmit={handleOnSubmit}></EditPo>
+              <ConfirmImport
+                onDelete={handleClose}
+                onSubmitDelete={onSubmitDelete}
+              ></ConfirmImport>
             }
           ></CustomizedDialogs>
         );
@@ -311,34 +320,30 @@ export default function ImportList() {
             open={open}
             handleClose={handleClose}
             children={
-              <ConfirmDelete
-                onDelete={handleClose}
-                onSubmitDelete={onSubmitDelete}
-              ></ConfirmDelete>
+              <Print>
+                <ImportItemView id={idPo.id}></ImportItemView>
+              </Print>
             }
           ></CustomizedDialogs>
         );
       default:
-      // code block
     }
   };
   //view
-  //view
   function hanlerView(params) {
     setCrud(1);
-    //the thing  you wanna do
     setIdPo({ id: params, loading: false });
     handleClickOpen();
   }
   //edit
   function handlerEdit(params) {
-    //the thing  you wanna do
     setCrud(2);
     setIdPo({ id: params, loading: false });
     handleClickOpen();
   }
   function handlerDelete(params) {
-    setIsDelete({ id: params, loading: false });
+    // setIsDelete({ id: params, loading: false });
+    setIdPo({ id: params, loading: false });
     setCrud(3);
     handleClickOpen();
   }

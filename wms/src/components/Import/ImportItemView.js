@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useHttp from "../../Hook/useHttp";
-import poApi from "../../api/poApi";
+import importApi from "../../api/importApi";
 import { CircularProgress } from "@material-ui/core";
 import ImportItem from "./ImportItem";
 const ImportItemView = (props) => {
@@ -12,11 +12,10 @@ const ImportItemView = (props) => {
     status,
     data: item,
     error,
-  } = useHttp(poApi.ImportItem, true);
+  } = useHttp(importApi.getPoImport, true);
 
   useEffect(() => {
     sendRequest(id);
-    console.log(item);
   }, []);
 
   if (status === "pending") {

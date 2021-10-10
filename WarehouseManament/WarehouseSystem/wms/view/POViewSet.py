@@ -50,7 +50,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         if request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         po = PO.objects.filter(status=PO.DONE, add_date__gte=datetime.datetime.now() - datetime.timedelta(days=7),
-                               import_view__isnull=True)
+                               )
         return Response(POSerializer(po, many=True).data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):

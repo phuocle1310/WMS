@@ -8,7 +8,7 @@ import FormStyles from "../Po/FormStyles";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 
-const ConfirmDelete = (props) => {
+const ConfirmImport = (props) => {
   const { id } = props;
   const classes = FormStyles();
   //lang
@@ -22,7 +22,7 @@ const ConfirmDelete = (props) => {
     <>
       <div className={classes.box}>
         <p className={classes.labelId} style={{ padding: 20 }}>
-          {language.confirmDelete}
+          {language.confirmImport}
         </p>
       </div>
       <div className={classes.box2}>
@@ -53,4 +53,4 @@ const ConfirmDelete = (props) => {
   );
 };
 
-export default ConfirmDelete;
+export default ConfirmImport;

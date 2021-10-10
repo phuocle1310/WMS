@@ -93,6 +93,10 @@ const MulLanguage = {
     chart: "Chart",
     orders: "Orders",
     receipt: "Receipts",
+    //import
+    confirmImport:
+      "You are submitting a request to import goods into the warehouse!!!",
+    location: "Location",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -190,6 +194,10 @@ const MulLanguage = {
     chart: "Biểu đồ",
     orders: "Biên lai xuất hàng",
     receipt: "Biên lai nhập hàng",
+    //import
+    confirmImport: "Bạn đang gửi yêu cầu để nhập hàng vào kho!!!",
+    location: "Vị trí",
+    listProductsImport: "Danh sách sản phẩm nhập vào kho",
   },
 };
 export default MulLanguage;

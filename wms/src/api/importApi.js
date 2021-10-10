@@ -4,5 +4,10 @@ const importApi = {
     const url = `/po/get_po_done/`;
     return axiosClient.get(url);
   },
+  //lấy import của po inprocess
+  getPoImport: (id) => {
+    const url = `/import/get_import_inprocess/${id}/`;
+    return axiosClient.get(url);
+  },
 };
 export default importApi;
