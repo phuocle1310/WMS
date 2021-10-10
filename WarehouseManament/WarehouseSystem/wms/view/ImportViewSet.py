@@ -11,6 +11,20 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ImportViewSerializer
 
+    @action(methods=['get'], detail=False, url_path='get_list_import_inprocess')
+    def get_list_import_inprocess(self, request):
+        if request.user.role == 2 or request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        inprocess = ImportView.objects.filter(status=True)
+        return Response(ImportViewSerializer(inprocess, many=True).data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False, url_path='get_list_import_finish')
+    def get_list_import_finish(self, request):
+        if request.user.role == 2 or request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        inprocess = ImportView.objects.filter(status=False)
+        return Response(ImportViewSerializer(inprocess, many=True).data, status=status.HTTP_200_OK)
+
     @action(methods=['get'], detail=False, url_path='get_import_inprocess/(?P<PO_id>[0-9]+)')
     def get_import_inprocess_by_po(self, request, PO_id):
         if request.user.role == 2 or request.user.is_anonymous:
