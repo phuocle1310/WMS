@@ -3,13 +3,29 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ..models import ImportView, PO
-from ..serializers import ImportViewSerializer
+from ..serializers import ImportViewSerializer, POSerializer
 
 
 class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = ImportView.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ImportViewSerializer
+
+    @action(methods=['get'], detail=False, url_path='get_list_po_import_inprocess')
+    def get_list_po_import_inprocess(self, request):
+        if request.user.role == 2 or request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        import_view = PO.objects.filter(import_view__isnull=False, import_view__status=True).distinct()
+        serializer = POSerializer(import_view, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False, url_path='get_list_po_import_finish')
+    def get_list_po_import_finish(self, request):
+        if request.user.role == 2 or request.user.is_anonymous:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        import_view = PO.objects.filter(import_view__isnull=False, import_view__status=False).distinct()
+        serializer = POSerializer(import_view, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False, url_path='get_list_import_inprocess')
     def get_list_import_inprocess(self, request):
@@ -53,4 +69,3 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
             import_view.save()
         serializer = ImportViewSerializer(import_view, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
-

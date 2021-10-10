@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth import logout
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
@@ -80,3 +81,18 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
     def get_current_user(self, request):
         return Response(self.serializer_class(request.user).data,
                         status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False, url_path="get-token-by refresh-token")
+    def get_token_by_refresh_token(self, request):
+        client_id = settings.OAUTH2_INFO.get('client_id')
+        client_secret = settings.OAUTH2_INFO.get('client_secret')
+        headers = {
+            # 'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
+        }
+        body = {
+            'grant_type': 'refresh_token',
+            'refresh_token': 'cALgBRMXAUX8vZ6xEMa8cntBfvRTpi'
+        }
+        r = requests.post("http://127.0.0.1:8000/o/token/", body, headers, auth=(client_id, client_secret))
+        return Response(r.json(), status=status.HTTP_200_OK)
