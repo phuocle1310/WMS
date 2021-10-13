@@ -21,6 +21,7 @@ const AddSoPage = React.lazy(() => import("./pages/client/AddSoPage"));
 const NotFound = React.lazy(() => import("./pages/uipage/NotFound"));
 const Login = React.lazy(() => import("./components/Login/Login"));
 const NotPermission = React.lazy(() => import("./pages/uipage/NotPermission"));
+const ImportPage = React.lazy(() => import("./pages/Staff/ImportPage"));
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const role = useSelector((state) => state.user.currentUser.role);
@@ -67,6 +68,17 @@ function App() {
               <DashboardLayoutRoute
                 path="/receipts"
                 component={ManagePoPage}
+              ></DashboardLayoutRoute>
+            )}
+            {role !== "USER" ? (
+              <DashboardLayoutRoute
+                path="/import"
+                component={NotPermission}
+              ></DashboardLayoutRoute>
+            ) : (
+              <DashboardLayoutRoute
+                path="/import"
+                component={ImportPage}
               ></DashboardLayoutRoute>
             )}
             {role !== "USER" ? (

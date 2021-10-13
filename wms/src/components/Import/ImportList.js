@@ -6,11 +6,9 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import {
   DataGridPro,
-  GridToolbarContainer,
   GridToolbarExport,
   GridOverlay,
   GridToolbarDensitySelector,
-  GridToolbarFilterButton,
 } from "@mui/x-data-grid-pro";
 import { NavLink } from "react-router-dom";
 import poApi from "../../api/poApi";
@@ -20,20 +18,23 @@ import { useDispatch, useSelector } from "react-redux";
 //print
 import ReactToPrint from "react-to-print";
 //css
-import ListPoStyles from "./ListPoStyles";
+import ListPoStyles from "../Po/ListPoStyles";
 //api
-import { listPo } from "../../store/poSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
 import IconButton from "@material-ui/core/IconButton";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import ConfirmDelete from "../UI/ConfirmDelete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import PoItemView from "./PoItemView";
+import PoItemView from "../Po/PoItemView";
 import Print from "../../components/UI/Print";
-import EditPo from "./EditPo";
-export default function ListPo() {
+import EditPo from "../Po/EditPo";
+import importApi from "../../api/importApi";
+import ConfirmImport from "./ConfirmImport";
+import InputIcon from "@material-ui/icons/Input";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import ImportItemView from "./ImportItemView";
+export default function ImportList() {
   const classes = ListPoStyles();
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
@@ -138,7 +139,7 @@ export default function ListPo() {
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             >
-              <EditIcon />
+              <InputIcon />
             </IconButton>
             <IconButton
               onClick={() => {
@@ -147,13 +148,13 @@ export default function ListPo() {
               color="primary"
               aria-label="upload picture"
               component="span"
-              disabled={role === "SUPPLIER" ? false : true}
+              // disabled={role === "SUPPLIER" ? false : true}
               classes={{
                 root: classes.button, // class name, e.g. `classes-nesting-root-x`
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             >
-              <DeleteForeverIcon />
+              <ListAltIcon />
             </IconButton>
           </>
         );
@@ -257,16 +258,15 @@ export default function ListPo() {
     );
   };
   //call api data
-  const rows = useSelector((state) => state.po.listPo);
+  const [rows, setRows] = useState([]);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
-  const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const action = listPo(page + 1);
-        const actionResult = await dispatch(action);
-        unwrapResult(actionResult);
+        const response = await importApi.getPoDone();
+        setRows(response);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -276,6 +276,7 @@ export default function ListPo() {
   const handlePageChange = (page) => {
     setPage(page);
   };
+  console.log(rows);
   //xu ly cac crub
   //crud
   const [open, setOpen] = React.useState(false);
@@ -306,7 +307,10 @@ export default function ListPo() {
             open={open}
             handleClose={handleClose}
             children={
-              <EditPo id={idPo.id} handleOnSubmit={handleOnSubmit}></EditPo>
+              <ConfirmImport
+                onDelete={handleClose}
+                onSubmitDelete={onSubmitDelete}
+              ></ConfirmImport>
             }
           ></CustomizedDialogs>
         );
@@ -316,35 +320,30 @@ export default function ListPo() {
             open={open}
             handleClose={handleClose}
             children={
-              <ConfirmDelete
-                onDelete={handleClose}
-                onSubmitDelete={onSubmitDelete}
-              ></ConfirmDelete>
+              <Print>
+                <ImportItemView id={idPo.id}></ImportItemView>
+              </Print>
             }
           ></CustomizedDialogs>
         );
       default:
-      // code block
     }
   };
   //view
-  //view
   function hanlerView(params) {
     setCrud(1);
-    //the thing  you wanna do
     setIdPo({ id: params, loading: false });
     handleClickOpen();
   }
   //edit
   function handlerEdit(params) {
-    //the thing  you wanna do
     setCrud(2);
     setIdPo({ id: params, loading: false });
     handleClickOpen();
   }
   function handlerDelete(params) {
-    //the thing  you wanna do
-    setIsDelete({ id: params, loading: false });
+    // setIsDelete({ id: params, loading: false });
+    setIdPo({ id: params, loading: false });
     setCrud(3);
     handleClickOpen();
   }
@@ -403,9 +402,9 @@ export default function ListPo() {
         className={classes.root}
         rowCount={rowsCount}
         columns={columns}
-        pageSize={10}
         pagination
-        paginationMode="server"
+        pageSize={8}
+        rowsPerPageOptions={[5]}
         onPageChange={handlePageChange}
         page={page}
         editMode="none"
