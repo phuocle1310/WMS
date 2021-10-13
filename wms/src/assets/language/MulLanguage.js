@@ -198,6 +198,7 @@ const MulLanguage = {
     confirmImport: "Bạn đang gửi yêu cầu để nhập hàng vào kho!!!",
     location: "Vị trí",
     listProductsImport: "Danh sách sản phẩm nhập vào kho",
+    ipDone: "Đã nhập vào kho",
   },
 };
 export default MulLanguage;

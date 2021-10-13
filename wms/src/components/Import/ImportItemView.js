@@ -41,7 +41,7 @@ const ImportItemView = (props) => {
       </p>
     );
   }
-  return <ImportItem items={{ ...item }}></ImportItem>;
+  return <ImportItem items={{ ...item }} idPo={id}></ImportItem>;
 };
 
 export default ImportItemView;

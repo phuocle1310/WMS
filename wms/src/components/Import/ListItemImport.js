@@ -7,6 +7,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import moment from "moment";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import GreenCheckbox from "../UI/GreenCheckbox";
 
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
@@ -66,6 +69,10 @@ export default function CustomizedTables(props) {
               {" "}
               {language.location}
             </StyledTableCell>
+            <StyledTableCell align="right">
+              {" "}
+              {language.location}
+            </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -89,6 +96,21 @@ export default function CustomizedTables(props) {
                 style={{ textTransform: "uppercase" }}
               >
                 {row.row_location}-{row.shelf_column}-{row.shelf_floor}
+              </StyledTableCell>
+              <StyledTableCell
+                align="right"
+                style={{ textTransform: "uppercase" }}
+              >
+                <FormControlLabel
+                  control={
+                    <GreenCheckbox
+                      // checked={state.checkedG}
+                      // onChange={handleChange}
+                      name="checkedG"
+                    />
+                  }
+                  // label={language.ipDone}
+                />
               </StyledTableCell>
             </StyledTableRow>
           ))}

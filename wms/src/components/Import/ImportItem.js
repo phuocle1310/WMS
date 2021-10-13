@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import GreenCheckbox from "../UI/GreenCheckbox";
 import Grid from "@material-ui/core/Grid";
+
 //css
 import PoItemStyles from "../Po/PoItemStyles";
 //lang
@@ -18,7 +22,7 @@ const ImportItem = (props) => {
   //khai báo form ban đầu rỗng
   let form = null;
   var moment = require("moment");
-  const { items } = props;
+  const { items, idPo } = props;
   const [data, setData] = useState(items);
   let newList = [];
   for (let items in data) {
@@ -38,7 +42,16 @@ const ImportItem = (props) => {
     };
     newList.push(dataItem);
   }
-  console.log(newList);
+  const [state, setState] = React.useState({
+    checkedA: true,
+    checkedB: true,
+    checkedF: true,
+    checkedG: true,
+  });
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
   return (
     <Grid container>
       <Grid item xs={12} className={classes.title}>
@@ -48,26 +61,15 @@ const ImportItem = (props) => {
         <Grid container>
           <Grid item xs={12} lg={12}>
             <Grid container spacing={2}>
-              {/* <Grid item xs={12} lg={3}>
+              <Grid item xs={12} lg={3}>
                 <div className={classes.text}>
                   <div className={classes.textChild}>
-                    <p>{language.id}:</p>
-                    <p>{item.id}</p>
-                  </div>
-                  <div className={classes.textChild}>
-                    <p>{language.dateCreated}:</p>
-                    <p>{moment(item.add_date).format("L, h:mm")}</p>
-                  </div>
-                  <div className={classes.textChild}>
-                    <p>{language.importDate}:</p>
-                    <p>{moment(item.effective_date).format("L")}</p>
-                  </div>
-                  <div className={classes.textChild}>
-                    <p>{language.status}:</p>
-                    <p>{item.status}</p>
+                    <p>{language.poID}:</p>
+                    <p>{idPo}</p>
                   </div>
                 </div>
-              </Grid> */}
+              </Grid>
+
               {/* <Grid item xs={12} lg={4}>
                 <div className={classes.text}>
                   <div className={classes.textChild}>
