@@ -31,6 +31,7 @@ const ImportItem = (props) => {
     let dataItem = {
       idIP: data[items].id,
       id: data[items].item.id,
+      idImport: data[items].id,
       name: data[items].item.name,
       unit: data[items].item.unit,
       expire_date: data[items].item.expire_date,
@@ -40,6 +41,7 @@ const ImportItem = (props) => {
       shelf_column: data[items].location.shelf_column,
       shelf_floor: data[items].location.shelf_floor,
       qty: data[items].qty,
+      importStatus: data[items].status,
       add_date: data[items].add_date,
     };
     newList.push(dataItem);
@@ -50,10 +52,10 @@ const ImportItem = (props) => {
     checkedF: true,
     checkedG: true,
   });
-
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
   return (
     <Grid container>
       <Grid item xs={12} className={classes.title}>
@@ -98,19 +100,7 @@ const ImportItem = (props) => {
             <p className={classes.left}>{language.listProductsImport}:</p>
             <ListItemImport rows={newList}></ListItemImport>
           </Grid>
-          <Grid item xs={12} className={classes.box}>
-            <Button
-              variant="contained"
-              type="submit"
-              classes={{
-                root: classes.submit, // class name, e.g. `classes-nesting-root-x`
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-              // startIcon={<SendIcon />}
-            >
-              {language.sendRequire}
-            </Button>
-          </Grid>
+          <Grid item xs={12} className={classes.box}></Grid>
         </Grid>
       </Grid>
     </Grid>

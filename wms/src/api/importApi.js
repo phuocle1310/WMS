@@ -14,5 +14,10 @@ const importApi = {
     const url = `/import/get_import_inprocess/${id}/`;
     return axiosClient.get(url);
   },
+  //
+  importUpdate: (list) => {
+    const url = `/import/update-import/`;
+    return axiosClient.put(url, list);
+  },
 };
 export default importApi;
