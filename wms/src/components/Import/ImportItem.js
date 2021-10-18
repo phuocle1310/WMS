@@ -3,7 +3,9 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GreenCheckbox from "../UI/GreenCheckbox";
 import Grid from "@material-ui/core/Grid";
-
+import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
+import ClearIcon from "@material-ui/icons/Clear";
 //css
 import PoItemStyles from "../Po/PoItemStyles";
 //lang
@@ -29,6 +31,7 @@ const ImportItem = (props) => {
     let dataItem = {
       idIP: data[items].id,
       id: data[items].item.id,
+      idImport: data[items].id,
       name: data[items].item.name,
       unit: data[items].item.unit,
       expire_date: data[items].item.expire_date,
@@ -38,6 +41,7 @@ const ImportItem = (props) => {
       shelf_column: data[items].location.shelf_column,
       shelf_floor: data[items].location.shelf_floor,
       qty: data[items].qty,
+      importStatus: data[items].status,
       add_date: data[items].add_date,
     };
     newList.push(dataItem);
@@ -48,10 +52,10 @@ const ImportItem = (props) => {
     checkedF: true,
     checkedG: true,
   });
-
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
   return (
     <Grid container>
       <Grid item xs={12} className={classes.title}>
@@ -96,6 +100,7 @@ const ImportItem = (props) => {
             <p className={classes.left}>{language.listProductsImport}:</p>
             <ListItemImport rows={newList}></ListItemImport>
           </Grid>
+          <Grid item xs={12} className={classes.box}></Grid>
         </Grid>
       </Grid>
     </Grid>

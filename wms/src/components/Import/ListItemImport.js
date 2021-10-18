@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,10 +7,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import moment from "moment";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GreenCheckbox from "../UI/GreenCheckbox";
-
+import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
+import importApi from "../../api/importApi";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
@@ -41,81 +42,138 @@ const useStyles = makeStyles({
 
 export default function CustomizedTables(props) {
   const classes = useStyles();
+  const { rows } = props;
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
+  //tạo check
+  const createCheck = () => {
+    let arrChecked = [];
+    for (let i in props.rows) {
+      let checked = { isChecked: !props.rows[i].importStatus };
+      arrChecked.push(checked);
+    }
+    return arrChecked;
+  };
+
+  const [checked, setChecked] = useState(createCheck());
+  const onChecked = (position) => {
+    setChecked((pre) => {
+      let newArr = [...pre];
+      for (let index in newArr) {
+        if (Number(index) === Number(position)) {
+          newArr[index].isChecked = !newArr[index].isChecked;
+        }
+      }
+      return newArr;
+    });
+  };
+
+  const onUpdate = () => {
+    const listImport = [];
+    for (let index in checked) {
+      if (checked[index].isChecked === true) {
+        let pk = { pk: rows[index].idImport };
+        listImport.push(pk);
+      }
+    }
+    console.log(listImport);
+    const fetchImport = async () => {
+      try {
+        const action = await importApi.importUpdate({ import: listImport });
+        return action;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchImport();
+  };
+
   return (
-    <TableContainer>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>{language.id}</StyledTableCell>
-            <StyledTableCell align="left">{language.product}</StyledTableCell>
-            <StyledTableCell align="right">
-              {language.manufactureDate}
-            </StyledTableCell>
-            <StyledTableCell align="right">
-              {language.expirationDate}
-            </StyledTableCell>
-            <StyledTableCell align="right">{language.unit}</StyledTableCell>
-            <StyledTableCell align="right">{language.muCase}</StyledTableCell>
-            <StyledTableCell align="right">
-              {" "}
-              {language.quantity}
-            </StyledTableCell>
-            <StyledTableCell align="right">
-              {" "}
-              {language.location}
-            </StyledTableCell>
-            <StyledTableCell align="right">
-              {" "}
-              {language.location}
-            </StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.rows.map((row, index) => (
-            <StyledTableRow key={index}>
-              <StyledTableCell component="th" scope="row">
-                {row.id}
-              </StyledTableCell>
-              <StyledTableCell align="left">{row.name}</StyledTableCell>
+    <>
+      <TableContainer>
+        <Table className={classes.table} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>{language.id}</StyledTableCell>
+              <StyledTableCell align="left">{language.product}</StyledTableCell>
               <StyledTableCell align="right">
-                {moment(row.expire_date).format("L")}
+                {language.manufactureDate}
               </StyledTableCell>
               <StyledTableCell align="right">
-                {moment(row.production_date).format("L")}
+                {language.expirationDate}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.unit}</StyledTableCell>
-              <StyledTableCell align="right">{row.mu_case}</StyledTableCell>
-              <StyledTableCell align="right">{row.qty}</StyledTableCell>
-              <StyledTableCell
-                align="right"
-                style={{ textTransform: "uppercase" }}
-              >
-                {row.row_location}-{row.shelf_column}-{row.shelf_floor}
+              <StyledTableCell align="right">{language.unit}</StyledTableCell>
+              <StyledTableCell align="right">{language.muCase}</StyledTableCell>
+              <StyledTableCell align="right">
+                {" "}
+                {language.quantity}
               </StyledTableCell>
-              <StyledTableCell
-                align="right"
-                style={{ textTransform: "uppercase" }}
-              >
-                <FormControlLabel
-                  control={
-                    <GreenCheckbox
-                      // checked={state.checkedG}
-                      // onChange={handleChange}
-                      name="checkedG"
-                    />
-                  }
-                  // label={language.ipDone}
-                />
+              <StyledTableCell align="right">
+                {" "}
+                {language.location}
               </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+              <StyledTableCell align="right">
+                {" "}
+                {language.location}
+              </StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <StyledTableRow key={index}>
+                <StyledTableCell component="th" scope="row">
+                  {row.id}
+                </StyledTableCell>
+                <StyledTableCell align="left">{row.name}</StyledTableCell>
+                <StyledTableCell align="right">
+                  {moment(row.expire_date).format("L")}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {moment(row.production_date).format("L")}
+                </StyledTableCell>
+                <StyledTableCell align="right">{row.unit}</StyledTableCell>
+                <StyledTableCell align="right">{row.mu_case}</StyledTableCell>
+                <StyledTableCell align="right">{row.qty}</StyledTableCell>
+                <StyledTableCell
+                  align="right"
+                  style={{ textTransform: "uppercase" }}
+                >
+                  {row.row_location}-{row.shelf_column}-{row.shelf_floor}
+                </StyledTableCell>
+                <StyledTableCell
+                  align="right"
+                  style={{ textTransform: "uppercase" }}
+                >
+                  <FormControlLabel
+                    control={
+                      <GreenCheckbox
+                        checked={checked[index].isChecked}
+                        onChange={() => onChecked(index)}
+                        name="checkedG"
+                      />
+                    }
+                    // label={language.ipDone}
+                  />
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Button
+        variant="contained"
+        onClick={onUpdate}
+        classes={{
+          root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+          label: classes.label, // class name, e.g. `classes-nesting-label-x`
+        }}
+        startIcon={<SendIcon />}
+      >
+        {language.sendRequire}
+      </Button>
+    </>
   );
 }
