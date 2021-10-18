@@ -226,7 +226,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         if is_imported.count() > 0:
             return Response(ImportViewSerializer(is_imported, many=True).data, status=status.HTTP_200_OK)
         if not empty_location:
-            return Response(empty_location, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "Not enough location storage"}, status=status.HTTP_400_BAD_REQUEST)
         import_view = self.import_good_to_loc(self.get_object())
         data_import = ImportView.objects.filter(PO=self.get_object(), status=True)
         serializer = ImportViewSerializer(data_import, many=True)
