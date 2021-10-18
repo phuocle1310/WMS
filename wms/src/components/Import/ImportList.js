@@ -266,7 +266,6 @@ export default function ImportList() {
       try {
         const response = await importApi.getPoDone();
         setRows(response);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -276,7 +275,6 @@ export default function ImportList() {
   const handlePageChange = (page) => {
     setPage(page);
   };
-  console.log(rows);
   //xu ly cac crub
   //crud
   const [open, setOpen] = React.useState(false);
@@ -309,7 +307,7 @@ export default function ImportList() {
             children={
               <ConfirmImport
                 onDelete={handleClose}
-                onSubmitDelete={onSubmitDelete}
+                onSubmitImport={onSubmitImport}
               ></ConfirmImport>
             }
           ></CustomizedDialogs>
@@ -348,35 +346,10 @@ export default function ImportList() {
     handleClickOpen();
   }
   //xóa
-  const onSubmitDelete = () => {
-    const fetchDelete = async () => {
+  const onSubmitImport = () => {
+    const fetchImport = async () => {
       try {
-        const action = await poApi.deletePo(isDelete.id);
-        setIsDelete({ id: isDelete.id, loading: true });
-        setAlert({
-          nameAlert: "success",
-          message: language.success,
-          open: true,
-        });
-        handleClose();
-        return action;
-      } catch (error) {
-        setAlert({
-          nameAlert: "Error",
-          message: JSON.stringify(error.response.data),
-          open: true,
-        });
-      }
-    };
-    fetchDelete();
-  };
-  //edit
-  const handleOnSubmit = (status) => {
-    console.log(status);
-    const fetchUpadte = async () => {
-      try {
-        const data = { status: status };
-        const action = await poApi.updateStatus(idPo.id, data);
+        const action = await importApi.getImportGood(idPo.id);
         setIdPo({ id: idPo, loading: true });
         setAlert({
           nameAlert: "success",
@@ -393,16 +366,17 @@ export default function ImportList() {
         });
       }
     };
-    fetchUpadte();
+    fetchImport();
   };
   return (
-    <div style={{ height: 580, width: "auto" }}>
+    <div style={{ width: "100%", height: "100%" }}>
       <DataGridPro
         rows={rows}
         className={classes.root}
         rowCount={rowsCount}
         columns={columns}
         pagination
+        autoHeight
         pageSize={8}
         rowsPerPageOptions={[5]}
         onPageChange={handlePageChange}

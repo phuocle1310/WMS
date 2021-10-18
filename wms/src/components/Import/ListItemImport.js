@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,6 +14,7 @@ import GreenCheckbox from "../UI/GreenCheckbox";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
+import { id } from "date-fns/locale";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -46,6 +47,24 @@ export default function CustomizedTables(props) {
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
+  //tạo check
+  const createCheck = () => {
+    let arrChecked = [];
+    for (let i in props.rows.length) {
+      let checked = { ischecked: false, id: i };
+      arrChecked.push(checked);
+    }
+    return arrChecked;
+  };
+  const [checked, setCheck] = useState(createCheck);
+  const onChecked = () => {
+    setCheck((pre) => {
+      let newArr = [...pre];
+
+      return newArr;
+    });
+  };
+  console.log(checked + "ủa");
   return (
     <TableContainer>
       <Table className={classes.table} aria-label="customized table">
@@ -104,8 +123,8 @@ export default function CustomizedTables(props) {
                 <FormControlLabel
                   control={
                     <GreenCheckbox
-                      // checked={state.checkedG}
-                      // onChange={handleChange}
+                      checked={checked[id].ischecked}
+                      onChange={onChecked.bind(this, id)}
                       name="checkedG"
                     />
                   }

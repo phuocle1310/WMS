@@ -3,7 +3,9 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GreenCheckbox from "../UI/GreenCheckbox";
 import Grid from "@material-ui/core/Grid";
-
+import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
+import ClearIcon from "@material-ui/icons/Clear";
 //css
 import PoItemStyles from "../Po/PoItemStyles";
 //lang
@@ -95,6 +97,19 @@ const ImportItem = (props) => {
           <Grid item xs={12} lg={12} className={classes.list}>
             <p className={classes.left}>{language.listProductsImport}:</p>
             <ListItemImport rows={newList}></ListItemImport>
+          </Grid>
+          <Grid item xs={12} className={classes.box}>
+            <Button
+              variant="contained"
+              type="submit"
+              classes={{
+                root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+              }}
+              // startIcon={<SendIcon />}
+            >
+              {language.sendRequire}
+            </Button>
           </Grid>
         </Grid>
       </Grid>

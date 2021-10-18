@@ -39,7 +39,7 @@ const ConfirmImport = (props) => {
         </Button>
         <Button
           variant="contained"
-          onClick={props.onSubmitDelete}
+          onClick={props.onSubmitImport}
           classes={{
             root: classes.submit, // class name, e.g. `classes-nesting-root-x`
             label: classes.label, // class name, e.g. `classes-nesting-label-x`
