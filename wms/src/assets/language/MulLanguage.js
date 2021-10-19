@@ -97,6 +97,9 @@ const MulLanguage = {
     confirmImport:
       "You are submitting a request to import goods into the warehouse!!!",
     location: "Location",
+    importDone: "List to import",
+    importProcess: "List is being imported",
+    importFinish: "Imported list",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -199,6 +202,9 @@ const MulLanguage = {
     location: "Vị trí",
     listProductsImport: "Danh sách sản phẩm nhập vào kho",
     ipDone: "Đã nhập vào kho",
+    importDone: "Danh sách cần nhập kho",
+    importProcess: "Danh sách đang nhập kho",
+    importFinish: "Danh sách đã nhập kho",
   },
 };
 export default MulLanguage;

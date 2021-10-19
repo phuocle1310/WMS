@@ -34,7 +34,7 @@ import ConfirmImport from "./ConfirmImport";
 import InputIcon from "@material-ui/icons/Input";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ImportItemView from "./ImportItemView";
-export default function ImportList() {
+export default function ImportList(props) {
   const classes = ListPoStyles();
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
@@ -46,6 +46,7 @@ export default function ImportList() {
   const [idPo, setIdPo] = useState({ id: "", loading: false });
   const [isDelete, setIsDelete] = useState({ id: "", loading: false });
   const language = MulLanguage[`${currentLanguage}`];
+  const { index } = props;
   const columns = [
     {
       field: "id",
@@ -264,7 +265,11 @@ export default function ImportList() {
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const response = await importApi.getPoDone();
+        let response;
+        if (index === 1) response = await importApi.getPoDone();
+        if (index === 2) response = await importApi.getProcess();
+        if (index === 3) response = await importApi.getFinish();
+
         setRows(response);
       } catch (error) {
         console.log(error);
@@ -319,7 +324,7 @@ export default function ImportList() {
             handleClose={handleClose}
             children={
               <Print>
-                <ImportItemView id={idPo.id}></ImportItemView>
+                <ImportItemView id={idPo.id} index={index}></ImportItemView>
               </Print>
             }
           ></CustomizedDialogs>

@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 
 export default function CustomizedTables(props) {
   const classes = useStyles();
-  const { rows } = props;
+  const { rows, index } = props;
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -79,7 +79,6 @@ export default function CustomizedTables(props) {
         listImport.push(pk);
       }
     }
-    console.log(listImport);
     const fetchImport = async () => {
       try {
         const action = await importApi.importUpdate({ import: listImport });

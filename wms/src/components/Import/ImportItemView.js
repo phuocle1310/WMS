@@ -5,14 +5,17 @@ import { CircularProgress } from "@material-ui/core";
 import ImportItem from "./ImportItem";
 const ImportItemView = (props) => {
   //khai báo form ban đầu rỗng
-  const { id } = props;
+  const { id, index } = props;
 
   const {
     sendRequest,
     status,
     data: item,
     error,
-  } = useHttp(importApi.getPoImport, true);
+  } = useHttp(
+    index === 2 ? importApi.getPoImportInprocess : importApi.getPoImportFinish,
+    true,
+  );
 
   useEffect(() => {
     sendRequest(id);
