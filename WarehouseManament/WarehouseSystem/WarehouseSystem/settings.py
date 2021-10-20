@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 #chạy post man bỏ biến này ra
-OAUTH2_PROVIDER = {
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-}
+# OAUTH2_PROVIDER = {
+#     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+# }
 # OAUTH2_PROVIDER = {
 #     # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 #     'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 15,
@@ -128,7 +128,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '12345',
         'HOST': ''  # mặc định localhost
     }
 }
