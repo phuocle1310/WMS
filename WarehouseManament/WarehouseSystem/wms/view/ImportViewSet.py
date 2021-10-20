@@ -23,7 +23,7 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
     def get_list_po_import_finish(self, request):
         if request.user.role == 2 or request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        import_view = PO.objects.filter(import_view__isnull=False, import_view__status=False).distinct()
+        import_view = PO.objects.filter(status=4).distinct()
         serializer = POSerializer(import_view, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -73,6 +73,32 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
             data_update = ImportView.objects.get(pk=pk)
             data_update.status = False
             data_update.save()
+
+        '''
+            + kiểm tra nếu PO đã import xong thì update status là IMPORTED
+        '''
+
+        po_update = data_update.PO
+        is_imported = self.is_imported(po_update)
+        if is_imported:
+            po_update.status = 4
+            po_update.edit_who = request.user
+            po_update.save()
         data_return = ImportView.objects.filter(pk__in=pk_list)
         serializer = ImportViewSerializer(data_return, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+    '''
+        + Check PO đã imported xong chưa
+        1) Rồi - update status PO là IMPORTED
+        2) Chưa- thì thôi
+    '''
+
+    def is_imported(self, instance):
+        instance = instance
+        import_po = ImportView.objects.filter(PO=instance, status=True)
+        if import_po.count() > 0:
+            return False
+        return True

@@ -156,20 +156,6 @@ class BasePOSO(models.Model):
     effective_date = models.DateField()
     add_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
-    description = models.TextField(null=True, blank=True)
-
-    PENDING = 2
-    ACCEPTED = 1
-    FAILED = 3
-    DONE = 0
-    STATUS_CHOICES = (
-        (PENDING, 'PENDING'),
-        (ACCEPTED, 'ACCEPTED'),
-        (FAILED, 'FAILED'),
-        (DONE, 'DONE'),
-    )
-
-    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=PENDING)
 
     class Meta:
         abstract = True
@@ -183,10 +169,40 @@ class PO(BasePOSO):
     add_who = models.ForeignKey(User, related_name="po_add_who", on_delete=models.SET_NULL, null=True)
     edit_who = models.ForeignKey(User, related_name="po_edit_who", on_delete=models.SET_NULL, null=True)
 
+    PENDING = 2
+    ACCEPTED = 1
+    FAILED = 3
+    DONE = 0
+    IMPORTED = 4
+    STATUS_CHOICES = (
+        (PENDING, 'PENDING'),
+        (ACCEPTED, 'ACCEPTED'),
+        (FAILED, 'FAILED'),
+        (DONE, 'DONE'),
+        (IMPORTED, 'IMPORTED'),
+    )
+
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=PENDING)
+
 
 class SO(BasePOSO):
     add_who = models.ForeignKey(User, related_name="so_add_who", on_delete=models.SET_NULL, null=True)
     edit_who = models.ForeignKey(User, related_name="so_edit_who", on_delete=models.SET_NULL, null=True)
+
+    PENDING = 2
+    ACCEPTED = 1
+    FAILED = 3
+    DONE = 0
+    EXPORTED = 4
+    STATUS_CHOICES = (
+        (PENDING, 'PENDING'),
+        (ACCEPTED, 'ACCEPTED'),
+        (FAILED, 'FAILED'),
+        (DONE, 'DONE'),
+        (EXPORTED, 'EXPORTED'),
+    )
+
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=PENDING)
 
 
 class BasePOSODetail(models.Model):
