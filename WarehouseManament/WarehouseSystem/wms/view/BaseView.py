@@ -353,7 +353,7 @@ class BaseAPIView:
         return True
 
     def delete_export_view(self):
-        exports_delete = ExportView.objects.filter(status=False,
+        exports_delete = ExportView.objects.filter(status=2,
                                                    add_date__lte=datetime.datetime.now() - datetime.timedelta(days=7))
         for export_delete in exports_delete:
             export_delete.delete()

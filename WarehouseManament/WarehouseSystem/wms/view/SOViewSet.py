@@ -204,6 +204,9 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         empty_location = self.is_empty_pickface_locations(self.get_object())
         if is_exported.count() > 0:
             return Response(ExportViewSerializer(is_exported, many=True).data, status=status.HTTP_200_OK)
+        so_exported = self.get_object()
+        if so_exported.status == 4:
+            return Response({"Failed": "SO exported"}, status=status.HTTP_400_BAD_REQUEST)
         if not empty_location:
             return Response(empty_location, status=status.HTTP_400_BAD_REQUEST)
         export_view = self.allocated_good(self.get_object())

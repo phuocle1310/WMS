@@ -23,8 +23,8 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
     def get_list_po_import_finish(self, request):
         if request.user.role == 2 or request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        import_view = PO.objects.filter(status=4).distinct()
-        serializer = POSerializer(import_view, many=True)
+        imported_po = PO.objects.filter(status=4).distinct()
+        serializer = POSerializer(imported_po, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False, url_path='get_list_import_inprocess')
@@ -52,7 +52,6 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
     def get_import_finish_by_po(self, request, PO_id):
         if request.user.role == 2 or request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        # po = PO.objects.get(pk=PO_id)
         inprocess = ImportView.objects.filter(status=False, PO=PO_id)
         return Response(ImportViewSerializer(inprocess, many=True).data, status=status.HTTP_200_OK)
 
@@ -62,6 +61,8 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
         pk_list = []
         import_view_update = request.data.get('import')
+        if import_view_update is None:
+            return Response({"Failed": "Required data"}, status=status.HTTP_400_BAD_REQUEST)
         for import_view in import_view_update:
             try:
                 datas_update = ImportView.objects.get(pk=import_view.get('pk'))
@@ -74,16 +75,16 @@ class ImportViewSet(viewsets.ViewSet, generics.ListAPIView):
             data_update.status = False
             data_update.save()
 
-        '''
-            + kiểm tra nếu PO đã import xong thì update status là IMPORTED
-        '''
+            '''
+                + kiểm tra nếu PO đã import xong thì update status là IMPORTED
+            '''
 
-        po_update = data_update.PO
-        is_imported = self.is_imported(po_update)
-        if is_imported:
-            po_update.status = 4
-            po_update.edit_who = request.user
-            po_update.save()
+            po_update = data_update.PO
+            is_imported = self.is_imported(po_update)
+            if is_imported:
+                po_update.status = 4
+                po_update.edit_who = request.user
+                po_update.save()
         data_return = ImportView.objects.filter(pk__in=pk_list)
         serializer = ImportViewSerializer(data_return, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
