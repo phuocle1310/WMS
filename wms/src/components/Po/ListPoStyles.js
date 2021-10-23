@@ -16,6 +16,7 @@ const ListPoStyles = makeStyles((theme) => ({
     width: "120px",
   },
   overlay: {
+    margin: 30,
     flexDirection: "column",
     "& .ant-empty-img-1": {
       fill: theme.palette.type === "light" ? "#aeb8c2" : "#262626",
