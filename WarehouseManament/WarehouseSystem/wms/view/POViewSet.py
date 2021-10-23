@@ -86,10 +86,10 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
             instance.edit_who = request.user
         else:
             instance.edit_who = request.user
-        if stt in [2, 0]:
+        if stt in [2, 0, 4]:
             return Response({"Falied": "This PO can't update this status"}, status=status.HTTP_400_BAD_REQUEST)
         if instance.status == 0:
-            return Response({"Falied": "PO have done already, can't edit!!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "PO have done already, can't edit!!"}, status=status.HTTP_400_BAD_REQUEST)
         instance.status = stt
         instance.save()
         serializer = POSerializer(instance)
@@ -97,16 +97,16 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
 
     def destroy(self, request, *args, **kwargs):
         if request.user.role == 1:
-            return Response({"Falied": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             instance = self.get_object()
 
         except PO.DoesNotExist:
-            return Response({"Falied": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"Failed": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
         if instance.status != 2:
-            return Response({"Falied": "You can't delete PO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"Failed": "You can't delete PO accepted or deleted"}, status=status.HTTP_403_FORBIDDEN)
         else:
             if request.user.supplier == self.get_object().supplier:
                 return super().destroy(request, *args, **kwargs) and Response({"Success": "Delete PO success"}, status=status.HTTP_200_OK)
