@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import useHttp from "../../Hook/useHttp";
 import importApi from "../../api/importApi";
 import { CircularProgress } from "@material-ui/core";
 import ImportItem from "./ImportItem";
 const ImportItemView = (props) => {
   //khai báo form ban đầu rỗng
-  const { id } = props;
+  const { id, index } = props;
 
   const {
     sendRequest,
     status,
     data: item,
     error,
-  } = useHttp(importApi.getPoImport, true);
+  } = useHttp(
+    index === 2 ? importApi.getPoImportInprocess : importApi.getPoImportFinish,
+    true,
+  );
 
   useEffect(() => {
     sendRequest(id);
-  }, []);
+  }, [id, sendRequest]);
 
   if (status === "pending") {
     return (
@@ -41,7 +44,7 @@ const ImportItemView = (props) => {
       </p>
     );
   }
-  return <ImportItem items={{ ...item }} idPo={id}></ImportItem>;
+  return <ImportItem items={{ ...item }} idPo={id} index={index}></ImportItem>;
 };
 
 export default ImportItemView;

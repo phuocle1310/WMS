@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from "react";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import GreenCheckbox from "../UI/GreenCheckbox";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import SendIcon from "@material-ui/icons/Send";
-import ClearIcon from "@material-ui/icons/Clear";
+
 //css
 import PoItemStyles from "../Po/PoItemStyles";
 //lang
@@ -22,10 +17,8 @@ const ImportItem = (props) => {
   );
   const language = MulLanguage[`${currentLanguage}`];
   //khai báo form ban đầu rỗng
-  let form = null;
-  var moment = require("moment");
   const { items, idPo } = props;
-  const [data, setData] = useState(items);
+  const data = items;
   let newList = [];
   for (let items in data) {
     let dataItem = {
@@ -46,15 +39,6 @@ const ImportItem = (props) => {
     };
     newList.push(dataItem);
   }
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
 
   return (
     <Grid container>
@@ -73,32 +57,11 @@ const ImportItem = (props) => {
                   </div>
                 </div>
               </Grid>
-
-              {/* <Grid item xs={12} lg={4}>
-                <div className={classes.text}>
-                  <div className={classes.textChild}>
-                    <p>{language.supplier}:</p>
-                    <p>{item.supplier.company_name}</p>
-                  </div>
-                  <div className={classes.textChild}>
-                    <p>{language.address}:</p>
-                    <p>{item.supplier.address}</p>
-                  </div>
-                  <div className={classes.textChild}>
-                    <p>{language.phone}:</p>
-                    <p>{item.supplier.phone}</p>
-                  </div>
-                  <div className={classes.textChild}>
-                    <p>{language.email}:</p>
-                    <p>{item.supplier.email}</p>
-                  </div>
-                </div>
-              </Grid> */}
             </Grid>
           </Grid>
           <Grid item xs={12} lg={12} className={classes.list}>
             <p className={classes.left}>{language.listProductsImport}:</p>
-            <ListItemImport rows={newList}></ListItemImport>
+            <ListItemImport rows={newList} index={props.index}></ListItemImport>
           </Grid>
           <Grid item xs={12} className={classes.box}></Grid>
         </Grid>

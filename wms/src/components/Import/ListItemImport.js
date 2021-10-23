@@ -38,11 +38,28 @@ const useStyles = makeStyles({
   table: {
     minWidth: 700,
   },
+  submit: {
+    borderRadius: 25,
+    border: 0,
+    marginTop: 20,
+    color: "white",
+    height: 40,
+    width: "200px",
+    padding: "0 30px",
+    background: "#E4544B",
+    float: "right",
+    "&:hover": {
+      background: "#E4544B",
+    },
+  },
+  label: {
+    textTransform: "capitalize",
+  },
 });
 
 export default function CustomizedTables(props) {
   const classes = useStyles();
-  const { rows } = props;
+  const { rows, index } = props;
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -79,7 +96,6 @@ export default function CustomizedTables(props) {
         listImport.push(pk);
       }
     }
-    console.log(listImport);
     const fetchImport = async () => {
       try {
         const action = await importApi.importUpdate({ import: listImport });
@@ -117,13 +133,13 @@ export default function CustomizedTables(props) {
               </StyledTableCell>
               <StyledTableCell align="right">
                 {" "}
-                {language.location}
+                {language.isImport}
               </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
-              <StyledTableRow key={index}>
+            {rows.map((row, id) => (
+              <StyledTableRow key={id}>
                 <StyledTableCell component="th" scope="row">
                   {row.id}
                 </StyledTableCell>
@@ -150,8 +166,9 @@ export default function CustomizedTables(props) {
                   <FormControlLabel
                     control={
                       <GreenCheckbox
-                        checked={checked[index].isChecked}
-                        onChange={() => onChecked(index)}
+                        disabled={index === 2 ? false : true}
+                        checked={checked[id].isChecked}
+                        onChange={() => onChecked(id)}
                         name="checkedG"
                       />
                     }
@@ -163,17 +180,19 @@ export default function CustomizedTables(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button
-        variant="contained"
-        onClick={onUpdate}
-        classes={{
-          root: classes.submit, // class name, e.g. `classes-nesting-root-x`
-          label: classes.label, // class name, e.g. `classes-nesting-label-x`
-        }}
-        startIcon={<SendIcon />}
-      >
-        {language.sendRequire}
-      </Button>
+      {index === 2 && (
+        <Button
+          variant="contained"
+          onClick={onUpdate}
+          classes={{
+            root: classes.submit,
+            label: classes.label,
+          }}
+          startIcon={<SendIcon />}
+        >
+          {language.sendRequire}
+        </Button>
+      )}
     </>
   );
 }

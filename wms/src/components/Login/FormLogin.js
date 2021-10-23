@@ -76,6 +76,7 @@ const FormLogin = function FormLogin() {
         const response = await userApi.login(fromData);
         //lưu vô cookie
         cookies.save("access-token", response.access_token);
+        cookies.save("refresh_token", response.refresh_token);
         const action = getMe();
         const actionResult = await dispatch(action);
         //update thong tin user

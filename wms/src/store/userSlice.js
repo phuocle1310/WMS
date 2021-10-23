@@ -28,6 +28,7 @@ const userSlice = createSlice({
     logout(state) {
       //lưu vô cookie
       cookies.save("access-token", "");
+      cookies.save("refresh_token", ""); 
       state.currentUser = {};
       state.loading = true;
       state.error = false;
