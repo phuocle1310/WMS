@@ -19,9 +19,9 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
     queryset = PO.objects.all()
     action_required_auth = ['list', 'create',
                             'update_po', 'destroy', 'get_po']
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['effective_date', 'status',]
-    search_fields = ['effective_date', 'supplier__company_name', 'status']
+    # filter_backends = [DjangoFilterBackend, SearchFilter]
+    # filterset_fields = ['effective_date', 'status',]
+    # search_fields = ['effective_date', 'supplier__company_name', 'status']
 
     def get_permissions(self, list_action=action_required_auth):
         if self.action in list_action:
@@ -225,6 +225,9 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         empty_location = self.is_empty_storage_locations(self.get_object())
         if is_imported.count() > 0:
             return Response(ImportViewSerializer(is_imported, many=True).data, status=status.HTTP_200_OK)
+        po_imported = self.get_object()
+        if po_imported.status == 4:
+            return Response({"Failed": "PO imported"}, status=status.HTTP_400_BAD_REQUEST)
         if not empty_location:
             return Response({"Failed": "Not enough location storage"}, status=status.HTTP_400_BAD_REQUEST)
         import_view = self.import_good_to_loc(self.get_object())
