@@ -57,7 +57,7 @@ INSTALLED_APPS = [
 #     'OAUTH_DELETE_EXPIRED': True
 # }
 
-#auth của én
+#auth của én thấy ghét
 OAUTH2_INFO = {
     "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
     "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
@@ -128,7 +128,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '12345',
         'HOST': ''  # mặc định localhost
     }
 }
