@@ -57,6 +57,9 @@ OAUTH2_PROVIDER = {
 #     'OAUTH_DELETE_EXPIRED': True
 # }
 
+<<<<<<< HEAD
+#auth của én thấy ghét
+=======
 #auth của én
 OAUTH2_INFO = {
     "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
@@ -64,10 +67,17 @@ OAUTH2_INFO = {
 }
 
 #auth
+>>>>>>> 253dc05324d481c97f7993e6afdd4deeceb5f9f1
 # OAUTH2_INFO = {
-#     "client_id": "UwiohB60sSv0jVI2FtIsBLZ2faeLTincyCx0drSa",
-#     "client_secret": "AK5xA6fgwhdGb8e2MxcWUaEVGCaWrvEDCYsXmIesyWtIT0u1HZK2t3gTdvCoUbktaYXzvU7UGGPBjeS0iVpcMmptoLOxP8jKDU7eNQ6qp3EV186T3uXWQOVuVjK5Bk1A"
+#     "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
+#     "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
 # }
+
+# auth
+OAUTH2_INFO = {
+    "client_id": "UwiohB60sSv0jVI2FtIsBLZ2faeLTincyCx0drSa",
+    "client_secret": "AK5xA6fgwhdGb8e2MxcWUaEVGCaWrvEDCYsXmIesyWtIT0u1HZK2t3gTdvCoUbktaYXzvU7UGGPBjeS0iVpcMmptoLOxP8jKDU7eNQ6qp3EV186T3uXWQOVuVjK5Bk1A"
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':

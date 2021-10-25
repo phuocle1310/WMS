@@ -127,6 +127,7 @@ class Location(models.Model):
 
     class Meta:
         unique_together = ['shelf_column', 'shelf_floor', 'row_location']
+        ordering = ['id']
 
 
 class ItemLocation(models.Model):

@@ -30,6 +30,7 @@ router.register('supplier', views.SupplierView)
 router.register('statistical', views.StatisticalViewSet, basename='MyModel')
 router.register(r'import', views.ImportViewSet)
 router.register(r'export', views.ExportViewSet)
+router.register(r'location', views.LocationViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

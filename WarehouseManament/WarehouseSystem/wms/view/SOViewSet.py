@@ -192,13 +192,21 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         serializer = OrderSerializer(receipts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['get'], detail=False, url_path='get_so_accept')
+    def get_so_accept(self, request):
+        if request.user.is_anonymous or request.user.role == 2:
+            return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
+        receipts = SO.objects.filter(status=1)
+        serializer = SOSerializer(receipts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     @action(methods=['get'], detail=True, url_path='export-good')
     def export_good(self, request, pk):
         s = self.delete_export_view()
         if request.user.role == 2 or request.user.is_anonymous:
             return Response({"Failed": "You don't have permission"}, status=status.HTTP_403_FORBIDDEN)
-        if self.get_object().status != 0:
-            return Response({"Failed": "PO can't import to stock"}, status=status.HTTP_400_BAD_REQUEST)
+        if self.get_object().status != 1:
+            return Response({"Failed": "SO can't import to stock"}, status=status.HTTP_400_BAD_REQUEST)
 
         is_exported = ExportView.objects.filter(SO=self.get_object())
         empty_location = self.is_empty_pickface_locations(self.get_object())
@@ -208,7 +216,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         if so_exported.status == 4:
             return Response({"Failed": "SO exported"}, status=status.HTTP_400_BAD_REQUEST)
         if not empty_location:
-            return Response(empty_location, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "Not enough location pickface"}, status=status.HTTP_400_BAD_REQUEST)
         export_view = self.allocated_good(self.get_object())
         if not export_view:
             return Response({"Failed": "SO export wrong!! Please check SO's detail"}, status=status.HTTP_400_BAD_REQUEST)

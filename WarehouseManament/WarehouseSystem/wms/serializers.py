@@ -466,3 +466,14 @@ class ExportViewSerializer(ModelSerializer):
         model = ExportView
         fields = ['id','SO', 'item', 'to_location', 'from_location', 'qty', 'add_date', 'status']
 
+
+# Location
+
+
+class LocationCreateSerializer(serializers.Serializer):
+    name_row = serializers.CharField(required=True, max_length=10)
+    number_column = serializers.IntegerField(default=0)
+    number_floor = serializers.IntegerField(default=0)
+
+
+
