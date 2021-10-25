@@ -208,7 +208,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         if so_exported.status == 4:
             return Response({"Failed": "SO exported"}, status=status.HTTP_400_BAD_REQUEST)
         if not empty_location:
-            return Response(empty_location, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "Not enough location pickface"}, status=status.HTTP_400_BAD_REQUEST)
         export_view = self.allocated_good(self.get_object())
         if not export_view:
             return Response({"Failed": "SO export wrong!! Please check SO's detail"}, status=status.HTTP_400_BAD_REQUEST)
