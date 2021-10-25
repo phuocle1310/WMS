@@ -21,7 +21,7 @@ import ListPoStyles from "../Po/ListPoStyles";
 import importApi from "../../api/importApi";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GreenCheckbox from "../UI/GreenCheckbox";
-export default function TableImport(props) {
+export default function TableExport(props) {
   const classes = ListPoStyles();
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
