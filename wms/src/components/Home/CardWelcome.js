@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { makeStyles } from "@material-ui/core/styles";
+import MulLanguage from "../../assets/language/MulLanguage";
+import { useSelector } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -31,11 +33,22 @@ const CardWelcome = () => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
+
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
+  //thông tin user
+  const currentUser = useSelector((state) => state.user.currentUser);
+
   return (
     <>
       <div className={classes.root}>
         <div className={classes.title} data-aos="fade-left">
-          <h3>Chào mừng Yến</h3>
+          <h3>
+            {language.welcome} {currentUser.last_name}
+          </h3>
         </div>
         <div className={classes.img}>
           <img src={welcome} alt="anh"></img>

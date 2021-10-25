@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 
 //css
@@ -39,7 +39,6 @@ const ImportItem = (props) => {
     };
     newList.push(dataItem);
   }
-
   return (
     <Grid container>
       <Grid item xs={12} className={classes.title}>
@@ -61,7 +60,11 @@ const ImportItem = (props) => {
           </Grid>
           <Grid item xs={12} lg={12} className={classes.list}>
             <p className={classes.left}>{language.listProductsImport}:</p>
-            <ListItemImport rows={newList} index={props.index}></ListItemImport>
+            <ListItemImport
+              rows={newList}
+              index={props.index}
+              listUpdateImport={props.handleUpdateImport}
+            ></ListItemImport>
           </Grid>
           <Grid item xs={12} className={classes.box}></Grid>
         </Grid>

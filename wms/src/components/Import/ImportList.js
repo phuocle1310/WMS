@@ -38,6 +38,33 @@ export default function ImportList(props) {
   const [idPo, setIdPo] = useState({ id: "", loading: false });
   const language = MulLanguage[`${currentLanguage}`];
   const { index } = props;
+  const [listUpdateImport, setListUpdateImport] = useState([]);
+
+  const handleUpdateImport = (data) => {
+    setListUpdateImport(data);
+    console.log(listUpdateImport);
+    const fetchImport = async () => {
+      try {
+        const action = await importApi.importUpdate({
+          import: listUpdateImport,
+        });
+        setAlert({
+          nameAlert: "success",
+          message: language.success,
+          open: true,
+        });
+        handleClose();
+        return action;
+      } catch (error) {
+        setAlert({
+          nameAlert: "Error",
+          message: JSON.stringify(error.response.data),
+          open: true,
+        });
+      }
+    };
+    fetchImport();
+  };
   const columns = [
     {
       field: "id",
@@ -232,7 +259,7 @@ export default function ImportList(props) {
       }
     };
     fetchLogin();
-  }, [page, idPo.id, index]);
+  }, [page, idPo.id, index, listUpdateImport]);
   const handlePageChange = (page) => {
     setPage(page);
   };
@@ -280,7 +307,11 @@ export default function ImportList(props) {
             handleClose={handleClose}
             children={
               <Print>
-                <ImportItemView id={idPo.id} index={index}></ImportItemView>
+                <ImportItemView
+                  id={idPo.id}
+                  index={index}
+                  handleUpdateImport={handleUpdateImport}
+                ></ImportItemView>
               </Print>
             }
           ></CustomizedDialogs>
