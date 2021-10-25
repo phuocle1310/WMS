@@ -82,19 +82,19 @@ const ExportPage = (props) => {
           aria-label="scrollable force tabs example"
         >
           <Tab
-            label={language.importDone}
+            label={language.exportDone}
             className={classes.tab}
             icon={<AddIcon />}
             {...a11yProps(0)}
           />
           <Tab
-            label={language.importProcess}
+            label={language.exportProcess}
             className={classes.tab}
             icon={<AutorenewIcon />}
             {...a11yProps(1)}
           />
           <Tab
-            label={language.importFinish}
+            label={language.exportFinish}
             className={classes.tab}
             icon={<DoneIcon />}
             {...a11yProps(3)}
@@ -117,7 +117,7 @@ const ExportPage = (props) => {
             aria-label="scrollable force tabs example"
           >
             <Tab
-              label={language.pyPo}
+              label={language.pySo}
               className={classes.tab}
               {...a11yPropsChild(0)}
             />

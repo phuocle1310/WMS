@@ -11,9 +11,11 @@ const SecondNavigationStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("lg")]: {
       height: "100vh",
       display: "flex",
-      width: 260,
+      width: 280,
     },
     color: "#afb2d5",
+    overflow: "auto",
+    overflowX: "hidden",
   },
   menuItem: {
     borderBottom: 0,

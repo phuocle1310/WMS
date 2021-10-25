@@ -22,7 +22,7 @@ const ConfirmExport = (props) => {
     <>
       <div className={classes.box}>
         <p className={classes.labelId} style={{ padding: 20 }}>
-          {language.confirmImport}
+          {language.confirmExport}
         </p>
       </div>
       <div className={classes.box2}>

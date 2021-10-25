@@ -59,7 +59,7 @@ const ExportItem = (props) => {
             </Grid>
           </Grid>
           <Grid item xs={12} lg={12} className={classes.list}>
-            <p className={classes.left}>{language.listProductsImport}:</p>
+            <p className={classes.left}>{language.listProductsExport}:</p>
             <ListItemExport
               rows={newList}
               index={props.index}
