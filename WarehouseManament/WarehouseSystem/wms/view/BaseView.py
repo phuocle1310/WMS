@@ -282,6 +282,8 @@ class BaseAPIView:
                     l['qty'] = Location.PICK_FACE - pick_loc.get('total')
                     pick_face_can_fill.append(l)
 
+            if item_locations_storage.count() == 0:
+                raise ValidationError("Some item in SO does not in storage")
             locations = []
             Qty_total = sodetail.Qty_order
             for loc in item_locations_storage:
