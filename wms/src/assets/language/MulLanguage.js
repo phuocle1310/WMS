@@ -101,6 +101,8 @@ const MulLanguage = {
     importDone: "List to import",
     importProcess: "List is being imported",
     importFinish: "Imported list",
+    //welcome
+    welcome: "Welcome",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -206,6 +208,8 @@ const MulLanguage = {
     importDone: "Danh sách cần nhập kho",
     importProcess: "Danh sách đang nhập kho",
     importFinish: "Danh sách đã nhập kho",
+    //welcome
+    welcome: "Xin chào",
   },
 };
 export default MulLanguage;

@@ -7,6 +7,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import MulLanguage from "../../assets/language/MulLanguage";
 import AOS from "aos";
 import "aos/dist/aos.css";
 function createData(name, calories, fat, carbs, protein) {
@@ -14,8 +16,8 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Frozen ", 159, 6.0, 24, 4.0),
+  createData("Ice ", 237, 9.0, 37, 4.3),
   createData("Eclair", 262, 16.0, 24, 6.0),
 ];
 
@@ -49,11 +51,16 @@ const StackedBar = () => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
+  //lang
+  const currentLanguage = useSelector(
+    (state) => state.currentLanguage.currentLanguage,
+  );
+  const language = MulLanguage[`${currentLanguage}`];
   return (
     <>
       <div className={classes.root}>
         <div className={classes.title}>
-          <p>Sản phẩm</p>
+          <p>{language.product}</p>
         </div>
         <div
           className={classes.chart}
@@ -64,9 +71,9 @@ const StackedBar = () => {
             <Table className={classes.table} aria-label="caption table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Dessert (100g serving)</TableCell>
-                  <TableCell align="right">Calories</TableCell>
-                  <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                  <TableCell>{language.id}</TableCell>
+                  <TableCell align="right">{language.product}</TableCell>
+                  <TableCell align="right">{language.quantity}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
