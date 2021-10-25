@@ -64,5 +64,24 @@ const ListPoStyles = makeStyles((theme) => ({
   button1: {
     color: "#1565c0",
   },
+  right: {
+    textAlign: "right",
+  },
+  submit: {
+    border: 0,
+    margin: 10,
+    marginTop: 20,
+    color: "white",
+    height: 40,
+    width: "200px",
+    padding: "0 30px",
+    background: "#E4544B",
+    "&:hover": {
+      background: "#E4544B",
+    },
+  },
+  label: {
+    textTransform: "capitalize",
+  },
 }));
 export default ListPoStyles;

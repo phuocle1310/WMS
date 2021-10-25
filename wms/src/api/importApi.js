@@ -32,5 +32,10 @@ const importApi = {
     const url = `/import/update-import/`;
     return axiosClient.put(url, list);
   },
+  //danh sách import đang thực hiện get_list_import_inprocess
+  getListInprocess: () => {
+    const url = `/import/get_list_import_inprocess/`;
+    return axiosClient.get(url);
+  },
 };
 export default importApi;
