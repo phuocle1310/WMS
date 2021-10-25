@@ -5,7 +5,7 @@ import { CircularProgress } from "@material-ui/core";
 import ImportItem from "./ImportItem";
 const ImportItemView = (props) => {
   //khai báo form ban đầu rỗng
-  const { id, index } = props;
+  const { id, index, handleUpdateImport } = props;
 
   const {
     sendRequest,
@@ -44,7 +44,14 @@ const ImportItemView = (props) => {
       </p>
     );
   }
-  return <ImportItem items={{ ...item }} idPo={id} index={index}></ImportItem>;
+  return (
+    <ImportItem
+      items={{ ...item }}
+      idPo={id}
+      index={index}
+      handleUpdateImport={handleUpdateImport}
+    ></ImportItem>
+  );
 };
 
 export default ImportItemView;

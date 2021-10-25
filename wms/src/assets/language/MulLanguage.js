@@ -101,6 +101,12 @@ const MulLanguage = {
     importDone: "List to import",
     importProcess: "List is being imported",
     importFinish: "Imported list",
+    idProduct: "ID of product",
+    pyPo: "According to the import order",
+    pyProduct: "According to the product order",
+    sendUpdate: "Upadte",
+    //welcome
+    welcome: "Welcome",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -206,6 +212,12 @@ const MulLanguage = {
     importDone: "Danh sách cần nhập kho",
     importProcess: "Danh sách đang nhập kho",
     importFinish: "Danh sách đã nhập kho",
+    idProduct: "Mã sản phẩm",
+    pyPo: "Theo đơn nhập hàng",
+    pyProduct: "Theo đơn sản phẩm",
+    sendUpdate: "Cập nhật",
+    //welcome
+    welcome: "Xin chào",
   },
 };
 export default MulLanguage;

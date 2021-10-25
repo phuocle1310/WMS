@@ -12,6 +12,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import React from "react";
 import PageStyles from "../client/PageStyles";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
+import TableImport from "../../components/Import/TableImport";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -48,10 +49,22 @@ const ImportPage = (props) => {
       "aria-controls": `scrollable-force-tabpanel-${index}`,
     };
   }
+  function a11yPropsChild(index) {
+    return {
+      id: `scrollable-force-tab-${index}`,
+      "aria-controls": `scrollable-force-tabpanel-${index}`,
+    };
+  }
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+  //tab Child
+  const [valueChild, setValueChild] = React.useState(0);
+
+  const handleChangeChild = (event, newValueChild) => {
+    setValueChild(newValueChild);
   };
   //css
   const classes = PageStyles();
@@ -93,9 +106,33 @@ const ImportPage = (props) => {
           <ImportList index={1}></ImportList>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <ImportList index={2}></ImportList>
-          </Grid>
+          <Tabs
+            value={valueChild}
+            onChange={handleChangeChild}
+            variant="scrollable"
+            scrollButtons="on"
+            indicatorColor="primary"
+            textColor="primary"
+            className={classes.tabs}
+            aria-label="scrollable force tabs example"
+          >
+            <Tab
+              label={language.pyPo}
+              className={classes.tab}
+              {...a11yPropsChild(0)}
+            />
+            <Tab
+              label={language.pyProduct}
+              className={classes.tab}
+              {...a11yPropsChild(1)}
+            />
+          </Tabs>{" "}
+          <TabPanel value={valueChild} index={0}>
+            <ImportList index={2}></ImportList>{" "}
+          </TabPanel>
+          <TabPanel value={valueChild} index={1}>
+            <TableImport index={2}></TableImport>
+          </TabPanel>
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
