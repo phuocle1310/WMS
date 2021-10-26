@@ -97,6 +97,8 @@ const MulLanguage = {
     confirmImport:
       "You are submitting a request to import goods into the warehouse!!!",
     location: "Location",
+    fromLocation: "From location",
+    toLocation: "To Location",
     isImport: "entered",
     importDone: "List to import",
     importProcess: "List is being imported",
@@ -216,6 +218,8 @@ const MulLanguage = {
     //import
     confirmImport: "Bạn đang gửi yêu cầu để nhập hàng vào kho!!!",
     location: "Vị trí",
+    fromLocation: "Từ vị trí",
+    toLocation: "Đến vị trí",
     listProductsImport: "Danh sách sản phẩm nhập vào kho",
     isImport: "Đã nhập vào kho",
     importDone: "Danh sách cần nhập kho",

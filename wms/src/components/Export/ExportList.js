@@ -19,13 +19,14 @@ import ListPoStyles from "../Po/ListPoStyles";
 import IconButton from "@material-ui/core/IconButton";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import PoItemView from "../Po/PoItemView";
+import SoItemView from "../So/SoItemView";
 import Print from "../../components/UI/Print";
-import importApi from "../../api/importApi";
 import ConfirmExport from "./ConfirmExport";
 import InputIcon from "@material-ui/icons/Input";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ExportItemView from "./ExportItemView";
+//api
+import exportApi from "../../api/exportApi";
 export default function ExportList(props) {
   const classes = ListPoStyles();
   //phân quyền
@@ -41,13 +42,12 @@ export default function ExportList(props) {
   const [listUpdateImport, setListUpdateImport] = useState([]);
 
   const handleUpdateImport = (data) => {
-    setListUpdateImport(data);
-    console.log(listUpdateImport);
     const fetchImport = async () => {
       try {
-        const action = await importApi.importUpdate({
+        const action = await exportApi.importUpdate({
           import: listUpdateImport,
         });
+        setListUpdateImport([]);
         setAlert({
           nameAlert: "success",
           message: language.success,
@@ -249,10 +249,10 @@ export default function ExportList(props) {
     const fetchLogin = async () => {
       try {
         let response;
-        if (index === 1) response = await importApi.getPoDone();
-        if (index === 2) response = await importApi.getProcess();
-        if (index === 3) response = await importApi.getFinish();
-
+        if (index === 1) response = await exportApi.getSoDone();
+        if (index === 2) response = await exportApi.getProcess();
+        if (index === 3) response = await exportApi.getFinish();
+        console.log(response);
         setRows(response);
       } catch (error) {
         console.log(error);
@@ -282,7 +282,7 @@ export default function ExportList(props) {
             handleClose={handleClose}
             children={
               <Print>
-                <PoItemView id={idPo.id}></PoItemView>
+                <SoItemView id={idPo.id}></SoItemView>
               </Print>
             }
           ></CustomizedDialogs>
@@ -340,7 +340,7 @@ export default function ExportList(props) {
   const onSubmitImport = () => {
     const fetchImport = async () => {
       try {
-        const action = await importApi.getImportGood(idPo.id);
+        const action = await exportApi.getExportGood(idPo.id);
         setIdPo({ id: idPo, loading: true });
         setAlert({
           nameAlert: "success",

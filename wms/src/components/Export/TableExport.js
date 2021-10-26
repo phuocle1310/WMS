@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 //css
 import ListPoStyles from "../Po/ListPoStyles";
 //api
-import importApi from "../../api/importApi";
+import exportApi from "../../api/exportApi";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GreenCheckbox from "../UI/GreenCheckbox";
 export default function TableExport(props) {
@@ -44,35 +44,40 @@ export default function TableExport(props) {
       //thêm vào mảng
       if (check === true) {
         setListUpdateImport((pre) => {
-          let newArr = listUpdateImport;
+          let newArr = pre;
           var index = newArr.findIndex((x) => x.pk === id);
           if (Number(index) === Number(-1)) {
-            newArr.push({ pk: id });
+            let exportItem;
+            if (index === 1) exportItem = { pk: id, status: 1 };
+            if (index === 2) exportItem = { pk: id, status: 2 };
+            if (index === 3) exportItem = { pk: id, status: 2 };
+            newArr.push(exportItem);
           }
           return newArr;
         });
       } else {
         //xóa ra khỏi mảng
         setListUpdateImport((pre) => {
-          let newArr = [...pre];
-          var index = newArr.findIndex((x) => x.pk === id);
-          if (index !== -1) {
-            newArr.splice(index, 1);
+          let newArr = listUpdateImport;
+          if (newArr.length > 0) {
+            var index = newArr.findIndex((x) => x.pk === id);
+            if (index !== -1) {
+              newArr.splice(index, 1);
+            }
           }
           return newArr;
         });
-        console.log("uat");
       }
       return check;
     });
   };
-  const handleUpdateImport = (data) => {
-    setListUpdateImport(data);
+  const handleUpdateImport = () => {
     const fetchImport = async () => {
       try {
-        const action = await importApi.importUpdate({
-          import: listUpdateImport,
+        const action = await exportApi.exportUpdate({
+          export: listUpdateImport,
         });
+        setListUpdateImport([]);
         setAlert({
           nameAlert: "success",
           message: language.success,
@@ -97,33 +102,10 @@ export default function TableExport(props) {
       width: 100,
     },
     {
-      field: "PO",
-      headerName: language.poID,
+      field: "SO",
+      headerName: language.soId,
       sortable: false,
       width: 140,
-    },
-    {
-      field: "status",
-      headerName: language.status,
-      sortable: false,
-      width: 120,
-      renderCell: (params) => {
-        let id = params.getValue(params.id, "id");
-        // console.log(status + "ủa");
-        // setChecked(Boolean(status));
-        return (
-          <FormControlLabel
-            control={
-              <GreenCheckbox
-                checked={checked}
-                onChange={() => onChecked(id)}
-                name="checkedG"
-              />
-            }
-            // label={language.ipDone}
-          />
-        );
-      },
     },
     {
       field: "itemid",
@@ -152,17 +134,52 @@ export default function TableExport(props) {
       width: 120,
     },
     {
-      field: "location",
-      headerName: language.location,
+      field: "from_location",
+      headerName: language.fromLocation,
       sortable: false,
       width: 120,
       renderCell: (params) => {
-        let location = params.getValue(params.id, "location");
+        let location = params.getValue(params.id, "from_location");
         return (
           <p>
             {location.row_location}-{location.shelf_column}-
             {location.shelf_floor}
           </p>
+        );
+      },
+    },
+    {
+      field: "to_location",
+      headerName: language.toLocation,
+      sortable: false,
+      width: 120,
+      renderCell: (params) => {
+        let location = params.getValue(params.id, "to_location");
+        return (
+          <p>
+            {location.row_location}-{location.shelf_column}-
+            {location.shelf_floor}
+          </p>
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: language.status,
+      sortable: false,
+      width: 120,
+      renderCell: (params) => {
+        let id = params.getValue(params.id, "id");
+        return (
+          <FormControlLabel
+            control={
+              <GreenCheckbox
+                checked={checked}
+                onChange={() => onChecked(id)}
+                name="checkedG"
+              />
+            }
+          />
         );
       },
     },
@@ -200,7 +217,10 @@ export default function TableExport(props) {
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        let response = await importApi.getListInprocess();
+        let response;
+        if (index === 1) response = await exportApi.getListAllocated();
+        if (index === 2) response = await exportApi.getListPicked();
+        if (index === 3) response = await exportApi.getListSorted();
         setRows(response);
       } catch (error) {
         console.log(error);
@@ -215,7 +235,7 @@ export default function TableExport(props) {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div className={classes.right}>
-        {" "}
+        <h3>Danh sách</h3>
         <Button
           variant="contained"
           onClick={handleUpdateImport}

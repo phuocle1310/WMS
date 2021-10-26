@@ -1,20 +1,20 @@
 import axiosClient from "./axiosClient";
-const importApi = {
-  getPoDone: () => {
-    const url = `/po/get_po_done/`;
+const exportApi = {
+  getSoDone: () => {
+    const url = `/so/get_so_accept/`;
     return axiosClient.get(url);
   },
   getProcess: () => {
-    const url = `/import/get_list_po_import_inprocess/`;
+    const url = `/export/get_list_po_import_inprocess/`;
     return axiosClient.get(url);
   },
   getFinish: () => {
-    const url = `/import/get_list_po_import_finish/`;
+    const url = `/export/get_list_so_export_finish/`;
     return axiosClient.get(url);
   },
   //tạo yêu cầu import
-  getImportGood: (id) => {
-    const url = `/po/${id}/import-good/`;
+  getExportGood: (id) => {
+    const url = `/so/${id}/export-good/`;
     return axiosClient.get(url);
   },
   //lấy import của po inprocess
@@ -28,14 +28,22 @@ const importApi = {
     return axiosClient.get(url);
   },
   //
-  importUpdate: (list) => {
-    const url = `/import/update-import/`;
+  exportUpdate: (list) => {
+    const url = `/export/update_status/`;
     return axiosClient.put(url, list);
   },
   //danh sách import đang thực hiện get_list_import_inprocess
-  getListInprocess: () => {
-    const url = `/import/get_list_import_inprocess/`;
+  getListAllocated: () => {
+    const url = `/export/get_list_export_allocated/`;
+    return axiosClient.get(url);
+  },
+  getListPicked: () => {
+    const url = `/export/get_list_export_picked/`;
+    return axiosClient.get(url);
+  },
+  getListSorted: () => {
+    const url = `get_list_export_sorted/`;
     return axiosClient.get(url);
   },
 };
-export default importApi;
+export default exportApi;

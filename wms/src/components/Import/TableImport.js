@@ -54,20 +54,20 @@ export default function TableImport(props) {
       } else {
         //xóa ra khỏi mảng
         setListUpdateImport((pre) => {
-          let newArr = [...pre];
-          var index = newArr.findIndex((x) => x.pk === id);
-          if (index !== -1) {
-            newArr.splice(index, 1);
+          let newArr = pre;
+          if (newArr.length > 0) {
+            var index = newArr.findIndex((x) => x.pk === id);
+            if (index !== -1) {
+              newArr.splice(index, 1);
+            }
           }
           return newArr;
         });
-        console.log("uat");
       }
       return check;
     });
   };
   const handleUpdateImport = (data) => {
-    setListUpdateImport(data);
     const fetchImport = async () => {
       try {
         const action = await importApi.importUpdate({
@@ -109,8 +109,6 @@ export default function TableImport(props) {
       width: 120,
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
-        // console.log(status + "ủa");
-        // setChecked(Boolean(status));
         return (
           <FormControlLabel
             control={
@@ -120,7 +118,6 @@ export default function TableImport(props) {
                 name="checkedG"
               />
             }
-            // label={language.ipDone}
           />
         );
       },
@@ -215,7 +212,6 @@ export default function TableImport(props) {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div className={classes.right}>
-        {" "}
         <Button
           variant="contained"
           onClick={handleUpdateImport}
