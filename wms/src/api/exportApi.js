@@ -42,7 +42,7 @@ const exportApi = {
     return axiosClient.get(url);
   },
   getListSorted: () => {
-    const url = `get_list_export_sorted/`;
+    const url = `/export/get_list_export_sorted/`;
     return axiosClient.get(url);
   },
 };

@@ -131,9 +131,9 @@ const ExportPage = (props) => {
             <ExportList index={2}></ExportList>{" "}
           </TabPanel>
           <TabPanel value={valueChild} index={1}>
-            <TableExport index={1}></TableExport>
-            <TableExport index={2}></TableExport>
-            <TableExport index={3}></TableExport>
+            <TableExport indexE={1}></TableExport>
+            <TableExport indexE={2}></TableExport>
+            <TableExport indexE={3}></TableExport>
           </TabPanel>
         </TabPanel>
         <TabPanel value={value} index={2}>

@@ -34,7 +34,7 @@ export default function TableExport(props) {
   //lấy id idReceipt cần show
   const [idPo, setIdPo] = useState({ id: "", loading: false });
   const language = MulLanguage[`${currentLanguage}`];
-  const { index } = props;
+  const { indexE } = props;
   const [listUpdateImport, setListUpdateImport] = useState([]);
 
   const [checked, setChecked] = useState(false);
@@ -48,9 +48,10 @@ export default function TableExport(props) {
           var index = newArr.findIndex((x) => x.pk === id);
           if (Number(index) === Number(-1)) {
             let exportItem;
-            if (index === 1) exportItem = { pk: id, status: 1 };
-            if (index === 2) exportItem = { pk: id, status: 2 };
-            if (index === 3) exportItem = { pk: id, status: 2 };
+            if (indexE === 1) exportItem = { pk: id, status: 1 };
+            if (indexE === 2) exportItem = { pk: id, status: 2 };
+            if (indexE === 3) exportItem = { pk: id, status: 2 };
+            console.log(exportItem);
             newArr.push(exportItem);
           }
           return newArr;
@@ -72,6 +73,7 @@ export default function TableExport(props) {
     });
   };
   const handleUpdateImport = () => {
+    console.log(listUpdateImport);
     const fetchImport = async () => {
       try {
         const action = await exportApi.exportUpdate({
@@ -218,16 +220,16 @@ export default function TableExport(props) {
     const fetchLogin = async () => {
       try {
         let response;
-        if (index === 1) response = await exportApi.getListAllocated();
-        if (index === 2) response = await exportApi.getListPicked();
-        if (index === 3) response = await exportApi.getListSorted();
+        if (indexE === 1) response = await exportApi.getListAllocated();
+        if (indexE === 2) response = await exportApi.getListPicked();
+        if (indexE === 3) response = await exportApi.getListSorted();
         setRows(response);
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogin();
-  }, [page, idPo.id, index, listUpdateImport]);
+  }, [page, idPo.id, indexE, listUpdateImport]);
   const handlePageChange = (page) => {
     setPage(page);
   };
