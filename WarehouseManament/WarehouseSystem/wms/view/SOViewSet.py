@@ -119,7 +119,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
 
         if not bool(items):
             return Response({"items": "Can't be none"}, status=status.HTTP_403_FORBIDDEN)
-        if so.status in [2, 3]:
+        if so.status in [2, 3, 1, 0]:
             return Response({"Failed": "This SO can't create order"}, status=status.HTTP_403_FORBIDDEN)
         list_item_receipted = self.get_item_receipted(self.get_object(), 1)
         list_id = []
