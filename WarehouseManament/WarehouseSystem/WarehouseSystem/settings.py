@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 #chạy post man bỏ biến này ra
-OAUTH2_PROVIDER = {
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-}
+# OAUTH2_PROVIDER = {
+#     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+# }
 # OAUTH2_PROVIDER = {
 #     # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 #     'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 15,
@@ -57,17 +57,7 @@ OAUTH2_PROVIDER = {
 #     'OAUTH_DELETE_EXPIRED': True
 # }
 
-<<<<<<< HEAD
-#auth của én thấy ghét
-=======
 #auth của én
-OAUTH2_INFO = {
-    "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
-    "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
-}
-
-#auth
->>>>>>> 253dc05324d481c97f7993e6afdd4deeceb5f9f1
 # OAUTH2_INFO = {
 #     "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
 #     "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
@@ -138,7 +128,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '12345',
         'HOST': ''  # mặc định localhost
     }
 }
