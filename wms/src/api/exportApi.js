@@ -17,14 +17,9 @@ const exportApi = {
     const url = `/so/${id}/export-good/`;
     return axiosClient.get(url);
   },
-  //lấy import của po inprocess
-  getPoImportInprocess: (id) => {
-    const url = `/import/get_import_inprocess/${id}/`;
-    return axiosClient.get(url);
-  },
-  //lấy import po fi
-  getPoImportFinish: (id) => {
-    const url = `/import/get_import_finish/${id}/`;
+  //lấy list export của so
+  getSoFinish: (id) => {
+    const url = `/export/get_export_sorted_by_so/${id}/`;
     return axiosClient.get(url);
   },
   //

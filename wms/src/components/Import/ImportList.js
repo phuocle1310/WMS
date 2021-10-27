@@ -252,6 +252,7 @@ export default function ImportList(props) {
   const [rows, setRows] = useState([]);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
+  var moment = require("moment");
   useEffect(() => {
     const fetchLogin = async () => {
       try {
@@ -260,7 +261,15 @@ export default function ImportList(props) {
         if (index === 2) response = await importApi.getProcess();
         if (index === 3) response = await importApi.getFinish();
 
-        setRows(response);
+        setRows(
+          response.map((item) => {
+            return {
+              ...item,
+              add_date: moment(item.add_date).format("L, h:mm"),
+              effective_date: moment(item.effective_date).format("L"),
+            };
+          }),
+        );
       } catch (error) {
         console.log(error);
       }

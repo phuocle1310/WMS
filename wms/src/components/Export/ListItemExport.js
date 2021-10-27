@@ -7,11 +7,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import moment from "moment";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import GreenCheckbox from "../UI/GreenCheckbox";
-import Button from "@material-ui/core/Button";
-import SendIcon from "@material-ui/icons/Send";
-import importApi from "../../api/importApi";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
@@ -59,45 +54,12 @@ const useStyles = makeStyles({
 
 export default function ListItemExport(props) {
   const classes = useStyles();
-  const { rows, index, listUpdateImport } = props;
+  const { rows } = props;
   //lang
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
-  //tạo check
-  const createCheck = () => {
-    let arrChecked = [];
-    for (let i in props.rows) {
-      let checked = { isChecked: !props.rows[i].importStatus };
-      arrChecked.push(checked);
-    }
-    return arrChecked;
-  };
-
-  const [checked, setChecked] = useState(createCheck());
-  const onChecked = (position) => {
-    setChecked((pre) => {
-      let newArr = [...pre];
-      for (let index in newArr) {
-        if (Number(index) === Number(position)) {
-          newArr[index].isChecked = !newArr[index].isChecked;
-        }
-      }
-      return newArr;
-    });
-  };
-
-  const onUpdate = () => {
-    const listImport = [];
-    for (let index in checked) {
-      if (checked[index].isChecked === true) {
-        let pk = { pk: rows[index].idImport };
-        listImport.push(pk);
-      }
-    }
-    listUpdateImport(listImport);
-  };
 
   return (
     <>
@@ -123,10 +85,6 @@ export default function ListItemExport(props) {
                 {" "}
                 {language.location}
               </StyledTableCell>
-              <StyledTableCell align="right">
-                {" "}
-                {language.isImport}
-              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -151,40 +109,11 @@ export default function ListItemExport(props) {
                 >
                   {row.row_location}-{row.shelf_column}-{row.shelf_floor}
                 </StyledTableCell>
-                <StyledTableCell
-                  align="right"
-                  style={{ textTransform: "uppercase" }}
-                >
-                  <FormControlLabel
-                    control={
-                      <GreenCheckbox
-                        disabled={index === 2 ? false : true}
-                        checked={checked[id].isChecked}
-                        onChange={() => onChecked(id)}
-                        name="checkedG"
-                      />
-                    }
-                    // label={language.ipDone}
-                  />
-                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {index === 2 && (
-        <Button
-          variant="contained"
-          onClick={onUpdate}
-          classes={{
-            root: classes.submit,
-            label: classes.label,
-          }}
-          startIcon={<SendIcon />}
-        >
-          {language.sendRequire}
-        </Button>
-      )}
     </>
   );
 }

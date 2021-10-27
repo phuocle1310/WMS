@@ -31,6 +31,7 @@ import ExportItemView from "./ExportItemView";
 import exportApi from "../../api/exportApi";
 export default function ExportList(props) {
   const classes = ListPoStyles();
+  var moment = require("moment");
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
   //lang
@@ -264,8 +265,15 @@ export default function ExportList(props) {
         if (index === 1) response = await exportApi.getSoDone();
         if (index === 2) response = await exportApi.getProcess();
         if (index === 3) response = await exportApi.getFinish();
-        console.log(response);
-        setRows(response);
+        setRows(
+          response.map((item) => {
+            return {
+              ...item,
+              add_date: moment(item.add_date).format("L, h:mm"),
+              effective_date: moment(item.effective_date).format("L"),
+            };
+          }),
+        );
       } catch (error) {
         console.log(error);
       }

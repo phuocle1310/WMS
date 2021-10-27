@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import useHttp from "../../Hook/useHttp";
-import importApi from "../../api/importApi";
+import exportApi from "../../api/exportApi";
 import { CircularProgress } from "@material-ui/core";
 import ExportItem from "./ExportItem";
 const ExportItemView = (props) => {
@@ -12,10 +12,7 @@ const ExportItemView = (props) => {
     status,
     data: item,
     error,
-  } = useHttp(
-    index === 2 ? importApi.getPoImportInprocess : importApi.getPoImportFinish,
-    true,
-  );
+  } = useHttp(exportApi.getSoFinish, true);
 
   useEffect(() => {
     sendRequest(id);
