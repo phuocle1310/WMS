@@ -7,30 +7,31 @@ import { useState, useEffect } from "react";
 import {
   DataGridPro,
   GridToolbarExport,
+  GridToolbarContainer,
+  gridClasses,
   GridOverlay,
   GridToolbarDensitySelector,
 } from "@mui/x-data-grid-pro";
-import { NavLink } from "react-router-dom";
-import poApi from "../../api/poApi";
 //lang
 import MulLanguage from "../../assets/language/MulLanguage";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 //css
-import ListPoStyles from "./ListPoStyles";
+import ListPoStyles from "../Po/ListPoStyles";
 //api
-import { listPo } from "../../store/poSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
 import IconButton from "@material-ui/core/IconButton";
 import CustomizedDialogs from "../UI/CustomizedDialogs";
-import ConfirmDelete from "../UI/ConfirmDelete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import PoItemView from "./PoItemView";
+import SoItemView from "../So/SoItemView";
 import Print from "../../components/UI/Print";
-import EditPo from "./EditPo";
-export default function ListPo() {
+import ConfirmExport from "./ConfirmExport";
+import InputIcon from "@material-ui/icons/Input";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import ExportItemView from "./ExportItemView";
+//api
+import exportApi from "../../api/exportApi";
+export default function ExportList(props) {
   const classes = ListPoStyles();
+  var moment = require("moment");
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
   //lang
@@ -39,8 +40,34 @@ export default function ListPo() {
   );
   //lấy id idReceipt cần show
   const [idPo, setIdPo] = useState({ id: "", loading: false });
-  const [isDelete, setIsDelete] = useState({ id: "", loading: false });
   const language = MulLanguage[`${currentLanguage}`];
+  const { index } = props;
+  const [listUpdateImport, setListUpdateImport] = useState([]);
+
+  const handleUpdateImport = (data) => {
+    const fetchImport = async () => {
+      try {
+        const action = await exportApi.importUpdate({
+          import: listUpdateImport,
+        });
+        setListUpdateImport([]);
+        setAlert({
+          nameAlert: "success",
+          message: language.success,
+          open: true,
+        });
+        handleClose();
+        return action;
+      } catch (error) {
+        setAlert({
+          nameAlert: "Error",
+          message: JSON.stringify(error.response.data),
+          open: true,
+        });
+      }
+    };
+    fetchImport();
+  };
   const columns = [
     {
       field: "id",
@@ -63,6 +90,10 @@ export default function ListPo() {
     {
       field: "add_who",
       headerName: language.nameStaff,
+      valueFormatter: (params) => {
+        let staff = params.getValue(params.id, "add_who");
+        return staff.username;
+      },
       sortable: false,
       width: 180,
       renderCell: (params) => {
@@ -78,6 +109,10 @@ export default function ListPo() {
       field: "edit_who",
       headerName: language.edit_who_id,
       sortable: false,
+      valueFormatter: (params) => {
+        let staff = params.getValue(params.id, "edit_who");
+        return staff.username;
+      },
       width: 130,
       renderCell: (params) => {
         let staff = params.getValue(params.id, "edit_who");
@@ -121,36 +156,40 @@ export default function ListPo() {
             >
               <VisibilityIcon />
             </IconButton>
-            <IconButton
-              onClick={() => {
-                handlerEdit(id);
-              }}
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-              disabled={role === "SUPPLIER" ? true : false}
-              classes={{
-                root: classes.button1, // class name, e.g. `classes-nesting-root-x`
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                handlerDelete(id);
-              }}
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-              disabled={role === "SUPPLIER" ? false : true}
-              classes={{
-                root: classes.button, // class name, e.g. `classes-nesting-root-x`
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-            >
-              <DeleteForeverIcon />
-            </IconButton>
+            {index === 1 && (
+              <IconButton
+                onClick={() => {
+                  handlerEdit(id);
+                }}
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+                disabled={role === "SUPPLIER" ? true : false}
+                classes={{
+                  root: classes.button1, // class name, e.g. `classes-nesting-root-x`
+                  label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                }}
+              >
+                <InputIcon />
+              </IconButton>
+            )}
+            {index > 1 && (
+              <IconButton
+                onClick={() => {
+                  handlerDelete(id);
+                }}
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+                // disabled={role === "SUPPLIER" ? false : true}
+                classes={{
+                  root: classes.button, // class name, e.g. `classes-nesting-root-x`
+                  label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                }}
+              >
+                <ListAltIcon />
+              </IconButton>
+            )}
           </>
         );
       },
@@ -201,45 +240,6 @@ export default function ListPo() {
   function CustomNoRowsOverlay() {
     return (
       <GridOverlay className={classes.overlay}>
-        <svg
-          width="120"
-          height="100"
-          viewBox="0 0 184 152"
-          aria-hidden
-          focusable="false"
-        >
-          <g fill="none" fillRule="evenodd">
-            <g transform="translate(24 31.67)">
-              <ellipse
-                className="ant-empty-img-5"
-                cx="67.797"
-                cy="106.89"
-                rx="67.797"
-                ry="12.668"
-              />
-              <path
-                className="ant-empty-img-1"
-                d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z"
-              />
-              <path
-                className="ant-empty-img-2"
-                d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z"
-              />
-              <path
-                className="ant-empty-img-3"
-                d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z"
-              />
-            </g>
-            <path
-              className="ant-empty-img-3"
-              d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z"
-            />
-            <g className="ant-empty-img-4" transform="translate(149.65 15.383)">
-              <ellipse cx="20.654" cy="3.167" rx="2.849" ry="2.815" />
-              <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z" />
-            </g>
-          </g>
-        </svg>
         <div className={classes.overlay}>No Rows</div>
       </GridOverlay>
     );
@@ -248,27 +248,38 @@ export default function ListPo() {
     return (
       <div className={classes.root1}>
         <GridToolbarDensitySelector />
-        <GridToolbarExport />
+        <GridToolbarContainer className={gridClasses.toolbarContainer}>
+          <GridToolbarExport />
+        </GridToolbarContainer>
       </div>
     );
   };
   //call api data
-  const rows = useSelector((state) => state.po.listPo);
+  const [rows, setRows] = useState([]);
   const rowsCount = useSelector((state) => state.po.rowCount);
   const [page, setPage] = useState(0);
-  const dispatch = useDispatch();
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        const action = listPo(page + 1);
-        const actionResult = await dispatch(action);
-        unwrapResult(actionResult);
+        let response;
+        if (index === 1) response = await exportApi.getSoDone();
+        if (index === 2) response = await exportApi.getProcess();
+        if (index === 3) response = await exportApi.getFinish();
+        setRows(
+          response.map((item) => {
+            return {
+              ...item,
+              add_date: moment(item.add_date).format("L, h:mm"),
+              effective_date: moment(item.effective_date).format("L"),
+            };
+          }),
+        );
       } catch (error) {
         console.log(error);
       }
     };
     fetchLogin();
-  }, [page, isDelete.loading, idPo.id]);
+  }, [page, idPo.id, index, listUpdateImport]);
   const handlePageChange = (page) => {
     setPage(page);
   };
@@ -291,7 +302,7 @@ export default function ListPo() {
             handleClose={handleClose}
             children={
               <Print>
-                <PoItemView id={idPo.id}></PoItemView>
+                <SoItemView id={idPo.id}></SoItemView>
               </Print>
             }
           ></CustomizedDialogs>
@@ -302,7 +313,10 @@ export default function ListPo() {
             open={open}
             handleClose={handleClose}
             children={
-              <EditPo id={idPo.id} handleOnSubmit={handleOnSubmit}></EditPo>
+              <ConfirmExport
+                onDelete={handleClose}
+                onSubmitImport={onSubmitImport}
+              ></ConfirmExport>
             }
           ></CustomizedDialogs>
         );
@@ -312,68 +326,41 @@ export default function ListPo() {
             open={open}
             handleClose={handleClose}
             children={
-              <ConfirmDelete
-                onDelete={handleClose}
-                onSubmitDelete={onSubmitDelete}
-              ></ConfirmDelete>
+              <Print>
+                <ExportItemView
+                  id={idPo.id}
+                  index={index}
+                  handleUpdateImport={handleUpdateImport}
+                ></ExportItemView>
+              </Print>
             }
           ></CustomizedDialogs>
         );
       default:
-      // code block
     }
   };
   //view
-  //view
   function hanlerView(params) {
     setCrud(1);
-    //the thing  you wanna do
     setIdPo({ id: params, loading: false });
     handleClickOpen();
   }
   //edit
   function handlerEdit(params) {
-    //the thing  you wanna do
     setCrud(2);
     setIdPo({ id: params, loading: false });
     handleClickOpen();
   }
   function handlerDelete(params) {
-    //the thing  you wanna do
-    setIsDelete({ id: params, loading: false });
+    setIdPo({ id: params, loading: false });
     setCrud(3);
     handleClickOpen();
   }
   //xóa
-  const onSubmitDelete = () => {
-    const fetchDelete = async () => {
+  const onSubmitImport = () => {
+    const fetchImport = async () => {
       try {
-        const action = await poApi.deletePo(isDelete.id);
-        setIsDelete({ id: isDelete.id, loading: true });
-        setAlert({
-          nameAlert: "success",
-          message: language.success,
-          open: true,
-        });
-        handleClose();
-        return action;
-      } catch (error) {
-        setAlert({
-          nameAlert: "Error",
-          message: JSON.stringify(error.response.data),
-          open: true,
-        });
-      }
-    };
-    fetchDelete();
-  };
-  //edit
-  const handleOnSubmit = (status) => {
-    console.log(status);
-    const fetchUpadte = async () => {
-      try {
-        const data = { status: status };
-        const action = await poApi.updateStatus(idPo.id, data);
+        const action = await exportApi.getExportGood(idPo.id);
         setIdPo({ id: idPo, loading: true });
         setAlert({
           nameAlert: "success",
@@ -390,18 +377,19 @@ export default function ListPo() {
         });
       }
     };
-    fetchUpadte();
+    fetchImport();
   };
   return (
-    <div style={{ height: 580, width: "auto" }}>
+    <div style={{ width: "100%", height: "100%" }}>
       <DataGridPro
         rows={rows}
         className={classes.root}
         rowCount={rowsCount}
         columns={columns}
-        pageSize={10}
         pagination
-        paginationMode="server"
+        autoHeight
+        pageSize={8}
+        rowsPerPageOptions={[5]}
         onPageChange={handlePageChange}
         page={page}
         editMode="none"
@@ -410,7 +398,6 @@ export default function ListPo() {
           Toolbar: CustomToolbar,
           NoRowsOverlay: CustomNoRowsOverlay,
         }}
-        loading={rows.length === 0}
       />
       {renderCrud()}
       {alert.nameAlert && (

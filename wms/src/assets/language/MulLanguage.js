@@ -97,6 +97,8 @@ const MulLanguage = {
     confirmImport:
       "You are submitting a request to import goods into the warehouse!!!",
     location: "Location",
+    fromLocation: "From location",
+    toLocation: "To Location",
     isImport: "entered",
     importDone: "List to import",
     importProcess: "List is being imported",
@@ -107,6 +109,18 @@ const MulLanguage = {
     sendUpdate: "Upadte",
     //welcome
     welcome: "Welcome",
+    //export
+    confirmExport:
+      "You are submitting a request to release goods from stock!!!",
+    listProductsExport: "List of products in stock",
+    isExport: "Out of stock",
+    exportDone: "List to be shipped",
+    exportProcess: "List is in stock",
+    exportFinish: "List of Exported",
+    pySo: "According to the delivery order",
+    pyAllocated: "List Allocated",
+    pyPicked: "List Picked",
+    pySorted: "list Sorted",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -207,6 +221,8 @@ const MulLanguage = {
     //import
     confirmImport: "Bạn đang gửi yêu cầu để nhập hàng vào kho!!!",
     location: "Vị trí",
+    fromLocation: "Từ vị trí",
+    toLocation: "Đến vị trí",
     listProductsImport: "Danh sách sản phẩm nhập vào kho",
     isImport: "Đã nhập vào kho",
     importDone: "Danh sách cần nhập kho",
@@ -218,6 +234,19 @@ const MulLanguage = {
     sendUpdate: "Cập nhật",
     //welcome
     welcome: "Xin chào",
+    //export
+    confirmExport: "Bạn đang gửi yêu cầu để xuất hàng ra kho!!!",
+    listProductsExport: "Danh sách sản phẩm xuất vào kho",
+    isExport: "Đã xuất vào kho",
+    exportDone: "Danh sách cần xuất kho",
+    exportProcess: "Danh sách đang xuất kho",
+    exportFinish: "Danh sách đã xuất kho",
+    pySo: "Theo đơn xuất hàng",
+    titleImport: "Nhập hàng vào kho",
+    titleExport: "Xuất hàng ra kho",
+    pyAllocated: "Danh sách Allocated",
+    pyPicked: "Danh sách Picked",
+    pySorted: "Danh sách Sorted",
   },
 };
 export default MulLanguage;

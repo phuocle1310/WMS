@@ -23,10 +23,12 @@ export default function MenuAdmin(props) {
   const listMenu1 = [
     { content: `${language.listSo}`, id: 1, link: "/listso" },
     { content: `${language.orders}`, id: 2, link: "/orders" },
+    { content: `${language.titleExport}`, id: 2, link: "/export" },
   ];
   const listMenu2 = [
     { content: `${language.listPo}`, id: 2, link: "/listpo" },
     { content: `${language.receipt}`, id: 2, link: "/receipts" },
+    { content: `${language.titleImport}`, id: 2, link: "/import" },
   ];
   return (
     <div>

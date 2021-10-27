@@ -22,6 +22,7 @@ const NotFound = React.lazy(() => import("./pages/uipage/NotFound"));
 const Login = React.lazy(() => import("./components/Login/Login"));
 const NotPermission = React.lazy(() => import("./pages/uipage/NotPermission"));
 const ImportPage = React.lazy(() => import("./pages/Staff/ImportPage"));
+const ExportPage = React.lazy(() => import("./pages/Staff/ExportPage"));
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const role = useSelector((state) => state.user.currentUser.role);
@@ -79,6 +80,17 @@ function App() {
               <DashboardLayoutRoute
                 path="/import"
                 component={ImportPage}
+              ></DashboardLayoutRoute>
+            )}
+            {role !== "USER" ? (
+              <DashboardLayoutRoute
+                path="/export"
+                component={NotPermission}
+              ></DashboardLayoutRoute>
+            ) : (
+              <DashboardLayoutRoute
+                path="/export"
+                component={ExportPage}
               ></DashboardLayoutRoute>
             )}
             {role !== "USER" ? (

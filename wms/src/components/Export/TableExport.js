@@ -5,7 +5,6 @@ import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import * as React from "react";
 import { useState, useEffect } from "react";
-
 import SendIcon from "@material-ui/icons/Send";
 import {
   DataGridPro,
@@ -19,10 +18,10 @@ import { useSelector } from "react-redux";
 //css
 import ListPoStyles from "../Po/ListPoStyles";
 //api
-import importApi from "../../api/importApi";
+import exportApi from "../../api/exportApi";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import GreenCheckbox from "../UI/GreenCheckbox";
-export default function TableImport(props) {
+export default function TableExport(props) {
   const classes = ListPoStyles();
   //phân quyền
   const role = useSelector((state) => state.user.currentUser.role);
@@ -35,12 +34,13 @@ export default function TableImport(props) {
   //lấy id idReceipt cần show
   const [idPo, setIdPo] = useState({ id: "", loading: false });
   const language = MulLanguage[`${currentLanguage}`];
-  const { index } = props;
+  const { indexE } = props;
   const [listUpdateImport, setListUpdateImport] = useState([]);
+
+  // const [checked, setChecked] = useState(false);
 
   const [checked, setChecked] = useState([]);
   const onChecked = (position) => {
-    console.log(position);
     setChecked((pre) => {
       let newArr = [...pre];
       for (let index in newArr) {
@@ -51,35 +51,38 @@ export default function TableImport(props) {
       return newArr;
     });
   };
-  const handleUpdateImport = (data) => {
+  const handleUpdateImport = () => {
     const listImport = [];
     for (let index in checked) {
       if (checked[index].isChecked === true) {
-        let exportItem = { pk: rows[index].id };
+        let exportItem;
+        if (indexE === 1) exportItem = { pk: rows[index].id, status: 1 };
+        if (indexE === 2) exportItem = { pk: rows[index].id, status: 2 };
+        if (indexE === 3) exportItem = { pk: rows[index].id, status: 2 };
         listImport.push(exportItem);
       }
     }
-    console.log(listImport);
-    // const fetchImport = async () => {
-    //   try {
-    //     const action = await importApi.importUpdate({
-    //       import: listUpdateImport,
-    //     });
-    //     setAlert({
-    //       nameAlert: "success",
-    //       message: language.success,
-    //       open: true,
-    //     });
-    //     return action;
-    //   } catch (error) {
-    //     setAlert({
-    //       nameAlert: "Error",
-    //       message: JSON.stringify(error.response.data),
-    //       open: true,
-    //     });
-    //   }
-    // };
-    // fetchImport();
+    const fetchImport = async () => {
+      try {
+        const action = await exportApi.exportUpdate({
+          export: listImport,
+        });
+        setListUpdateImport([]);
+        setAlert({
+          nameAlert: "success",
+          message: language.success,
+          open: true,
+        });
+        return action;
+      } catch (error) {
+        setAlert({
+          nameAlert: "Error",
+          message: JSON.stringify(error.response.data),
+          open: true,
+        });
+      }
+    };
+    fetchImport();
   };
   const columns = [
     {
@@ -89,50 +92,20 @@ export default function TableImport(props) {
       width: 100,
     },
     {
-      field: "PO",
-      headerName: language.poID,
+      field: "SO",
+      headerName: language.soId,
       sortable: false,
       width: 140,
-    },
-    {
-      field: "status",
-      headerName: language.status,
-      sortable: false,
-      width: 120,
-      valueFormatter: (params) => {
-        let status = params.getValue(params.id, "status");
-        return !status;
-      },
-      renderCell: (params) => {
-        let id = params.getValue(params.id, "id");
-        return (
-          <FormControlLabel
-            control={
-              <GreenCheckbox
-                checked={
-                  checked.length > 0
-                    ? checked[checked.findIndex((x) => x.id === id)].isChecked
-                    : false
-                }
-                onChange={() =>
-                  onChecked(checked.findIndex((x) => x.id === id))
-                }
-                name="checkedG"
-              />
-            }
-          />
-        );
-      },
     },
     {
       field: "itemid",
       headerName: language.idProduct,
       sortable: false,
+      width: 180,
       valueFormatter: (params) => {
         let item = params.getValue(params.id, "item");
         return item.id;
       },
-      width: 180,
       renderCell: (params) => {
         let item = params.getValue(params.id, "item");
         return <p>{item.id}</p>;
@@ -142,11 +115,11 @@ export default function TableImport(props) {
       field: "itemproduct",
       headerName: language.product,
       sortable: false,
+      width: 180,
       valueFormatter: (params) => {
         let item = params.getValue(params.id, "item");
         return item.name;
       },
-      width: 180,
       renderCell: (params) => {
         let item = params.getValue(params.id, "item");
         return <p>{item.name}</p>;
@@ -159,23 +132,74 @@ export default function TableImport(props) {
       width: 120,
     },
     {
-      field: "location",
-      headerName: language.location,
-      sortable: false,
-      width: 120,
+      field: "from_location",
+      headerName: language.fromLocation,
       valueFormatter: (params) => {
-        let location = params.getValue(params.id, "location");
+        let location = params.getValue(params.id, "from_location");
         let item = ` ${location.row_location}-${location.shelf_column}-${location.shelf_floor}`;
         return item;
       },
+      sortable: false,
+      width: 120,
       renderCell: (params) => {
-        let location = params.getValue(params.id, "location");
+        let location = params.getValue(params.id, "from_location");
         return (
           <p>
             {location.row_location}-{location.shelf_column}-
             {location.shelf_floor}
           </p>
         );
+      },
+    },
+    {
+      field: "to_location",
+      headerName: language.toLocation,
+      valueFormatter: (params) => {
+        let location = params.getValue(params.id, "to_location");
+        let item = ` ${location.row_location}-${location.shelf_column}-${location.shelf_floor}`;
+        return item;
+      },
+      sortable: false,
+      width: 120,
+      renderCell: (params) => {
+        let location = params.getValue(params.id, "to_location");
+        return (
+          <p>
+            {location.row_location}-{location.shelf_column}-
+            {location.shelf_floor}
+          </p>
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: language.status,
+      sortable: false,
+      width: 120,
+      renderCell: (params) => {
+        let id = params.getValue(params.id, "id");
+        let status = params.getValue(params.id, "status");
+        if (indexE !== 3) {
+          return (
+            <FormControlLabel
+              control={
+                <GreenCheckbox
+                  checked={
+                    checked.length > 0
+                      ? checked[checked.findIndex((x) => x.id === id)].isChecked
+                      : false
+                  }
+                  onChange={() =>
+                    onChecked(checked.findIndex((x) => x.id === id))
+                  }
+                  name="checkedG"
+                />
+              }
+            />
+          );
+        } else {
+          return <p>{status}</p>;
+        }
       },
     },
   ];
@@ -212,8 +236,12 @@ export default function TableImport(props) {
   useEffect(() => {
     const fetchLogin = async () => {
       try {
-        let response = await importApi.getListInprocess();
+        let response;
+        if (indexE === 1) response = await exportApi.getListAllocated();
+        if (indexE === 2) response = await exportApi.getListPicked();
+        if (indexE === 3) response = await exportApi.getListSorted();
         setRows(response);
+
         const createCheck = () => {
           let arrChecked = [];
           for (let i in response) {
@@ -228,7 +256,7 @@ export default function TableImport(props) {
       }
     };
     fetchLogin();
-  }, [page, idPo.id, index, listUpdateImport]);
+  }, [page, idPo.id, indexE, listUpdateImport]);
   const handlePageChange = (page) => {
     setPage(page);
   };
@@ -236,18 +264,20 @@ export default function TableImport(props) {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div className={classes.right}>
-        <Button
-          variant="contained"
-          onClick={handleUpdateImport}
-          disabled={rows.length > 0 ? false : true}
-          classes={{
-            root: classes.submit,
-            label: classes.label,
-          }}
-          startIcon={<SendIcon />}
-        >
-          {language.sendUpdate}
-        </Button>
+        {indexE !== 3 && (
+          <Button
+            variant="contained"
+            onClick={handleUpdateImport}
+            disabled={rows.length > 0 ? false : true}
+            classes={{
+              root: classes.submit,
+              label: classes.label,
+            }}
+            startIcon={<SendIcon />}
+          >
+            {language.sendUpdate}
+          </Button>
+        )}
       </div>
       <div>
         <DataGridPro
