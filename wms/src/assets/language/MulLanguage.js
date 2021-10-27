@@ -118,6 +118,9 @@ const MulLanguage = {
     exportProcess: "List is in stock",
     exportFinish: "List of Exported",
     pySo: "According to the delivery order",
+    pyAllocated: "List Allocated",
+    pyPicked: "List Picked",
+    pySorted: "list Sorted",
   },
   vn: {
     welcomelogin: "Chào mừng bạn, tham gia sử dụng web bằng cách đăng nhập!!!",
@@ -241,6 +244,9 @@ const MulLanguage = {
     pySo: "Theo đơn xuất hàng",
     titleImport: "Nhập hàng vào kho",
     titleExport: "Xuất hàng ra kho",
+    pyAllocated: "Danh sách Allocated",
+    pyPicked: "Danh sách Picked",
+    pySorted: "Danh sách Sorted",
   },
 };
 export default MulLanguage;

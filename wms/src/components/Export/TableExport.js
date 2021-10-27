@@ -37,47 +37,35 @@ export default function TableExport(props) {
   const { indexE } = props;
   const [listUpdateImport, setListUpdateImport] = useState([]);
 
-  const [checked, setChecked] = useState(false);
-  const onChecked = (id) => {
+  // const [checked, setChecked] = useState(false);
+
+  const [checked, setChecked] = useState([]);
+  const onChecked = (position) => {
     setChecked((pre) => {
-      let check = !pre;
-      //thêm vào mảng
-      if (check === true) {
-        setListUpdateImport((pre) => {
-          let newArr = pre;
-          var index = newArr.findIndex((x) => x.pk === id);
-          if (Number(index) === Number(-1)) {
-            let exportItem;
-            if (indexE === 1) exportItem = { pk: id, status: 1 };
-            if (indexE === 2) exportItem = { pk: id, status: 2 };
-            if (indexE === 3) exportItem = { pk: id, status: 2 };
-            console.log(exportItem);
-            newArr.push(exportItem);
-          }
-          return newArr;
-        });
-      } else {
-        //xóa ra khỏi mảng
-        setListUpdateImport((pre) => {
-          let newArr = listUpdateImport;
-          if (newArr.length > 0) {
-            var index = newArr.findIndex((x) => x.pk === id);
-            if (index !== -1) {
-              newArr.splice(index, 1);
-            }
-          }
-          return newArr;
-        });
+      let newArr = [...pre];
+      for (let index in newArr) {
+        if (Number(index) === Number(position)) {
+          newArr[index].isChecked = !newArr[index].isChecked;
+        }
       }
-      return check;
+      return newArr;
     });
   };
   const handleUpdateImport = () => {
-    console.log(listUpdateImport);
+    const listImport = [];
+    for (let index in checked) {
+      if (checked[index].isChecked === true) {
+        let exportItem;
+        if (indexE === 1) exportItem = { pk: rows[index].id, status: 1 };
+        if (indexE === 2) exportItem = { pk: rows[index].id, status: 2 };
+        if (indexE === 3) exportItem = { pk: rows[index].id, status: 2 };
+        listImport.push(exportItem);
+      }
+    }
     const fetchImport = async () => {
       try {
         const action = await exportApi.exportUpdate({
-          export: listUpdateImport,
+          export: listImport,
         });
         setListUpdateImport([]);
         setAlert({
@@ -114,6 +102,10 @@ export default function TableExport(props) {
       headerName: language.idProduct,
       sortable: false,
       width: 180,
+      valueFormatter: (params) => {
+        let item = params.getValue(params.id, "item");
+        return item.id;
+      },
       renderCell: (params) => {
         let item = params.getValue(params.id, "item");
         return <p>{item.id}</p>;
@@ -124,6 +116,10 @@ export default function TableExport(props) {
       headerName: language.product,
       sortable: false,
       width: 180,
+      valueFormatter: (params) => {
+        let item = params.getValue(params.id, "item");
+        return item.name;
+      },
       renderCell: (params) => {
         let item = params.getValue(params.id, "item");
         return <p>{item.name}</p>;
@@ -138,6 +134,11 @@ export default function TableExport(props) {
     {
       field: "from_location",
       headerName: language.fromLocation,
+      valueFormatter: (params) => {
+        let location = params.getValue(params.id, "from_location");
+        let item = ` ${location.row_location}-${location.shelf_column}-${location.shelf_floor}`;
+        return item;
+      },
       sortable: false,
       width: 120,
       renderCell: (params) => {
@@ -153,6 +154,11 @@ export default function TableExport(props) {
     {
       field: "to_location",
       headerName: language.toLocation,
+      valueFormatter: (params) => {
+        let location = params.getValue(params.id, "to_location");
+        let item = ` ${location.row_location}-${location.shelf_column}-${location.shelf_floor}`;
+        return item;
+      },
       sortable: false,
       width: 120,
       renderCell: (params) => {
@@ -172,17 +178,28 @@ export default function TableExport(props) {
       width: 120,
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
-        return (
-          <FormControlLabel
-            control={
-              <GreenCheckbox
-                checked={checked}
-                onChange={() => onChecked(id)}
-                name="checkedG"
-              />
-            }
-          />
-        );
+        let status = params.getValue(params.id, "status");
+        if (indexE !== 3) {
+          return (
+            <FormControlLabel
+              control={
+                <GreenCheckbox
+                  checked={
+                    checked.length > 0
+                      ? checked[checked.findIndex((x) => x.id === id)].isChecked
+                      : false
+                  }
+                  onChange={() =>
+                    onChecked(checked.findIndex((x) => x.id === id))
+                  }
+                  name="checkedG"
+                />
+              }
+            />
+          );
+        } else {
+          return <p>{status}</p>;
+        }
       },
     },
   ];
@@ -224,6 +241,16 @@ export default function TableExport(props) {
         if (indexE === 2) response = await exportApi.getListPicked();
         if (indexE === 3) response = await exportApi.getListSorted();
         setRows(response);
+
+        const createCheck = () => {
+          let arrChecked = [];
+          for (let i in response) {
+            let checked = { isChecked: false, id: response[i].id };
+            arrChecked.push(checked);
+          }
+          return arrChecked;
+        };
+        setChecked(createCheck());
       } catch (error) {
         console.log(error);
       }
@@ -237,19 +264,20 @@ export default function TableExport(props) {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div className={classes.right}>
-        <h3>Danh sách</h3>
-        <Button
-          variant="contained"
-          onClick={handleUpdateImport}
-          disabled={rows.length > 0 ? false : true}
-          classes={{
-            root: classes.submit,
-            label: classes.label,
-          }}
-          startIcon={<SendIcon />}
-        >
-          {language.sendUpdate}
-        </Button>
+        {indexE !== 3 && (
+          <Button
+            variant="contained"
+            onClick={handleUpdateImport}
+            disabled={rows.length > 0 ? false : true}
+            classes={{
+              root: classes.submit,
+              label: classes.label,
+            }}
+            startIcon={<SendIcon />}
+          >
+            {language.sendUpdate}
+          </Button>
+        )}
       </div>
       <div>
         <DataGridPro

@@ -117,22 +117,28 @@ const ExportPage = (props) => {
             aria-label="scrollable force tabs example"
           >
             <Tab
-              label={language.pySo}
+              label={language.pyAllocated}
               className={classes.tab}
               {...a11yPropsChild(0)}
             />
             <Tab
-              label={language.pyProduct}
+              label={language.pyPicked}
               className={classes.tab}
               {...a11yPropsChild(1)}
             />
+            <Tab
+              label={language.pySorted}
+              className={classes.tab}
+              {...a11yPropsChild(2)}
+            />
           </Tabs>{" "}
           <TabPanel value={valueChild} index={0}>
-            <ExportList index={2}></ExportList>{" "}
+            <TableExport indexE={1}></TableExport>
           </TabPanel>
           <TabPanel value={valueChild} index={1}>
-            <TableExport indexE={1}></TableExport>
             <TableExport indexE={2}></TableExport>
+          </TabPanel>
+          <TabPanel value={valueChild} index={2}>
             <TableExport indexE={3}></TableExport>
           </TabPanel>
         </TabPanel>

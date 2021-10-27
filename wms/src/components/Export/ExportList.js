@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import {
   DataGridPro,
   GridToolbarExport,
+  GridToolbarContainer,
+  gridClasses,
   GridOverlay,
   GridToolbarDensitySelector,
 } from "@mui/x-data-grid-pro";
@@ -87,6 +89,10 @@ export default function ExportList(props) {
     {
       field: "add_who",
       headerName: language.nameStaff,
+      valueFormatter: (params) => {
+        let staff = params.getValue(params.id, "add_who");
+        return staff.username;
+      },
       sortable: false,
       width: 180,
       renderCell: (params) => {
@@ -102,6 +108,10 @@ export default function ExportList(props) {
       field: "edit_who",
       headerName: language.edit_who_id,
       sortable: false,
+      valueFormatter: (params) => {
+        let staff = params.getValue(params.id, "edit_who");
+        return staff.username;
+      },
       width: 130,
       renderCell: (params) => {
         let staff = params.getValue(params.id, "edit_who");
@@ -237,7 +247,9 @@ export default function ExportList(props) {
     return (
       <div className={classes.root1}>
         <GridToolbarDensitySelector />
-        <GridToolbarExport />
+        <GridToolbarContainer className={gridClasses.toolbarContainer}>
+          <GridToolbarExport />
+        </GridToolbarContainer>
       </div>
     );
   };
