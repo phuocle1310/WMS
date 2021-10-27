@@ -95,7 +95,7 @@ class ExportViewSet(viewsets.ViewSet, generics.ListAPIView, BaseAPIView):
             except:
                 raise ValidationError("Quantity order must be numeric characters")
             data_update = ExportView.objects.get(pk=export_view.get('pk'))
-            if stt < data_update.status:
+            if stt < data_update.status or stt > data_update.status + 1:
                 return Response({"Failed": "Change status unsucessfully"}, status=status.HTTP_400_BAD_REQUEST)
 
         for export_view in export_view_update:
