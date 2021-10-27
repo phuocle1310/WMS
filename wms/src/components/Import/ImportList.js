@@ -88,6 +88,10 @@ export default function ImportList(props) {
       field: "add_who",
       headerName: language.nameStaff,
       sortable: false,
+      valueFormatter: (params) => {
+        let staff = params.getValue(params.id, "add_who");
+        return staff.username;
+      },
       width: 180,
       renderCell: (params) => {
         let staff = params.getValue(params.id, "add_who");
@@ -100,6 +104,10 @@ export default function ImportList(props) {
     },
     {
       field: "edit_who",
+      valueFormatter: (params) => {
+        let staff = params.getValue(params.id, "edit_who");
+        return staff.username;
+      },
       headerName: language.edit_who_id,
       sortable: false,
       width: 130,
@@ -140,7 +148,7 @@ export default function ImportList(props) {
               aria-label="upload picture"
               component="span"
               classes={{
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                label: classes.label,
               }}
             >
               <VisibilityIcon />
@@ -155,8 +163,8 @@ export default function ImportList(props) {
                 component="span"
                 disabled={role === "SUPPLIER" ? true : false}
                 classes={{
-                  root: classes.button1, // class name, e.g. `classes-nesting-root-x`
-                  label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                  root: classes.button1,
+                  label: classes.label,
                 }}
               >
                 <InputIcon />
@@ -170,10 +178,9 @@ export default function ImportList(props) {
                 color="primary"
                 aria-label="upload picture"
                 component="span"
-                // disabled={role === "SUPPLIER" ? false : true}
                 classes={{
-                  root: classes.button, // class name, e.g. `classes-nesting-root-x`
-                  label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                  root: classes.button,
+                  label: classes.label,
                 }}
               >
                 <ListAltIcon />

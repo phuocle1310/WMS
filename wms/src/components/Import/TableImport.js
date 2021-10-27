@@ -37,57 +37,48 @@ export default function TableImport(props) {
   const { index } = props;
   const [listUpdateImport, setListUpdateImport] = useState([]);
 
-  const [checked, setChecked] = useState(false);
-  const onChecked = (id) => {
+  const [checked, setChecked] = useState([]);
+  const onChecked = (position) => {
+    console.log(position);
     setChecked((pre) => {
-      let check = !pre;
-      //thêm vào mảng
-      if (check === true) {
-        setListUpdateImport((pre) => {
-          let newArr = listUpdateImport;
-          var index = newArr.findIndex((x) => x.pk === id);
-          if (Number(index) === Number(-1)) {
-            newArr.push({ pk: id });
-          }
-          return newArr;
-        });
-      } else {
-        //xóa ra khỏi mảng
-        setListUpdateImport((pre) => {
-          let newArr = pre;
-          if (newArr.length > 0) {
-            var index = newArr.findIndex((x) => x.pk === id);
-            if (index !== -1) {
-              newArr.splice(index, 1);
-            }
-          }
-          return newArr;
-        });
+      let newArr = [...pre];
+      for (let index in newArr) {
+        if (Number(index) === Number(position)) {
+          newArr[index].isChecked = !newArr[index].isChecked;
+        }
       }
-      return check;
+      return newArr;
     });
   };
   const handleUpdateImport = (data) => {
-    const fetchImport = async () => {
-      try {
-        const action = await importApi.importUpdate({
-          import: listUpdateImport,
-        });
-        setAlert({
-          nameAlert: "success",
-          message: language.success,
-          open: true,
-        });
-        return action;
-      } catch (error) {
-        setAlert({
-          nameAlert: "Error",
-          message: JSON.stringify(error.response.data),
-          open: true,
-        });
+    const listImport = [];
+    for (let index in checked) {
+      if (checked[index].isChecked === true) {
+        let exportItem = { pk: rows[index].id };
+        listImport.push(exportItem);
       }
-    };
-    fetchImport();
+    }
+    console.log(listImport);
+    // const fetchImport = async () => {
+    //   try {
+    //     const action = await importApi.importUpdate({
+    //       import: listUpdateImport,
+    //     });
+    //     setAlert({
+    //       nameAlert: "success",
+    //       message: language.success,
+    //       open: true,
+    //     });
+    //     return action;
+    //   } catch (error) {
+    //     setAlert({
+    //       nameAlert: "Error",
+    //       message: JSON.stringify(error.response.data),
+    //       open: true,
+    //     });
+    //   }
+    // };
+    // fetchImport();
   };
   const columns = [
     {
@@ -107,14 +98,24 @@ export default function TableImport(props) {
       headerName: language.status,
       sortable: false,
       width: 120,
+      valueFormatter: (params) => {
+        let status = params.getValue(params.id, "status");
+        return !status;
+      },
       renderCell: (params) => {
         let id = params.getValue(params.id, "id");
         return (
           <FormControlLabel
             control={
               <GreenCheckbox
-                checked={checked}
-                onChange={() => onChecked(id)}
+                checked={
+                  checked.length > 0
+                    ? checked[checked.findIndex((x) => x.id === id)].isChecked
+                    : false
+                }
+                onChange={() =>
+                  onChecked(checked.findIndex((x) => x.id === id))
+                }
                 name="checkedG"
               />
             }
@@ -126,6 +127,10 @@ export default function TableImport(props) {
       field: "itemid",
       headerName: language.idProduct,
       sortable: false,
+      valueFormatter: (params) => {
+        let item = params.getValue(params.id, "item");
+        return item.id;
+      },
       width: 180,
       renderCell: (params) => {
         let item = params.getValue(params.id, "item");
@@ -136,6 +141,10 @@ export default function TableImport(props) {
       field: "itemproduct",
       headerName: language.product,
       sortable: false,
+      valueFormatter: (params) => {
+        let item = params.getValue(params.id, "item");
+        return item.name;
+      },
       width: 180,
       renderCell: (params) => {
         let item = params.getValue(params.id, "item");
@@ -153,6 +162,11 @@ export default function TableImport(props) {
       headerName: language.location,
       sortable: false,
       width: 120,
+      valueFormatter: (params) => {
+        let location = params.getValue(params.id, "location");
+        let item = ` ${location.row_location}-${location.shelf_column}-${location.shelf_floor}`;
+        return item;
+      },
       renderCell: (params) => {
         let location = params.getValue(params.id, "location");
         return (
@@ -199,6 +213,15 @@ export default function TableImport(props) {
       try {
         let response = await importApi.getListInprocess();
         setRows(response);
+        const createCheck = () => {
+          let arrChecked = [];
+          for (let i in response) {
+            let checked = { isChecked: false, id: response[i].id };
+            arrChecked.push(checked);
+          }
+          return arrChecked;
+        };
+        setChecked(createCheck());
       } catch (error) {
         console.log(error);
       }
