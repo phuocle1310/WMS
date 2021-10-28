@@ -11,6 +11,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import { useDispatch } from "react-redux";
 import uiActions from "../../store/userSlice";
 import { useHistory } from "react-router";
+import { NavLink } from "react-router-dom";
 export default function MenuMain(props) {
   const classes = SecondNavigationStyles();
 
@@ -36,30 +37,26 @@ export default function MenuMain(props) {
           <p>WMS.PY</p>
         </MenuItem>
         <MenuItem className={classes.menuItem} onClick={homeHandler}>
-          <IconButton
-            className={classes.subButton}
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
+          {" "}
+          <NavLink
+            activeClassName={classes.activeLink}
+            className={classes.navlink}
+            exact
+            to="/"
           >
-            <HomeOutlinedIcon></HomeOutlinedIcon>
-          </IconButton>{" "}
-          {language.titleHome}
+            <IconButton
+              className={classes.subButton}
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit"
+            >
+              <HomeOutlinedIcon></HomeOutlinedIcon>
+            </IconButton>{" "}
+            {language.titleHome}
+          </NavLink>
         </MenuItem>
         {props.children}
-        <MenuItem className={classes.menuItem}>
-          <IconButton
-            className={classes.subButton}
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
-          >
-            <SettingsIcon></SettingsIcon>
-          </IconButton>
-          <p>{language.setting}</p>
-        </MenuItem>
         <MenuItem className={classes.menuItem} onClick={handleLogout}>
           <IconButton
             className={classes.subButton}

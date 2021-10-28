@@ -21,7 +21,7 @@ const SecondNavigationStyles = makeStyles((theme) => ({
     borderBottom: 0,
     width: 230,
     color: "#afb2d5",
-    fontSize: "15px",
+    fontSize: "14.5px",
     "& p": {
       margin: 0,
       // padding: 0,
@@ -58,6 +58,7 @@ const SecondNavigationStyles = makeStyles((theme) => ({
   },
   subButton: {
     paddingLeft: 0,
+    paddingBottom: 16,
   },
   root: {
     minWidth: 100,
@@ -78,6 +79,15 @@ const SecondNavigationStyles = makeStyles((theme) => ({
     color: "#5f739b !important",
     background: "none !important",
     // },
+  },
+  navlink: {
+    textDecoration: "none",
+    color: "#afb2d5",
+    display: "block",
+  },
+  activeLink: {
+    textDecoration: "none",
+    color: "#fff",
   },
 }));
 export default SecondNavigationStyles;
