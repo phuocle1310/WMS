@@ -213,7 +213,7 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         if is_exported.count() > 0:
             return Response(ExportViewSerializer(is_exported, many=True).data, status=status.HTTP_200_OK)
         so_exported = self.get_object()
-        if so_exported.status == 4:
+        if so_exported.status in [0, 4]:
             return Response({"Failed": "SO exported"}, status=status.HTTP_400_BAD_REQUEST)
         if not empty_location:
             return Response({"Failed": "Not enough location pickface"}, status=status.HTTP_400_BAD_REQUEST)
