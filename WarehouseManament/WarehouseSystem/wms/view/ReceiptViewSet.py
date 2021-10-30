@@ -127,5 +127,4 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
                 receipt.save()
         except PO.DoesNotExist:
             return Response({"Failed": "PO doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-
         return Response({"Success": "Delete Receipt success"}, status=status.HTTP_200_OK)

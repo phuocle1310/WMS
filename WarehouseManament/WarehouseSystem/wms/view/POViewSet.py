@@ -87,7 +87,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         else:
             instance.edit_who = request.user
         if stt in [2, 0, 4]:
-            return Response({"Falied": "This PO can't update this status"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Failed": "This PO can't update this status"}, status=status.HTTP_400_BAD_REQUEST)
         if instance.status == 0:
             return Response({"Failed": "PO have done already, can't edit!!"}, status=status.HTTP_400_BAD_REQUEST)
         instance.status = stt
@@ -110,7 +110,7 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         else:
             if request.user.supplier == self.get_object().supplier:
                 return super().destroy(request, *args, **kwargs) and Response({"Success": "Delete PO success"}, status=status.HTTP_200_OK)
-            return Response({"Falied": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"Failed": "You dont have permission to delete this PO"}, status=status.HTTP_403_FORBIDDEN)
 
     @action(methods=['get'], detail=True, url_path='get-item-for-receipt')
     def get_item_receipt_by_po(self, request, pk):
