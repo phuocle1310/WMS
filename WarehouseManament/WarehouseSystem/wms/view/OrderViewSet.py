@@ -110,6 +110,7 @@ class OrderView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIView
                 item.Qty_total = F('Qty_total') - so_detail.Qty_order
                 item.save()
         order.edit_date = datetime.datetime.now()
+        order.edit_who = self.request.user
         order.save()
         serializer = OrderSerializer(order)
 
