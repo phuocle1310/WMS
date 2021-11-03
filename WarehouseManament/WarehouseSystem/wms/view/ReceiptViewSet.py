@@ -108,6 +108,7 @@ class ReceiptView(viewsets.ViewSet, generics.RetrieveAPIView, generics.ListAPIVi
                 item.Qty_total = F('Qty_total') + po_detail.Qty_order
                 item.save()
         receipt.edit_date = datetime.datetime.now()
+        receipt.edit_who = self.request.user
         receipt.save()
         serializer = ReceiptSerializer(receipt)
 
