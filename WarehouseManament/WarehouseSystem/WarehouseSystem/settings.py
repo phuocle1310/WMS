@@ -50,12 +50,12 @@ INSTALLED_APPS = [
 # OAUTH2_PROVIDER = {
 #     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 # }
-# OAUTH2_PROVIDER = {
-#     # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-#     'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 15,
-#     'OAUTH_SINGLE_ACCESS_TOKEN': True,
-#     'OAUTH_DELETE_EXPIRED': True
-# }
+OAUTH2_PROVIDER = {
+    # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 30,
+    'OAUTH_SINGLE_ACCESS_TOKEN': True,
+    'OAUTH_DELETE_EXPIRED': True
+}
 
 
 #auth của én
