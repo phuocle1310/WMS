@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { makeStyles } from "@material-ui/core/styles";
 import statisticalApi from "../../api/statisticalApi";
@@ -6,6 +6,7 @@ import { CircularProgress } from "@material-ui/core";
 import MulLanguage from "../../assets/language/MulLanguage";
 import { useSelector } from "react-redux";
 import useHttp from "../../Hook/useHttp";
+import { DatePicker, InlineDatePicker } from "@material-ui/pickers";
 const useStyles = makeStyles((theme) => ({
   root: {
     // background: ` transparent url(${welcome}) no-repeat`,
@@ -19,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     background: "#f8fafb",
     padding: "1px 18px",
+    height: 80,
     color: "#4251b5",
+    // fontSize: 25,
     fontWeight: 700,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -37,7 +40,7 @@ const StackedBar = (props) => {
     (state) => state.currentLanguage.currentLanguage,
   );
   const language = MulLanguage[`${currentLanguage}`];
-  const { item } = props;
+  const { item, handleDateChange, selectedDate } = props;
   const data = {
     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
     datasets: [
@@ -76,7 +79,18 @@ const StackedBar = (props) => {
     <>
       <div className={classes.root}>
         <div className={classes.title}>
-          <p>{language.chart}</p>
+          <p>
+            {language.chart}
+            <DatePicker
+              views={["year"]}
+              style={{ float: "right", width: 80, textAlign: "center" }}
+              label="Chọn năm"
+              value={selectedDate}
+              onChange={handleDateChange}
+              animateYearScrolling
+              variant="inline"
+            />
+          </p>
         </div>
         <div className={classes.chart}>
           <Bar data={data} options={options} />

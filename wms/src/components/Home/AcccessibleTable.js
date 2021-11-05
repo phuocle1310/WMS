@@ -16,9 +16,9 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-  createData("Frozen ", 159, 6.0, 24, 4.0),
-  createData("Ice ", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("8 ", "Sprite", 6.0, 24, 4.0),
+  createData("2", "Fanta", 9.0, 37, 4.3),
+  createData("5", "Nutriboost", 16.0, 24, 6.0),
 ];
 
 const useStyles = makeStyles((theme) => ({

@@ -4,8 +4,8 @@ const statisticalApi = {
     const url = `/statistical/statistical/`;
     return axiosClient.get(url);
   },
-  getChartPoSo: () => {
-    const url = `/statistical/totalPoSoByYear/`;
+  getChartPoSo: (year) => {
+    const url = `/statistical/totalPoSoByYear/?year= ${year}`;
     return axiosClient.get(url);
   },
 };
