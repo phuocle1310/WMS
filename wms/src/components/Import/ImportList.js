@@ -230,6 +230,7 @@ export default function ImportList(props) {
           </Alert>
         );
       default:
+        return <Alert className={classes.alert}>{status}</Alert>;
     }
   };
   //hàm xuất hiện thông báo

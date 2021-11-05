@@ -95,36 +95,6 @@ export default function TableImport(props) {
       width: 140,
     },
     {
-      field: "status",
-      headerName: language.status,
-      sortable: false,
-      width: 120,
-      valueFormatter: (params) => {
-        let status = params.getValue(params.id, "status");
-        return !status;
-      },
-      renderCell: (params) => {
-        let id = params.getValue(params.id, "id");
-        return (
-          <FormControlLabel
-            control={
-              <GreenCheckbox
-                checked={
-                  checked.length > 0
-                    ? checked[checked.findIndex((x) => x.id === id)].isChecked
-                    : false
-                }
-                onChange={() =>
-                  onChecked(checked.findIndex((x) => x.id === id))
-                }
-                name="checkedG"
-              />
-            }
-          />
-        );
-      },
-    },
-    {
       field: "itemid",
       headerName: language.idProduct,
       sortable: false,
@@ -175,6 +145,36 @@ export default function TableImport(props) {
             {location.row_location}-{location.shelf_column}-
             {location.shelf_floor}
           </p>
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: language.status,
+      sortable: false,
+      width: 120,
+      valueFormatter: (params) => {
+        let status = params.getValue(params.id, "status");
+        return !status;
+      },
+      renderCell: (params) => {
+        let id = params.getValue(params.id, "id");
+        return (
+          <FormControlLabel
+            control={
+              <GreenCheckbox
+                checked={
+                  checked.length > 0
+                    ? checked[checked.findIndex((x) => x.id === id)].isChecked
+                    : false
+                }
+                onChange={() =>
+                  onChecked(checked.findIndex((x) => x.id === id))
+                }
+                name="checkedG"
+              />
+            }
+          />
         );
       },
     },

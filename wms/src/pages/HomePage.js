@@ -11,6 +11,7 @@ import useHttp from "../Hook/useHttp";
 import statisticalApi from "../api/statisticalApi";
 import { CircularProgress } from "@material-ui/core";
 const HomePage = (props) => {
+  const [selectedDate, handleDateChange] = useState(new Date());
   // const classes = useStyles();
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
@@ -32,14 +33,16 @@ const HomePage = (props) => {
     const fetchChart = async () => {
       try {
         //gọi từ axios
-        const response = await statisticalApi.getChartPoSo();
+        const response = await statisticalApi.getChartPoSo(
+          selectedDate.getFullYear(),
+        );
         setChart(response);
       } catch (error) {
         console.log(error);
       }
     };
     fetchChart();
-  }, []);
+  }, [selectedDate]);
   if (status === "pending") {
     return (
       <div className="centered" style={{ textAlign: "center" }}>
@@ -70,7 +73,11 @@ const HomePage = (props) => {
         <EarningCard item={item}></EarningCard>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={8}>
-        <VerticalBar item={chart}></VerticalBar>
+        <VerticalBar
+          item={chart}
+          selectedDate={selectedDate}
+          handleDateChange={handleDateChange}
+        ></VerticalBar>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={4}>
         <Grid container spacing={4}>
