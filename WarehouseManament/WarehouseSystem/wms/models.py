@@ -71,7 +71,7 @@ class Item(models.Model):
     def clean(self):
         if self.expire_date is not None or self.production_date is not None:
             if self.expire_date < self.production_date:
-                raise ValidationError({'expire_date': 'Expire date can be < Production date'})
+                raise ValidationError({'expire_date': 'Expire date can be less than Production date'})
 
 
 class RowLocation(models.Model):
