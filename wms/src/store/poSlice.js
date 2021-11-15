@@ -19,6 +19,7 @@ export const listPo = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await poApi.getAllPo(data);
+      console.log(response);
       return response;
     } catch (err) {
       return rejectWithValue(err.response.data);
