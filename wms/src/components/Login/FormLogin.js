@@ -73,6 +73,7 @@ const FormLogin = function FormLogin() {
           grant_type: "password",
           ...authInfo,
         };
+        console.log(authInfo)
         const response = await userApi.login(fromData);
         //lưu vô cookie
         cookies.save("access-token", response.access_token);
@@ -85,6 +86,7 @@ const FormLogin = function FormLogin() {
         //chuyen qua trang chu
         history.replace("/");
       } catch (error) {
+        console.log(error.response.data);
         setIsErr(true);
       }
     };

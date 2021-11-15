@@ -47,29 +47,22 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 #chạy post man bỏ biến này ra
-# OAUTH2_PROVIDER = {
-#     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-# }
 OAUTH2_PROVIDER = {
-    # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 30,
-    'OAUTH_SINGLE_ACCESS_TOKEN': True,
-    'OAUTH_DELETE_EXPIRED': True
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
 }
-
-
-#auth của én
-# OAUTH2_INFO = {
-#     "client_id": "R4Wt7kxFZ7ePQzgYkKty3MSD0WhJZvsE9dVpsRVC",
-#     "client_secret": "U9rGe4l7AeNP3cdGx6871PmYyDaHFst2ZwxNTq7yF1wcBqU2bCmyP5VcI9RvhMr8LrkMxhfst7KNiWoCGNKh95ibEn32woXpNGJwvlQWFcLbjtiqEQJcSNBEevWbnF7O"
+# OAUTH2_PROVIDER = {
+#  'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+#     'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 30,
+#     'OAUTH_SINGLE_ACCESS_TOKEN': True,
+#     'OAUTH_DELETE_EXPIRED': True
 # }
 
 
 
 # auth
 OAUTH2_INFO = {
-    "client_id": "UwiohB60sSv0jVI2FtIsBLZ2faeLTincyCx0drSa",
-    "client_secret": "AK5xA6fgwhdGb8e2MxcWUaEVGCaWrvEDCYsXmIesyWtIT0u1HZK2t3gTdvCoUbktaYXzvU7UGGPBjeS0iVpcMmptoLOxP8jKDU7eNQ6qp3EV186T3uXWQOVuVjK5Bk1A"
+    "client_id": "4wqP0P6UUAoj1CWr7dkZLhberJCR5ROuMG5yiNl3",
+    "client_secret": "pRB9v6trM336h0DGGrqJORHBLzz7JNluOrFv8TX5EnmD3FAS8VPh6s3dSFvKDFti8scNtlnmr11bZ83cyJwGsYSaHkXEA0T913cyKAmTXYNavLRpKwptkSJ9emOrhLAR"
 }
 
 REST_FRAMEWORK = {
@@ -129,7 +122,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wms',
         'USER': 'root',
-        'PASSWORD': '12345',
+        'PASSWORD': '123456789',
         'HOST': ''  # mặc định localhost
     }
 }
