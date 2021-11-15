@@ -32,7 +32,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     def get_item_by_supplier(self, request):
         try:
             if request.user.role == 2:
-                items = Item.objects.filter(supplier=request.user.supplier)
+                items = Item.objects.filter(supplier=request.user.supplier, status=True)
             else:
                 items = Item.objects.all()
             serializer = ItemSerializer(items, many=True)
