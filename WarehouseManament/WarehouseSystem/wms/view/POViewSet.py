@@ -17,16 +17,17 @@ from ..serializers import *
 
 class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPIView, BaseAPIView):
     queryset = PO.objects.all()
-    action_required_auth = ['list', 'create',
-                            'update_po', 'destroy', 'get_po']
+    # action_required_auth = ['list', 'create',
+    #                         'update_po', 'destroy', 'get_po']
+    permission_classes = [permissions.IsAuthenticated, ]
     # filter_backends = [DjangoFilterBackend, SearchFilter]
     # filterset_fields = ['effective_date', 'status',]
     # search_fields = ['effective_date', 'supplier__company_name', 'status']
 
-    def get_permissions(self, list_action=action_required_auth):
-        if self.action in list_action:
-            return [permissions.IsAuthenticated()]
-        return [permissions.AllowAny()]
+    # def get_permissions(self):
+    #     if self.action in list_action:
+    #         return [permissions.IsAuthenticated()]
+    #     return [permissions.AllowAny()]
 
     def get_serializer_class(self):
         if self.action in ['create']:
@@ -44,6 +45,17 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         if po is not None:
             return Response(data=POSerializer(po).data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            if request.user.role in [0, 1]:
+                po = PO.objects.all()
+            else:
+                supplier = Supplier.objects.get(user=request.user)
+                po = PO.objects.filter(supplier=supplier)
+        except PO.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=POSerializer(po, many=True).data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False)
     def get_po_done(self, request):

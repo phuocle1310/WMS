@@ -7,7 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from .BaseView import BaseAPIView
-from ..models import SO, Item, Order, SODetail, ExportView
+from ..models import SO, Item, Order, SODetail, ExportView, Supplier
 from ..serializers import SOSerializer, SOCreateSerializer, OrderCreateSerializer, OrderSerializer, \
     ItemForReceiptOrderSerializer, ExportViewSerializer
 
@@ -35,6 +35,17 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         if so is not None:
             return Response(data=SOSerializer(so).data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            if request.user.role in [0, 1]:
+                so = SO.objects.all()
+            else:
+                supplier = Supplier.objects.get(user=request.user)
+                so = SO.objects.filter(supplier=supplier)
+        except SO.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=SOSerializer(so, many=True).data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = SOCreateSerializer(data=request.data)
