@@ -50,12 +50,16 @@ class POViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, 
         try:
             if request.user.role in [0, 1]:
                 po = PO.objects.all()
+                page = self.paginate_queryset(po)
             else:
                 supplier = Supplier.objects.get(user=request.user)
                 po = PO.objects.filter(supplier=supplier)
+                page = self.paginate_queryset(po)
         except PO.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(data=POSerializer(po, many=True).data, status=status.HTTP_200_OK)
+        if page is not None:
+            serializer = POSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     @action(methods=['get'], detail=False)
     def get_po_done(self, request):
