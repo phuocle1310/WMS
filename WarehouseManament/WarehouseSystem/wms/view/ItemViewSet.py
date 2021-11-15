@@ -31,7 +31,7 @@ class ItemViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView
     @action(methods=['get'], detail=False, url_path='get-item-by-supplier')
     def get_item_by_supplier(self, request):
         try:
-            if request.user.role == 0:
+            if request.user.role == 2:
                 items = Item.objects.filter(supplier=request.user.supplier)
             else:
                 items = Item.objects.all()
