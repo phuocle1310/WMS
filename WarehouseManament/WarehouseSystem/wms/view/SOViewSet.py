@@ -40,12 +40,16 @@ class SOView(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, gen
         try:
             if request.user.role in [0, 1]:
                 so = SO.objects.all()
+                page = self.paginate_queryset(so)
             else:
                 supplier = Supplier.objects.get(user=request.user)
                 so = SO.objects.filter(supplier=supplier)
+                page = self.paginate_queryset(so)
         except SO.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(data=SOSerializer(so, many=True).data, status=status.HTTP_200_OK)
+        if page is not None:
+            serializer = SOSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = SOCreateSerializer(data=request.data)
