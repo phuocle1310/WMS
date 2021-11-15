@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -10,16 +10,8 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import MulLanguage from "../../assets/language/MulLanguage";
 import AOS from "aos";
+import productApi from "../../api/productApi";
 import "aos/dist/aos.css";
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("8 ", "Sprite", 6.0, 24, 4.0),
-  createData("2", "Fanta", 9.0, 37, 4.3),
-  createData("5", "Nutriboost", 16.0, 24, 6.0),
-];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +44,20 @@ const StackedBar = () => {
     AOS.init({ duration: 1000 });
   }, []);
   //lang
+
+  let [product, setProduct] = useState([]);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await productApi.getProductBySupplier();
+        setProduct(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProduct();
+  }, []);
+
   const currentLanguage = useSelector(
     (state) => state.currentLanguage.currentLanguage,
   );
@@ -77,20 +83,20 @@ const StackedBar = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.name}>
+                {product.map((row) => (
+                  <TableRow key={row.id}>
                     <TableCell
                       component="th"
                       scope="row"
                       className={classes.cell}
                     >
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right" className={classes.cell}>
                       {row.name}
                     </TableCell>
                     <TableCell align="right" className={classes.cell}>
-                      {row.calories}
-                    </TableCell>
-                    <TableCell align="right" className={classes.cell}>
-                      {row.fat}
+                      {row.Qty_total}
                     </TableCell>
                   </TableRow>
                 ))}
